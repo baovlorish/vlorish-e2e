@@ -52,17 +52,17 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: cypress/reports/mochawesome-combine
 
-      # - name: Sleep for 30 seconds
-      #   uses: jakejarvis/wait-action@master
-      #   with:
-      #     time: "30s"
+      - name: Sleep for 30 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: "30s"
 
-      # - name: Slack Notification
-      #   if: always()
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #   run: |
-      #     npx cypress-slack-reporter --report-dir cypress/reports/mochawesome-combine --ci-provider none --custom-text "Test Report: "
+      - name: Slack Notification
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          npx cypress-slack-reporter --report-dir cypress/reports/mochawesome-combine --ci-provider none --custom-text "Test Report: https://baovlorish.github.io/vlorish-e2e/"
 
       # - name: "Upload screenshots and videos to Slack"
       #   uses: trymbill/cypress-slack-video-upload-action@v1.3.0
