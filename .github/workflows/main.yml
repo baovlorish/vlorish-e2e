@@ -64,11 +64,11 @@ jobs:
         run: |
           npx cypress-slack-reporter --report-dir cypress/reports/mochawesome-combine --ci-provider none --custom-text "Test Report: https://baovlorish.github.io/vlorish-e2e/"
 
-      # - name: "Upload screenshots and videos to Slack"
-      #   uses: trymbill/cypress-slack-video-upload-action@v1.3.0
-      #   if: failure()
-      #   with:
-      #     token: ${{ secrets.SLACK_TOKEN }}
-      #     channels: "app-auto-testing"
-      #     message-text: "Failed Test ScreenShots"
-      #     workdir: reports/screenshots
+      - name: "Upload screenshots and videos to Slack"
+        uses: trymbill/cypress-slack-video-upload-action@v1.3.0
+        if: failure()
+        with:
+          token: ${{ secrets.SLACK_TOKEN }}
+          channels: "app-auto-testing"
+          message-text: "Failed Test ScreenShots"
+          workdir: reports/screenshots
