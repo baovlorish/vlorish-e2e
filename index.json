@@ -2,14 +2,14 @@
   "stats": {
     "suites": 1,
     "tests": 1,
-    "passes": 0,
+    "passes": 1,
     "pending": 0,
-    "failures": 1,
-    "start": "2023-01-11T02:37:50.647Z",
-    "end": "2023-01-11T02:39:05.496Z",
-    "duration": 74757,
+    "failures": 0,
+    "start": "2023-01-11T03:25:14.478Z",
+    "end": "2023-01-11T03:25:25.740Z",
+    "duration": 11174,
     "testsRegistered": 1,
-    "passPercent": 0,
+    "passPercent": 100,
     "pendingPercent": 0,
     "other": 0,
     "hasOther": false,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "2789b2ff-abc5-4071-9052-13a5c562e545",
+      "uuid": "da20f6c0-a0fe-416f-a274-0aeb47491480",
       "title": "",
       "fullFile": "e2e/login.cy.js",
       "file": "e2e/login.cy.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "c8d4dd30-7aad-40d5-8e79-e1c8f9906867",
+          "uuid": "99928996-5767-460d-9070-caa701c34786",
           "title": "Login Functionality",
           "fullFile": "",
           "file": "",
@@ -38,33 +38,29 @@
               "title": "Login with valid user",
               "fullTitle": "Login Functionality Login with valid user",
               "timedOut": null,
-              "duration": 74757,
-              "state": "failed",
-              "speed": null,
-              "pass": false,
-              "fail": true,
+              "duration": 11174,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
               "pending": false,
-              "context": "[\n  \"screenshots/login.cy.js/Login Functionality -- Login with valid user (failed).png\",\n  \"videos/login.cy.js.mp4\"\n]",
+              "context": null,
               "code": "loginPage.loginWithUser(_userData.default.valid.email, _userData.default.valid.password);",
-              "err": {
-                "message": "CypressError: Timed out retrying after 60050ms: `cy.click()` failed because this element is not visible:\n\n`<input class=\"submitBtn\" type=\"submit\" style=\"white-space: pre-wrap; align-content: center; padding: 0px; opacity: 1; color: transparent; background: transparent; outline: none; border: none; resize: none; width: 0px; height: 0px; transform-origin: 0px 0px 0px; top: -9999px; left: -9999px; caret-color: transparent;\">`\n\nThis element `<input.submitBtn>` is not visible because it has an effective width and height of: `0 x 0` pixels.\n\nFix this problem, or use `{force: true}` to disable error checking.\n\nhttps://on.cypress.io/element-cannot-be-interacted-with",
-                "estack": "CypressError: Timed out retrying after 60050ms: `cy.click()` failed because this element is not visible:\n\n`<input class=\"submitBtn\" type=\"submit\" style=\"white-space: pre-wrap; align-content: center; padding: 0px; opacity: 1; color: transparent; background: transparent; outline: none; border: none; resize: none; width: 0px; height: 0px; transform-origin: 0px 0px 0px; top: -9999px; left: -9999px; caret-color: transparent;\">`\n\nThis element `<input.submitBtn>` is not visible because it has an effective width and height of: `0 x 0` pixels.\n\nFix this problem, or use `{force: true}` to disable error checking.\n\nhttps://on.cypress.io/element-cannot-be-interacted-with\n    at runVisibilityCheck (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:147354:76)\n    at $Cy.ensureStrictVisibility (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:147370:12)\n    at runAllChecks (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:133260:14)\n    at retryActionability (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:133315:16)\n    at tryCatcher (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:11318:23)\n    at Promise.attempt.Promise.try (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:8592:29)\n    at whenStable (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:152495:65)\n    at <unknown> (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:151949:14)\n    at tryCatcher (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:11318:23)\n    at Promise._settlePromiseFromHandler (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:9253:31)\n    at Promise._settlePromise (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:9310:18)\n    at Promise._settlePromise0 (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:9355:10)\n    at Promise._settlePromises (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:9435:18)\n    at Promise._fulfill (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:9379:18)\n    at <unknown> (https://stage-vlorish.itomy.ch/__cypress/runner/cypress_runner.js:10993:46)\nFrom Your Spec Code:\n    at LoginPage.loginWithUser (webpack:///./pages/loginPage.js:22:30)\n    at Context.eval (webpack:///./e2e/login.cy.js:12:14)",
-                "diff": null
-              },
-              "uuid": "30f3b976-5871-4ce2-ab60-d19695552200",
-              "parentUUID": "c8d4dd30-7aad-40d5-8e79-e1c8f9906867",
+              "err": {},
+              "uuid": "70e4441f-6b6f-439a-8e03-020af1c42026",
+              "parentUUID": "99928996-5767-460d-9070-caa701c34786",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
-          "passes": [],
-          "failures": [
-            "30f3b976-5871-4ce2-ab60-d19695552200"
+          "passes": [
+            "70e4441f-6b6f-439a-8e03-020af1c42026"
           ],
+          "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 74757,
+          "duration": 11174,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
