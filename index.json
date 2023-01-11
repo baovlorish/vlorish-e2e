@@ -5,9 +5,9 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2023-01-11T10:34:24.064Z",
-    "end": "2023-01-11T10:34:34.990Z",
-    "duration": 10842,
+    "start": "2023-01-11T10:42:20.765Z",
+    "end": "2023-01-11T10:42:30.164Z",
+    "duration": 9343,
     "testsRegistered": 1,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "40404537-1252-49e8-93ba-72dedb0abc05",
+      "uuid": "3b2c9197-dcdb-4bd9-b24f-82a698b61434",
       "title": "",
       "fullFile": "e2e/login.cy.js",
       "file": "e2e/login.cy.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "1ab97b4a-7e61-4730-aae9-f5b6b9748a66",
+          "uuid": "bc96c799-98b2-4a43-ac8f-83e60040b1ba",
           "title": "Login Functionality",
           "fullFile": "",
           "file": "",
@@ -38,29 +38,29 @@
               "title": "Login with valid user",
               "fullTitle": "Login Functionality Login with valid user",
               "timedOut": null,
-              "duration": 10842,
+              "duration": 9343,
               "state": "passed",
-              "speed": "slow",
+              "speed": "medium",
               "pass": true,
               "fail": false,
               "pending": false,
               "context": null,
               "code": "loginPage.loginWithUser(_userData.default.valid.email, _userData.default.valid.password);",
               "err": {},
-              "uuid": "fa0e2e63-7e48-44e3-8ad2-e23a43991e46",
-              "parentUUID": "1ab97b4a-7e61-4730-aae9-f5b6b9748a66",
+              "uuid": "0f8612bd-0666-497c-9283-602f44450a05",
+              "parentUUID": "bc96c799-98b2-4a43-ac8f-83e60040b1ba",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "fa0e2e63-7e48-44e3-8ad2-e23a43991e46"
+            "0f8612bd-0666-497c-9283-602f44450a05"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 10842,
+          "duration": 9343,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
