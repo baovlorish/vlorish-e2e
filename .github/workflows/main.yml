@@ -52,23 +52,23 @@ jobs:
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: cypress/reports/mochawesome-combine
 
-      - name: Sleep for 30 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: "30s"
+      # - name: Sleep for 30 seconds
+      #   uses: jakejarvis/wait-action@master
+      #   with:
+      #     time: "30s"
 
-      - name: Slack Notification
-        if: always()
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          npx cypress-slack-reporter --report-dir cypress/reports/mochawesome-combine --ci-provider none --custom-text "Test Report: "
+      # - name: Slack Notification
+      #   if: always()
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   run: |
+      #     npx cypress-slack-reporter --report-dir cypress/reports/mochawesome-combine --ci-provider none --custom-text "Test Report: "
 
-      - name: "Upload screenshots and videos to Slack"
-        uses: trymbill/cypress-slack-video-upload-action@v1.3.0
-        if: failure()
-        with:
-          token: ${{ secrets.SLACK_TOKEN }}
-          channels: "app-auto-testing"
-          message-text: "Failed Test ScreenShots"
-          workdir: reports/screenshots
+      # - name: "Upload screenshots and videos to Slack"
+      #   uses: trymbill/cypress-slack-video-upload-action@v1.3.0
+      #   if: failure()
+      #   with:
+      #     token: ${{ secrets.SLACK_TOKEN }}
+      #     channels: "app-auto-testing"
+      #     message-text: "Failed Test ScreenShots"
+      #     workdir: reports/screenshots
