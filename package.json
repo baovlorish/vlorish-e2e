@@ -11,8 +11,9 @@
     "report": "npm run combine-reports && npm run generate-report"
   },
   "devDependencies": {
-    "cypress": "^10.8.0",
+    "cypress": "^12.3.0",
     "cypress-multi-reporters": "^1.6.1",
+    "cypress-plugin-tab": "^1.0.5",
     "cypress-slack-reporter": "^1.5.0",
     "cypress-xpath": "^1.6.2",
     "del": "6.0.0",

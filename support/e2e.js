@@ -16,6 +16,7 @@
 // Import commands.js using ES2015 syntax:
 import "./commands";
 require("cypress-xpath");
+require("cypress-plugin-tab");
 
 import addContext from "mochawesome/addContext";
 const titleToFileName = (title) => title.replace(/[:\/]/g, "");
@@ -31,8 +32,8 @@ Cypress.on("test:after:run", (test, runnable) => {
 });
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
-Cypress.on('uncaught:exception', (err, runnable) => {
+Cypress.on("uncaught:exception", (err, runnable) => {
   // returning false here prevents Cypress from
   // failing the test
-  return false
-})
+  return false;
+});

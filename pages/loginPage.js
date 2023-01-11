@@ -12,14 +12,14 @@ export class LoginPage {
   }
 
   loginWithUser(email = "", password = "") {
-    // if (email != "") cy.get(this.usernameInput).click().type(email);
-    if (password != "")
-      cy.get("flt-glass-pane")
-        .shadow()
-        .find(this.passwordInput)
-        .type("abc", { force: true });
+    if (email != "") cy.get(this.usernameInput).click().type(email);
+    // if (password != "")
+    //   cy.get("flt-glass-pane")
+    //     .shadow()
+    //     .find(this.passwordInput)
+    //     .type("abc", { force: true });
 
-    cy.get(this.signInButton).click();
+    // cy.get(this.signInButton).click();
     return this;
   }
 }
