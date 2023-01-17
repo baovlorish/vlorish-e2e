@@ -5,9 +5,9 @@
     "passes": 1,
     "pending": 0,
     "failures": 0,
-    "start": "2023-01-16T02:38:29.077Z",
-    "end": "2023-01-16T02:38:40.572Z",
-    "duration": 11429,
+    "start": "2023-01-17T02:36:34.584Z",
+    "end": "2023-01-17T02:36:49.566Z",
+    "duration": 14841,
     "testsRegistered": 1,
     "passPercent": 100,
     "pendingPercent": 0,
@@ -18,7 +18,7 @@
   },
   "results": [
     {
-      "uuid": "2683c71a-e0a6-4ee6-b164-b38fcdc59e63",
+      "uuid": "5a07eadb-3b6e-4d03-b810-684dc15c4bea",
       "title": "",
       "fullFile": "e2e/login.cy.js",
       "file": "e2e/login.cy.js",
@@ -27,7 +27,7 @@
       "tests": [],
       "suites": [
         {
-          "uuid": "4b1a89c5-074d-4667-b3a4-c3c5db2cd897",
+          "uuid": "fc913634-5a1f-4742-a969-d17eef845ae7",
           "title": "Login Functionality",
           "fullFile": "",
           "file": "",
@@ -38,7 +38,7 @@
               "title": "Login with valid user",
               "fullTitle": "Login Functionality Login with valid user",
               "timedOut": null,
-              "duration": 11429,
+              "duration": 14841,
               "state": "passed",
               "speed": "slow",
               "pass": true,
@@ -47,20 +47,20 @@
               "context": null,
               "code": "loginPage.loginWithUser(_userData.default.valid.email, _userData.default.valid.password);",
               "err": {},
-              "uuid": "35e3027c-dd11-4a38-8a9f-9de0abe891f6",
-              "parentUUID": "4b1a89c5-074d-4667-b3a4-c3c5db2cd897",
+              "uuid": "c8855991-13a0-40cf-8ce0-8dd9e8b2cfa7",
+              "parentUUID": "fc913634-5a1f-4742-a969-d17eef845ae7",
               "isHook": false,
               "skipped": false
             }
           ],
           "suites": [],
           "passes": [
-            "35e3027c-dd11-4a38-8a9f-9de0abe891f6"
+            "c8855991-13a0-40cf-8ce0-8dd9e8b2cfa7"
           ],
           "failures": [],
           "pending": [],
           "skipped": [],
-          "duration": 11429,
+          "duration": 14841,
           "root": false,
           "rootEmpty": false,
           "_timeout": 2000
