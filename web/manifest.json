@@ -1,0 +1,23 @@
+{
+  "name": "vlorish_budgeting_app",
+  "short_name": "vlorish_budgeting_app",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0175C2",
+  "theme_color": "#0175C2",
+  "description": "Vlorish budgeting app",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "36x36",
+      "type": "image/png"
+    },
+    {
+      "src": "v.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

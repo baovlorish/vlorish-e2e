@@ -1,0 +1,69 @@
+image: cirrusci/flutter:3.0.0
+
+stages:
+  - sync
+
+Sync files to dev:
+  stage: sync
+  only:
+    - develop
+  environment:
+    name: develop
+  script:
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - ./aws/install
+    - aws --version
+    - export SENTRY_RELEASE='burgundy_budgeting_app@1.0.12'
+    - export OUTPUT_FOLDER_WEB=./build/web/
+    - curl -sL https://sentry.io/get-cli/ | bash
+    - flutter build web --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false --source-maps
+    - sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps build/web --ext js
+    - sentry-cli releases finalize $SENTRY_RELEASE
+
+    - aws s3 sync --cache-control 'no-cache' --delete build/web s3://vlorish-development-website/
+    - aws cloudfront create-invalidation --distribution-id E54R9PGIRKATR --paths /*
+
+Sync files to stage:
+  stage: sync
+  only:
+    - stage
+  environment:
+    name: stage
+
+  script:
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - ./aws/install
+    - aws --version
+    - export SENTRY_RELEASE='burgundy_budgeting_app@1.0.12'
+    - export OUTPUT_FOLDER_WEB=./build/web/
+    - curl -sL https://sentry.io/get-cli/ | bash
+    - flutter build web --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false --source-maps
+    - sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps build/web --ext js
+    - sentry-cli releases finalize $SENTRY_RELEASE
+
+    - aws s3 sync --cache-control 'no-cache' --delete build/web s3://vlorish-stage-website/
+    - aws cloudfront create-invalidation --distribution-id E2Q9S2D9N24N9U --paths /*
+
+Sync files to prod:
+  stage: sync
+  only:
+    - master
+  environment:
+    name: prod
+
+  script:
+    - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    - unzip awscliv2.zip
+    - ./aws/install
+    - aws --version
+    - export SENTRY_RELEASE='burgundy_budgeting_app@1.2.0'
+    - export OUTPUT_FOLDER_WEB=./build/web/
+    - curl -sL https://sentry.io/get-cli/ | bash
+    - flutter build web --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false --source-maps
+    - sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps build/web --ext js
+    - sentry-cli releases finalize $SENTRY_RELEASE
+
+    - aws s3 sync --cache-control 'no-cache' --delete build/web s3://vlorish-production-website/
+    - aws cloudfront create-invalidation --distribution-id E20ISAF1QSSFIE --paths /*
