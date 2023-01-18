@@ -1,3 +1,4 @@
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,8 +29,8 @@ class LoginScreenTest {
   }
 
   Future<void> verifySignInPage() async {
-    await tester.pumpAndSettle();
-    expect(find.text('sign-in'), findsOneWidget);
+    await tester.pumpAndSettle(const Duration(seconds: 4));
+    await tester.ensureVisible(find.widgetWithText(ButtonItem, 'sign-in'));
     final email = find.byType(InputItem).first;
     final password = find.byType(InputItem).last;
     await tester.ensureVisible(email);
