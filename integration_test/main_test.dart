@@ -1,8 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:burgundy_budgeting_app/main.dart' as app;
-
-import 'screen/auth_test.dart';
+import 'package:flutter_driver/flutter_driver.dart';
 import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/signup.dart';
@@ -11,6 +10,7 @@ void main() {
   SignInScreenTest signInScreen;
   SignUpScreenTest signUpScreen;
   DashboardScreenTest dashboardScreen;
+
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Authentication Test', () {
@@ -74,7 +74,7 @@ void main() {
       await signUpScreen.clickAgreeAndContinueBtn();
       //await signUpScreen.verifyErrorMessage('Please confirm your password');
 
-      print('BAR-T9 User see error message if he Password fields is empty');
+      print('BAR-T9 User see error message if the Password fields is empty');
       await signUpScreen.clickBtnSignIn();
       await signInScreen.clickBtnSignUp();
       await signUpScreen
@@ -86,24 +86,17 @@ void main() {
       //await signUpScreen.verifyErrorMessage('Please enter your password');
 
       print(
-          'BAR-T10 User is redirected on Terms&Conditions page after clicking on Terms link');
+          'BAR-T16 User see a notification when passwords in password & confirm password fields don’t match');
       await signUpScreen.clickBtnSignIn();
       await signInScreen.clickBtnSignUp();
       await signUpScreen
           .inputEmail(signInScreen.generateRandomString(10) + '@gmail.com');
       await signUpScreen.clickBtnNext();
-      await signUpScreen.clickAndVerifyTermLink();
-
-      print('Login Web with empty email');
-      await signUpScreen.clickBtnSignIn();
-      await signInScreen.inputEmailAndPassword('', 'Abcd123!@#');
-      await signInScreen.clickLoginButton();
-      await signInScreen.verifyErrorMessage('Please, enter your email');
-
-      print('Login Web with empty password');
-      await signInScreen.inputEmailAndPassword('test123@gmail.com', '');
-      await signInScreen.clickLoginButton();
-      await signInScreen.verifyErrorMessage('Please enter your password');
+      await signUpScreen.inputPassword('Test1234\$');
+      await signUpScreen.inputConfirmPassword('Test124\$');
+      await signUpScreen.clickAgreeAndContinueBtn();
+      await signUpScreen.verifyErrorMessage(
+          'Passwords do not match. Please re-enter the password.');
     });
   });
 }

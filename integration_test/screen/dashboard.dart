@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:burgundy_budgeting_app/ui/atomic/atom/back_button.dart';
+import 'package:burgundy_budgeting_app/ui/screen/category_management/category_management_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,7 +14,7 @@ class DashboardScreenTest {
 
   Future<void> clickLogoText() async {
     await tester.pumpAndSettle();
-    final iconText = find.byType(IconButton).first;
+    final iconText = find.byType(Image).first;
     await tester.tap(iconText);
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
