@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class SignInScreenTest {
@@ -64,6 +65,34 @@ class SignInScreenTest {
     final password = find.byType(InputItem).last;
     await tester.ensureVisible(email);
     await tester.ensureVisible(password);
+  }
+
+  Future<void> clickEyePassword() async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnNext = find.byType(IconButton).first;
+    await tester.tap(btnNext);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyPasswordShow(String pass) async {
+    final finder = find.byType(TextField).last;
+    final input = tester.firstWidget<TextField>(finder);
+    expect(input.obscureText, false);
+    print('password is visible');
+  }
+
+  Future<void> verifyPasswordHidden(String pass) async {
+    final finder = find.byType(TextField).last;
+    final input = tester.firstWidget<TextField>(finder);
+    expect(input.obscureText, true);
+    print('password is invisible');
+  }
+
+  Future<void> clickForgotPassword() async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnForgotPass = find.text('Forgot Password').first;
+    await tester.tap(btnForgotPass);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
   String generateRandomString(int len) {

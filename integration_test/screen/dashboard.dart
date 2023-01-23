@@ -19,6 +19,12 @@ class DashboardScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
+  Future<void> clickBack() async {
+    final NavigatorState navigator = tester.state(find.byType(Navigator));
+    navigator.pop();
+    await tester.pump();
+  }
+
   Future<void> openUrl(String url) async {
     //html.window.open(url, "_self");
     var urllaunchable =
