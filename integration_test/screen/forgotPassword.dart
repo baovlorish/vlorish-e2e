@@ -31,6 +31,12 @@ class ForgotPasswordScreenTest {
     await tester.ensureVisible(email);
   }
 
+  Future<void> verifyConfirmEmailPage() async {
+    await tester.pumpAndSettle(const Duration(seconds: 6));
+    expect(find.text('Confirm your email'), findsOneWidget);
+    expect(find.text('Create a new password'), findsOneWidget);
+  }
+
   Future<void> verifyErrorMessage(String msg) async {
     expect(find.text(msg), findsOneWidget);
     await tester.pumpAndSettle(const Duration(seconds: 2));

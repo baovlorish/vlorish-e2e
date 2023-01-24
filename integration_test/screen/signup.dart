@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:logger/logger.dart';
 
 class SignUpScreenTest {
   const SignUpScreenTest(this.tester);
@@ -145,10 +144,8 @@ class SignUpScreenTest {
 
   Future<void> verifySignUpPage() async {
     await tester.pumpAndSettle(const Duration(seconds: 6));
+    print('11111111');
     expect(find.text('Please enter your email address to create an account'),
         findsOneWidget);
-    await tester.ensureVisible(find.widgetWithText(ButtonItem, 'Next'));
-    final email = find.text('Email').first;
-    await tester.ensureVisible(email);
   }
 }
