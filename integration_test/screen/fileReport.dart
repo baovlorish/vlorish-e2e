@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Report {
-  const Report();
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
@@ -35,6 +34,18 @@ class Report {
     final file = await _localFile;
     print("write file!");
     // Write the file
-    return file.writeAsString('$log /n');
+    return file.writeAsString('$log');
+  }
+
+  Future<void> restoreFlutterError(Future<void> Function() call) async {
+    final originalOnError = FlutterError.onError!;
+    await call();
+    final overriddenOnError = FlutterError.onError!;
+
+    // restore FlutterError.onError
+    FlutterError.onError = (FlutterErrorDetails details) {
+      if (overriddenOnError != originalOnError) overriddenOnError(details);
+      originalOnError(details);
+    };
   }
 }

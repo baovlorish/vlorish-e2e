@@ -1,5 +1,9 @@
+import 'dart:html';
+
+import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -23,6 +27,22 @@ class ForgotPasswordScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
+  Future<void> inputPasswordinConfirmEmailScreen(String password) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final passwordInput = find.byType(InputItem).at(1);
+    await tester.tap(passwordInput);
+    await tester.enterText(passwordInput, password);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> inputConfirmPasswordinConfirmEmailScreen(String password) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final cfPasswordInput = find.byType(InputItem).last;
+    await tester.tap(cfPasswordInput);
+    await tester.enterText(cfPasswordInput, password);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
   Future<void> verifyForgotPasswordPage() async {
     await tester.pumpAndSettle(const Duration(seconds: 6));
     expect(find.text('Password Recovery'), findsOneWidget);
@@ -39,6 +59,12 @@ class ForgotPasswordScreenTest {
 
   Future<void> verifyErrorMessage(String msg) async {
     expect(find.text(msg), findsOneWidget);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyMessageErrorIsVisible(String msg) async {
+    final text = tester.widget<Text>(find.text(msg));
+    expect(text.style?.color, CustomColorScheme.inputErrorBorder);
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 }

@@ -57,7 +57,7 @@ class SignUpScreenTest {
     print('end verify not current pw');
   }
 
-  Future<void> clickBtnNext() async {
+  Future<void> clickButtonNext() async {
     await tester.pumpAndSettle();
     final btnNext = find.byType(ButtonItem).first;
     await tester.tap(btnNext);
@@ -126,7 +126,7 @@ class SignUpScreenTest {
   }
 
   Future<void> clickAndVerifyTermLink() async {
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
     final termUrl = find.text('Terms').first;
     await tester.tap(termUrl);
     await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -134,7 +134,7 @@ class SignUpScreenTest {
   }
 
   Future<void> clickAndVerifyPrivacyLink() async {
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
     final termUrl = find.text('Privacy Policy').first;
     await tester.tap(termUrl);
     await tester.pumpAndSettle(const Duration(seconds: 2));
