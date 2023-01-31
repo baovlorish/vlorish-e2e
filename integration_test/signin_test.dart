@@ -8,7 +8,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'package:path_provider/path_provider.dart';
 import 'screen/dashboard.dart';
-import 'screen/fileReport.dart';
 import 'screen/forgotPassword.dart';
 import 'screen/signin.dart';
 import 'screen/signup.dart';
@@ -20,8 +19,6 @@ void main() async {
   await htTestInit(description: testDescription);
   group('Authentication Test', () {
     testWidgets('SignIn test', (tester, [String? context]) async {
-      // final originalOnError = FlutterError.onError!;
-      // FlutterError.onError = (FlutterErrorDetails details) async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);

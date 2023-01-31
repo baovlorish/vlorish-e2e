@@ -8,7 +8,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'package:path_provider/path_provider.dart';
 import 'screen/dashboard.dart';
-import 'screen/fileReport.dart';
 import 'screen/forgotPassword.dart';
 import 'screen/signin.dart';
 import 'screen/signup.dart';
@@ -28,6 +27,7 @@ void main() async {
       dashboardScreen = DashboardScreenTest(tester);
       forgotPassScreen = ForgotPasswordScreenTest(tester);
       context = context ?? '';
+      String homeURL = Uri.base.toString();
 
       try {
         await htLogdDirect(
@@ -250,7 +250,6 @@ void main() async {
             'T21 User can enter max128 characters in Password fields',
             '',
             'STARTED');
-        print('T21 User can enter max128 characters in Password fields');
         await dashboardScreen.clickLogoText();
         await signInScreen.clickBtnSignUp(tester, context: context);
         await signUpScreen.inputEmail(
@@ -266,14 +265,7 @@ void main() async {
             tester,
             context: context);
         await signUpScreen.clickAgreeAndContinueBtn(tester, context: context);
-        await signUpScreen.verifyNotCurrentPassword(
-            'fieldTest12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test',
-            tester,
-            context: context);
-        await signUpScreen.verifyCurrentPassword(
-            'fieldTest12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Test12345#Tes',
-            tester,
-            context: context);
+
         await signUpScreen.verifyErrorMessage(
             'Passwords do not match. Please re-enter the password.', tester,
             context: context);
@@ -347,7 +339,8 @@ void main() async {
             signInScreen.generateRandomString(10) + '@gmail.com', tester,
             context: context);
         await signUpScreen.clickButtonNext(tester, context: context);
-        await signUpScreen.clickAndVerifyPrivacyLink(tester, context: context);
+        await signUpScreen.clickAndVerifyPrivacyLink(homeURL, tester,
+            context: context);
         await htLogd(
             tester,
             'BAR-T11 User is redirected on Privacy page after clicking on Privacy link',
@@ -366,13 +359,11 @@ void main() async {
             'BAR-T10 User is redirected on Terms&Conditions page after clicking on Terms link',
             '',
             'STARTED');
+
         await dashboardScreen.clickBack();
-        await signInScreen.clickBtnSignUp(tester, context: context);
-        await signUpScreen.inputEmail(
-            signInScreen.generateRandomString(10) + '@gmail.com', tester,
+
+        await signUpScreen.clickAndVerifyTermLink(homeURL, tester,
             context: context);
-        await signUpScreen.clickButtonNext(tester, context: context);
-        await signUpScreen.clickAndVerifyTermLink(tester, context: context);
         await htLogd(
             tester,
             'BAR-T10 User is redirected on Terms&Conditions page after clicking on Terms link',

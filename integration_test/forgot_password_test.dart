@@ -1,4 +1,4 @@
-import 'package:burgundy_budgeting_app/utils/logger.dart';
+import 'dart:io';
 import 'dart:developer' as developer;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -7,330 +7,552 @@ import './lib/test_lib_const.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:burgundy_budgeting_app/main.dart' as app;
-import 'package:logger/logger.dart';
 import 'screen/dashboard.dart';
 import 'screen/forgotPassword.dart';
 import 'screen/signin.dart';
-import 'screen/signup.dart';
+
+const String testDescription = 'Forgot Password';
 
 void main() async {
   SignInScreenTest signInScreen;
-  SignUpScreenTest signUpScreen;
   DashboardScreenTest dashboardScreen;
   ForgotPasswordScreenTest forgotPassScreen;
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
+  await htTestInit(description: testDescription);
   group('Authentication Test', () {
-    testWidgets('BAR-T1 SignUp Web with empty email', (tester) async {
-      final Logger logger = getLogger('Signin test');
-      //final FlutterExceptionHandler? originalOnError = FlutterError.onError;
-      // final originalOnError = FlutterError.onError!;
-      // FlutterError.onError = (FlutterErrorDetails details) async {
+    testWidgets('Forgot Password test', (tester, [String? context]) async {
       await app.main();
-      developer.log('log me', name: 'my.app.category');
       signInScreen = SignInScreenTest(tester);
-      signUpScreen = SignUpScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
       forgotPassScreen = ForgotPasswordScreenTest(tester);
+      context = context ?? '';
 
       try {
-        print('T66 User is redirected  to the Forgot Password flow pages');
+        await htLogdDirect(
+            'BAR-T66 User is redirected to the Forgot Password flow pages',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
-        await forgotPassScreen.verifyForgotPasswordPage();
-        print('Complete case T66');
-        logger.e('Complete case T66');
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T66 User is redirected to the Forgot Password flow pages',
+            '',
+            'FINISHED');
       } catch (e) {
-        logger.e(e);
-        print('Error case T66');
+        await htLogd(
+            tester,
+            'Error BAR-T66 User is redirected to the Forgot Password flow pages',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T72 User see error message if entered Email that does not exist in the app (BD)');
+        await htLogdDirect(
+            'BAR-T72 User see error message if entered Email that does not exist in the app (BD)',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
-        await forgotPassScreen.verifyForgotPasswordPage();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen
             .inputEmail(signInScreen.generateRandomString(10) + '@gmail.com');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyErrorMessage(
-            'There is no user with such an email. Please check if the email is correct and try again');
-        print('Complete case T72');
+            'There is no user with such an email. Please check if the email is correct and try again',
+            tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T72 User see error message if entered Email that does not exist in the app (BD)',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T72');
+        await htLogd(
+            tester,
+            'Error BAR-T72 User see error message if entered Email that does not exist in the app (BD)',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T74 User see error message and can not send request for password if  enters space into the start of the Email field');
+        await htLogdDirect(
+            'BAR-T74 User see error message and can not send request for password if enters space into the start of the Email field',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
-        await forgotPassScreen.verifyForgotPasswordPage();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail(
             ' ' + signInScreen.generateRandomString(10) + '@gmail.com');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyErrorMessage(
-            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com');
-        print('Complete case T74');
+            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com',
+            tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T74 User see error message and can not send request for password if  enters space into the start of the Email field',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T74');
+        await htLogd(
+            tester,
+            'Error BAR-T74 User see error message and can not send request for password if  enters space into the start of the Email field',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T75 User see error message and can not send request for password if  enters space into the start of the Email field');
+        await htLogdDirect(
+            'BAR-T75 User see error message and can not send request for password if  enters space into the start of the Email field',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
-        await forgotPassScreen.verifyForgotPasswordPage();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail(
             signInScreen.generateRandomString(10) + '@gmail.com' + ' ');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyErrorMessage(
-            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com');
-        print('Complete case T75');
+            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com',
+            tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T75 User see error message and can not send request for password if enters space into the start of the Email field',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T75');
+        await htLogd(
+            tester,
+            'Error BAR-T75 User see error message and can not send request for password if enters space into the start of the Email field',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T76 User see error message and can not send request for password if enters Email without domain part');
+        await htLogdDirect(
+            'BAR-T76 User see error message and can not send request for password if enters Email without domain part',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
-        await forgotPassScreen.verifyForgotPasswordPage();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen
             .inputEmail(signInScreen.generateRandomString(10) + '@gmail');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyErrorMessage(
-            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com');
-        print('Complete case T76');
+            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com',
+            tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T76 User see error message and can not send request for password if enters Email without domain part',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T76');
+        await htLogd(
+            tester,
+            'Error BAR-T76 User see error message and can not send request for password if enters Email without domain part',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T77 User see error message and can not send request for password if enters Email without "@" character');
+        await htLogdDirect(
+            'BAR-T77 User see error message and can not send request for password if enters Email without "@" character',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
-        await forgotPassScreen.verifyForgotPasswordPage();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen
             .inputEmail(signInScreen.generateRandomString(10) + 'gmail.com');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyErrorMessage(
-            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com');
-        print('Complete case T77');
+            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com',
+            tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T77 User see error message and can not send request for password if enters Email without "@" character',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T77');
+        await htLogd(
+            tester,
+            'Error BAR-T77 User see error message and can not send request for password if enters Email without "@" character',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T78 User see error message and cannot send request for password if enters Email without local part');
+        await htLogdDirect(
+            'BAR-T78 User see error message and cannot send request for password if enters Email without local part',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
-        await forgotPassScreen.verifyForgotPasswordPage();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('@gmail.com');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyErrorMessage(
-            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com');
-        print('Complete case T78');
+            'Please enter a valid email address. Valid email address example: nameofthemail@mail.com',
+            tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T78 User see error message and cannot send request for password if enters Email without local part',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T78');
+        await htLogd(
+            tester,
+            'Error BAR-T78 User see error message and cannot send request for password if enters Email without local part',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T80 User can leave Forgot Password window by tapping back button');
+        await htLogdDirect(
+            'BAR-T80 User can leave Forgot Password window by tapping back button',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await dashboardScreen.clickBack();
-        await signInScreen.verifySignInPage();
-        print('Complete case T80');
+        await signInScreen.verifySignInPage(tester, context: context);
+        await htLogd(
+            tester,
+            'BAR-T80 User can leave Forgot Password window by tapping back button',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T80');
+        await htLogd(
+            tester,
+            'Error BAR-T80 User can leave Forgot Password window by tapping back button',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T81 User see error message if click on Next button with empty Email field');
+        await htLogdDirect(
+            'BAR-T81 User see error message if click on Next button with empty Email field',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyErrorMessage('Please, enter your email');
-        print('Complete case T81');
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyErrorMessage(
+            'Please, enter your email', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T81 User see error message if click on Next button with empty Email field',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T81');
+        await htLogd(
+            tester,
+            'Error BAR-T81 User see error message if click on Next button with empty Email field',
+            '',
+            'FINISHED');
       }
 
       try {
-        print('T82 User can see a confirmation about an email');
+        await htLogdDirect('BAR-T82 User can see a confirmation about an email',
+            '', 'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
-        print('Complete case T82');
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
+        await htLogd(
+            tester,
+            'BAR-T82 User can see a confirmation about an email',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T82');
+        await htLogd(
+            tester,
+            'Error BAR-T82 User can see a confirmation about an email',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T84 User sees error message after clicking on "Done" button with empty Password field');
+        await htLogdDirect(
+            'BAR-T84 User sees error message after clicking on "Done" button with empty Password field',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyErrorMessage('Confirm Password');
-        print('Complete case T84');
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyErrorMessage('Confirm Password', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T84 User sees error message after clicking on "Done" button with empty Password field',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T84');
+        await htLogd(
+            tester,
+            'Error BAR-T84 User sees error message after clicking on "Done" button with empty Password field',
+            '',
+            'FINISHED');
       }
 
       try {
-        print('T85 Password fields contain at least 8 characters');
+        await htLogdDirect(
+            'BAR-T85 Password fields contain at least 8 characters',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.inputPasswordinConfirmEmailScreen('test123');
         await forgotPassScreen
             .inputConfirmPasswordinConfirmEmailScreen('test123');
-        await forgotPassScreen.clickBtnNext();
-        //await forgotPassScreen.verifyErrorMessage('The password should include at least 8 numbers. Please re-enter the  password');
-        print('Complete case T85');
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyErrorMessage(
+            'The password should include at least 8 numbers. Please re-enter the  password',
+            tester,
+            context: context);
+
+        await htLogd(
+            tester,
+            'BAR-T85 Password fields contain at least 8 characters',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T85');
+        await htLogd(
+            tester,
+            'Error BAR-T85 Password fields contain at least 8 characters',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T86 User sees error message if Password & Confirm Password fields don’t match');
+        await htLogdDirect(
+            'BAR-T86 User sees error message if Password & Confirm Password fields do not match',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.inputPasswordinConfirmEmailScreen('test123');
         await forgotPassScreen
             .inputConfirmPasswordinConfirmEmailScreen('test1234');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyErrorMessage(
-            'Passwords do not match. Please re-enter the password.');
-        print('Complete case T86');
+            'Passwords do not match. Please re-enter the password.', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T86 User sees error message if Password & Confirm Password fields don’t match',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T86');
+        await htLogd(
+            tester,
+            'Error BAR-T86 User sees error message if Password & Confirm Password fields don’t match',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T91 User sees error message and can not recover password if password does not contain  1 special char');
+        await htLogdDirect(
+            'BAR-T91 User sees error message and can not recover password if password does not contain 1 special char',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.inputPasswordinConfirmEmailScreen('test12345');
         await forgotPassScreen
             .inputConfirmPasswordinConfirmEmailScreen('test12345');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyMessageErrorIsVisible(
-            'contains at least one number (0-9) and a symbol');
-        // await forgotPassScreen.verifyMessageErrorIsVisible('Password should contain at least 8 characters and should contain at least:  1 special char, 1 number, 1 uppercase, 1 lowercase. Please re-enter the  password');
-        print('Complete case T91');
+            'contains at least one number (0-9) and a symbol', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T91 User sees error message and can not recover password if password does not contain 1 special char',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T91');
+        await htLogd(
+            tester,
+            'Error BAR-T91 User sees error message and can not recover password if password does not contain 1 special char',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T92 User sees error message and can not recover password if password does not contain  1 special char');
+        await htLogdDirect(
+            'BAR-T92 User sees error message and can not recover password if password does not contain 1 number',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen
             .inputPasswordinConfirmEmailScreen('testPassword');
         await forgotPassScreen
             .inputConfirmPasswordinConfirmEmailScreen('testPassword');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyMessageErrorIsVisible(
-            'contains at least one number (0-9) and a symbol');
-        // await forgotPassScreen.verifyErrorMessage('Password should contain at least 8 characters and should contain at least:  1 special char, 1 number, 1 uppercase, 1 lowercase. Please re-enter the  password');
-        print('Complete case T92');
+            'contains at least one number (0-9) and a symbol', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T92 User sees error message and can not recover password if password does not contain 1 number',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T92');
+        await htLogd(
+            tester,
+            'Error BAR-T92 User sees error message and can not recover password if password does not contain 1 number',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T93 User sees error message and can not recover password if password does not contain 1 uppercase');
+        await htLogdDirect(
+            'BAR-T93 User sees error message and can not recover password if password does not contain 1 uppercase',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen
             .inputPasswordinConfirmEmailScreen('testpassword');
         await forgotPassScreen
             .inputConfirmPasswordinConfirmEmailScreen('testpassword');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyMessageErrorIsVisible(
-            'contains both lower (a-z) and upper case letters (A-Z)');
-        // await forgotPassScreen.verifyErrorMessage('Password should contain at least 8 characters and should contain at least:  1 special char, 1 number, 1 uppercase, 1 lowercase. Please re-enter the  password');
-        print('Complete case T93');
+            'contains both lower (a-z) and upper case letters (A-Z)', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T93 User sees error message and can not recover password if password does not contain 1 uppercase',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T93');
+        await htLogd(
+            tester,
+            'Error BAR-T93 User sees error message and can not recover password if password does not contain 1 uppercase',
+            '',
+            'FINISHED');
       }
 
       try {
-        print(
-            'T94 User sees error message and can not recover password if password does not contain 1 lowercase');
+        await htLogdDirect(
+            'BAR-T94 User sees error message and can not recover password if password does not contain 1 lowercase',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen
             .inputPasswordinConfirmEmailScreen('TESTPASSWORD');
         await forgotPassScreen
             .inputConfirmPasswordinConfirmEmailScreen('TESTPASSWORD');
-        await forgotPassScreen.clickBtnNext();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyMessageErrorIsVisible(
-            'contains both lower (a-z) and upper case letters (A-Z)');
-        // await forgotPassScreen.verifyErrorMessage('Password should contain at least 8 characters and should contain at least:  1 special char, 1 number, 1 uppercase, 1 lowercase. Please re-enter the  password');
-        print('Complete case T94');
+            'contains both lower (a-z) and upper case letters (A-Z)', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T94 User sees error message and can not recover password if password does not contain 1 lowercase',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T94');
+        await htLogd(
+            tester,
+            'Error BAR-T94 User sees error message and can not recover password if password does not contain 1 lowercase',
+            '',
+            'FINISHED');
       }
 
       try {
-        print('T95 Password fields can contain min 8 characters');
+        await htLogdDirect(
+            'BAR-T95 Password fields can contain min 8 characters',
+            '',
+            'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.clickForgotPassword();
+        await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
-        await forgotPassScreen.clickBtnNext();
-        await forgotPassScreen.verifyConfirmEmailPage();
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.inputPasswordinConfirmEmailScreen('test123');
         await forgotPassScreen
             .inputConfirmPasswordinConfirmEmailScreen('test123');
-        await forgotPassScreen.clickBtnNext();
-        //await forgotPassScreen.verifyErrorMessage('The password should include at least 8 numbers. Please re-enter the  password');
-        print('Complete case T95');
+        await forgotPassScreen.clickBtnNext(tester, context: context);
+        await forgotPassScreen.verifyErrorMessage(
+            'The password should include at least 8 numbers. Please re-enter the password',
+            tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR-T95 Password fields can contain min 8 characters',
+            '',
+            'FINISHED');
       } catch (e) {
-        print('Error case T95');
+        await htLogd(
+            tester,
+            'Error BAR-T95 Password fields can contain min 8 characters',
+            '',
+            'FINISHED');
       }
-
-      // originalOnError!(details); // call test framework's error handler
-      //};
-      //FlutterError.onError = originalOnError;
     });
   });
 }

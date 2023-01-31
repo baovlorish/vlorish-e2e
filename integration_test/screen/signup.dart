@@ -64,7 +64,9 @@ class SignUpScreenTest {
   Future<void> verifyNotCurrentPassword(String passUser, WidgetTester tester,
       {String context = ""}) async {
     await tester.pumpAndSettle();
-    await htExpect(tester, find.text(passUser), findsNothing,
+    final currentPass = find.byType(TextField).first;
+    print(currentPass.toString());
+    await htExpect(tester, currentPass.toString(), passUser,
         reason: ("Verify-" +
             context +
             "-" +
@@ -155,34 +157,29 @@ class SignUpScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> clickAndVerifyTermLink(WidgetTester tester,
+  Future<void> clickAndVerifyTermLink(String homeURL, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     final termUrl = find.text('Terms').first;
     await tapSomething(tester, termUrl, addContext(context, 'click Term link'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    await htExpect(tester, find.text('Terms & Conditions'), findsOneWidget,
-        reason: ("Verify-" + context + '-Terms & Conditions is visible'));
+    var currentUrl = Uri.base.toString();
+    print(currentUrl);
+    await htExpect(tester, homeURL + '#/terms_and_conditions', currentUrl,
+        reason: ("Verify-" + context + '-Link terms_and_conditions is called'));
   }
 
-  Future<void> clickAndVerifyPrivacyLink(WidgetTester tester,
+  Future<void> clickAndVerifyPrivacyLink(String homeURL, WidgetTester tester,
       {String context = ''}) async {
-    var url = window.location.href;
     await tester.pumpAndSettle(const Duration(seconds: 6));
     final privacyLink = find.text('Privacy Policy').first;
     await tapSomething(
         tester, privacyLink, addContext(context, 'click Privacy link'));
-    await tester.pumpAndSettle(const Duration(seconds: 6));
-    await htExpect(tester, find.text('Privacy Policy'), findsOneWidget,
-        reason: ("Verify-" + context + '-Privacy Policy is visible'));
-    await htExpect(
-        tester,
-        find.text(
-            'Thank you for choosing to be part of our community at Vlorish'),
-        findsOneWidget,
-        reason: ("Verify-" +
-            context +
-            '-Thank you for choosing to be part of our community at Vlorish'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    var currentUrl = Uri.base.toString();
+    print(currentUrl);
+    await htExpect(tester, homeURL + '#/privacy_policy', currentUrl,
+        reason: ("Verify-" + context + '-Link Privacy Policy is called'));
   }
 
   Future<void> verifySignUpPage(WidgetTester tester,

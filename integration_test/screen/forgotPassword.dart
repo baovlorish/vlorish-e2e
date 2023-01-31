@@ -75,9 +75,13 @@ class ForgotPasswordScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> verifyMessageErrorIsVisible(String msg) async {
+  Future<void> verifyMessageErrorIsVisible(String msg, WidgetTester tester,
+      {String context = ''}) async {
     final text = tester.widget<Text>(find.text(msg));
     expect(text.style?.color, CustomColorScheme.inputErrorBorder);
+    await htExpect(
+        tester, text.style?.color, CustomColorScheme.inputErrorBorder,
+        reason: ("Verify-" + context + "-" + msg + ' error is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 }
