@@ -16,10 +16,10 @@ class MonthlyBudgetModel extends BaseBudgetModel {
     required this.netIncome,
     required this.totalFreeCash,
     required this.totalUnplannedAmount,
-    required this.totalCashReservesOnStartOfPeriod,
+    required MonthlyBudgetCalculatedRow totalCashReservesOnStartOfPeriod,
     required this.isPersonal,
     required this.businessId,
-  });
+  }) : _totalCashReservesOnStartOfPeriod = totalCashReservesOnStartOfPeriod;
 
   final DateTime monthYear;
   final MonthlyBudgetCategory income;
@@ -29,7 +29,7 @@ class MonthlyBudgetModel extends BaseBudgetModel {
   final MonthlyBudgetCalculatedRow totalExpenses;
   final MonthlyBudgetCalculatedRow netIncome;
   final MonthlyBudgetCalculatedRow totalFreeCash;
-  final MonthlyBudgetCalculatedRow totalCashReservesOnStartOfPeriod;
+  final MonthlyBudgetCalculatedRow _totalCashReservesOnStartOfPeriod;
   final int totalUnplannedAmount;
   final bool isPersonal;
   @override
@@ -121,9 +121,9 @@ class MonthlyBudgetModel extends BaseBudgetModel {
     var netIncome =
         MonthlyBudgetCalculatedRow.calculatedNetIncome(income, totalExpenses);
 
-    var totalFreeCash = isPersonal
+    var newTotalFreeCash = isPersonal
         ? MonthlyBudgetCalculatedRow.calculatedPersonalFreeCash(
-            totalCashReservesOnStartOfPeriod,
+            totalFreeCash,
             netIncome,
             expensesSeparated,
             investments)
@@ -140,9 +140,9 @@ class MonthlyBudgetModel extends BaseBudgetModel {
         investments: investments,
         totalExpenses: totalExpenses,
         netIncome: netIncome,
-        totalFreeCash: totalFreeCash,
+        totalFreeCash: newTotalFreeCash,
         totalUnplannedAmount: totalUnplannedAmount,
-        totalCashReservesOnStartOfPeriod: totalCashReservesOnStartOfPeriod);
+        totalCashReservesOnStartOfPeriod: _totalCashReservesOnStartOfPeriod);
   }
 
   void changeAndUpdateMonthlyBudgetCategory(
@@ -254,9 +254,9 @@ class MonthlyBudgetModel extends BaseBudgetModel {
     }
     var netIncome =
         MonthlyBudgetCalculatedRow.calculatedNetIncome(income, totalExpenses);
-    var totalFreeCash = isPersonal
+    var newTotalFreeCash = isPersonal
         ? MonthlyBudgetCalculatedRow.calculatedPersonalFreeCash(
-            totalCashReservesOnStartOfPeriod,
+            totalFreeCash,
             netIncome,
             expensesSeparated,
             investments)
@@ -273,9 +273,9 @@ class MonthlyBudgetModel extends BaseBudgetModel {
         investments: investments,
         totalExpenses: totalExpenses,
         netIncome: netIncome,
-        totalFreeCash: totalFreeCash,
+        totalFreeCash: newTotalFreeCash,
         totalUnplannedAmount: totalUnplannedAmount,
-        totalCashReservesOnStartOfPeriod: totalCashReservesOnStartOfPeriod);
+        totalCashReservesOnStartOfPeriod: _totalCashReservesOnStartOfPeriod);
   }
 }
 

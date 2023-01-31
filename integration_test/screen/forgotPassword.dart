@@ -1,5 +1,5 @@
 import 'dart:html';
-
+import '../lib/test_lib_common.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
@@ -12,15 +12,15 @@ class ForgotPasswordScreenTest {
 
   final WidgetTester tester;
 
-  Future<void> clickBtnNext() async {
+  Future<void> clickBtnNext(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
     final btnNext = find.byType(ButtonItem).first;
-    await tester.tap(btnNext);
+    await tapSomething(tester, btnNext, addContext(context, 'click Next Btn'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
   Future<void> inputEmail(String emailValue) async {
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
     final emailInput = find.byType(InputItem).first;
     await tester.tap(emailInput);
     await tester.enterText(emailInput, emailValue);
@@ -43,23 +43,36 @@ class ForgotPasswordScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> verifyForgotPasswordPage() async {
-    await tester.pumpAndSettle(const Duration(seconds: 6));
-    expect(find.text('Password Recovery'), findsOneWidget);
+  Future<void> verifyForgotPasswordPage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    await htExpect(tester, find.text('Password Recovery'), findsOneWidget,
+        reason: ("Verify-" + context + '- Password Recovery is visible'));
     await tester.ensureVisible(find.widgetWithText(ButtonItem, 'Next'));
+    await htExpect(
+        tester, find.widgetWithText(ButtonItem, 'Next'), findsOneWidget,
+        reason: ("Verify-" + context + '- Next Button is visible'));
     final email = find.text('Email').first;
     await tester.ensureVisible(email);
+    await htExpect(tester, email, findsOneWidget,
+        reason: ("Verify-" + context + '- Text Email is visible'));
   }
 
-  Future<void> verifyConfirmEmailPage() async {
-    await tester.pumpAndSettle(const Duration(seconds: 6));
-    expect(find.text('Confirm your email'), findsOneWidget);
-    expect(find.text('Create a new password'), findsOneWidget);
+  Future<void> verifyConfirmEmailPage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    await htExpect(tester, find.text('Confirm your email'), findsOneWidget,
+        reason: ('Verify-' + context + '- Password Recovery is visible'));
+    await htExpect(tester, find.text('Create a new password'), findsOneWidget,
+        reason: ('Verify-' + context + '- Password Recovery is visible'));
   }
 
-  Future<void> verifyErrorMessage(String msg) async {
-    expect(find.text(msg), findsOneWidget);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+  Future<void> verifyErrorMessage(String msg, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    await htExpect(tester, find.text(msg), findsOneWidget,
+        reason: ("Verify-" + context + "-" + msg + ' is visible'));
+    await tester.pumpAndSettle();
   }
 
   Future<void> verifyMessageErrorIsVisible(String msg) async {

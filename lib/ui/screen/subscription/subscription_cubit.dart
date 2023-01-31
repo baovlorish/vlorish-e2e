@@ -42,9 +42,7 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     try {
       var plans = await repository.getPlans();
       emit(
-        SubscriptionLoaded(plans,
-          isCoach: role?.isCoach == true,
-        ),
+        SubscriptionLoaded(plans),
       );
     } on DioError catch (e) {
       logger.e('Subscription Page Dio Error $e');

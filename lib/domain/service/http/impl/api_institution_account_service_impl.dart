@@ -11,6 +11,7 @@ class ApiInstitutionAccountServiceImpl extends ApiInstitutionAccountService {
   final exchangePublicTokenEndpoint =
       '/institution-account/exchange-public-token';
   final institutionAccountEndpoint = '/institution-account';
+  final institutionAccountByTypeEndpoint = '/institution-account/by-type';
   final HttpManager httpManager;
 
   final accountsUpdateModeEndpoint =
@@ -40,6 +41,14 @@ class ApiInstitutionAccountServiceImpl extends ApiInstitutionAccountService {
   @override
   Future<Response> getInstitutionAccount() async {
     return await httpManager.dio.get(institutionAccountEndpoint);
+  }
+
+  /// 0 - None,
+  /// 1 - Transactions,
+  /// 2 - Investments
+  @override
+  Future<Response> getInstitutionAccountByType(int type) async {
+    return await httpManager.dio.get(institutionAccountByTypeEndpoint+'?type=$type');
   }
 
   @override

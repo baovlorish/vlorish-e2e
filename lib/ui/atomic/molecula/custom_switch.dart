@@ -92,14 +92,16 @@ class CustomTextSwitch extends StatefulWidget {
   final String secondOptionName;
   final Function(bool) onSelected;
   final bool initialSelection;
+  final bool enabled;
 
-  const CustomTextSwitch(
-      {Key? key,
-      required this.firstOptionName,
-      required this.secondOptionName,
-      required this.onSelected,
-      this.initialSelection = false})
-      : super(key: key);
+  const CustomTextSwitch({
+    Key? key,
+    required this.firstOptionName,
+    required this.secondOptionName,
+    required this.onSelected,
+    this.initialSelection = false,
+    this.enabled = true,
+  }) : super(key: key);
 
   @override
   _CustomTextSwitchState createState() => _CustomTextSwitchState();
@@ -139,10 +141,14 @@ class _CustomTextSwitchState extends State<CustomTextSwitch> {
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
                             color: !selection
-                                ? CustomColorScheme.mainDarkBackground
+                                ? !widget.enabled
+                                    ? CustomColorScheme.tableHeaderText
+                                    : CustomColorScheme.mainDarkBackground
                                 : Colors.transparent),
                         color: !selection
-                            ? CustomColorScheme.mainDarkBackground
+                            ? !widget.enabled
+                                ? CustomColorScheme.tableHeaderText
+                                : CustomColorScheme.mainDarkBackground
                             : Colors.transparent),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
@@ -150,9 +156,8 @@ class _CustomTextSwitchState extends State<CustomTextSwitch> {
                           child: Label(
                         type: LabelType.General,
                         text: widget.firstOptionName,
-                            color: !selection
-                                ? Colors.white
-                                : CustomColorScheme.text,
+                        color:
+                            !selection ? Colors.white : CustomColorScheme.text,
                       )),
                     ),
                   ),
@@ -163,7 +168,7 @@ class _CustomTextSwitchState extends State<CustomTextSwitch> {
                   key: UniqueKey(),
                   borderRadius: BorderRadius.circular(30),
                   type: InkWellType.Purple,
-                  onTap: !selection
+                  onTap: !selection && widget.enabled
                       ? () {
                           widget.onSelected(true);
                           selection = !selection;
@@ -175,10 +180,12 @@ class _CustomTextSwitchState extends State<CustomTextSwitch> {
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
                             color: selection
-                                ? CustomColorScheme.mainDarkBackground
+                                ? !widget.enabled
+                                ? CustomColorScheme.tableHeaderText:CustomColorScheme.mainDarkBackground
                                 : Colors.transparent),
                         color: selection
-                            ? CustomColorScheme.mainDarkBackground
+                            ? !widget.enabled
+                            ? CustomColorScheme.tableHeaderText:CustomColorScheme.mainDarkBackground
                             : Colors.transparent),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
@@ -186,9 +193,8 @@ class _CustomTextSwitchState extends State<CustomTextSwitch> {
                         child: Label(
                           type: LabelType.General,
                           text: widget.secondOptionName,
-                          color: selection
-                              ? Colors.white
-                              : CustomColorScheme.text,
+                          color:
+                              selection ? Colors.white : CustomColorScheme.text,
                         ),
                       ),
                     ),

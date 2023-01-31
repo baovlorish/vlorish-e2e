@@ -158,8 +158,8 @@ class _BudgetLayoutState extends State<BudgetLayout> {
               openAndFocusCalculationField(model);
             },
             isCoach: homeScreenCubit.currentForeignSession != null,
-            isLimitedCoach:
-                homeScreenCubit.currentForeignSession?.access.isLimited ??
+            isReadOnlyAdvisor:
+                homeScreenCubit.currentForeignSession?.access.isReadOnly ??
                     false,
           );
         } else if (state is BudgetMonthlyLoadedState) {
@@ -175,8 +175,8 @@ class _BudgetLayoutState extends State<BudgetLayout> {
               openAndFocusCalculationField(model);
             },
             isCoach: homeScreenCubit.currentForeignSession != null,
-            isLimitedCoach:
-                homeScreenCubit.currentForeignSession?.access.isLimited ??
+            isReadOnlyAdvisor:
+                homeScreenCubit.currentForeignSession?.access.isReadOnly ??
                     false,
           );
         } else if (state is BudgetLoadingState) {

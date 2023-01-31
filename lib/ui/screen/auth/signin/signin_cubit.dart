@@ -13,15 +13,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 
+import '../../../../domain/repository/user_repository.dart';
+
 class SigninCubit extends Cubit<SigninState> {
   final Logger logger = getLogger('SigninCubit');
 
   AuthRepository authRepository;
+  final UserRepository userRepository;
 
-  SigninCubit(this.authRepository) : super(SigninInitial());
+  SigninCubit(this.authRepository, this.userRepository) : super(SigninInitial());
 
   void login(String login, String password, BuildContext context) async {
     emit(LoadingState());
+    userRepository.clearUserData();
     var role = 1;
     try {
       final checkEmail = await authRepository.isRegistered(login);

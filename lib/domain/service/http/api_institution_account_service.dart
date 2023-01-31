@@ -8,6 +8,8 @@ abstract class ApiInstitutionAccountService {
 
   Future<Response<dynamic>> getInstitutionAccount();
 
+  Future<Response> getInstitutionAccountByType(int type);
+
   Future<Response<dynamic>> exchangePublicToken(String publicToken);
 
   Future<Response<dynamic>> deleteInstitutionAccount(

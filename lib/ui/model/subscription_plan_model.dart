@@ -18,7 +18,7 @@ class SubscriptionPlanModel {
   factory SubscriptionPlanModel.fromResponse(PlanResponse response) => SubscriptionPlanModel(
     name: response.name,
     type: response.type,
-    monthly: response.prices.firstWhere((element) => element.recurringType==1),
-    yearly: response.prices.firstWhere((element) => element.recurringType==2),
+    monthly: response.prices.firstWhere((element) => element.recurringType==1 && !element.archived),
+    yearly: response.prices.firstWhere((element) => element.recurringType==2 && !element.archived),
   );
 }

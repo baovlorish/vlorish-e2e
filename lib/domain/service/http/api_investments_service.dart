@@ -19,18 +19,9 @@ abstract class ApiInvestmentsService {
 
   Future<Response> addTransactionsToInvestmentById(InvestmentModel model);
 
-  Future<Response> getAvailableInvestment(InvestmentGroup investmentGroup);
-
-  Future<Response> availableInvestmentAttach(
-      InvestmentGroup investmentGroup, List<AttachInvestmentRetirementModel> attachModel);
-
   Future<Response> getRetirements();
 
-  Future<Response> getAvailableRetirements(int type);
-
   Future<Response> addRetirement(RetirementModel model);
-
-  Future<Response> availableRetirementAttach(List<Map<String, dynamic>> items);
 
   Future<Response> deleteRetirementById(
       RetirementModel model, DateTime? sellDate, bool removeHistory);

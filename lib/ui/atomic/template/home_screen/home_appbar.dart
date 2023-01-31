@@ -76,17 +76,14 @@ class HomeAppBar extends AppBar {
               CustomVerticalDivider(
                 color: CustomColorScheme.menuBackgroundActive,
               ),
-            if (homeScreenCubit.user.hasClients)
+            if (homeScreenCubit.user.subscription != null && homeScreenCubit.user.subscription!.isAdvisor)
               AppBarItem(
                 hoverMenuWidget: ClientsDashboardMenu(
                     clientsList: homeScreenCubit.fetchClientsList,
                     onTapItem: homeScreenCubit.startForeignSession,
                     onTapButton: () {
-                      if (homeScreenCubit.currentForeignSession != null) {
-                        homeScreenCubit.stopForeignSession();
-                      }
-                      homeScreenCubit.navigateTo(
-                          ManageUsersPage.routeName, context);
+                      if (homeScreenCubit.currentForeignSession != null) homeScreenCubit.stopForeignSession();
+                      homeScreenCubit.navigateTo(ManageUsersPage.routeName, context);
                     }),
                 iconUrl: 'assets/images/icons/group.png',
                 isSmall: isSmall,
@@ -183,7 +180,11 @@ class HomeAppBar extends AppBar {
               notificationCount: unreadNotificationCount,
               hoverMenuWidget: NotificationMenu(
                 maxHeight: MediaQuery.of(context).size.height - 100,
-                width: homeScreenCubit.user.hasClients ? 469 : 409,
+                width: homeScreenCubit.user.subscription != null &&
+                        homeScreenCubit.user.subscription!.isAdvisor &&
+                        homeScreenCubit.user.hasClients
+                    ? 469
+                    : 409,
                 fetchNotificationPage: homeScreenCubit.fetchNotificationPage,
                 deleteNotification: (String id) async {
                   await homeScreenCubit.deleteNotification(id);

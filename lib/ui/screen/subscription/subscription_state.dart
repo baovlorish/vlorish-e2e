@@ -15,9 +15,8 @@ class SubscriptionInitial extends SubscriptionState {
 
 class SubscriptionLoaded extends SubscriptionState {
   List<SubscriptionPlanModel> plans;
-  final bool isCoach;
 
-  SubscriptionPlanModel get standardPlan =>
+  SubscriptionPlanModel get personalPlan =>
       plans.firstWhere((element) => element.type == 0);
 
   SubscriptionPlanModel get premiumPlan =>
@@ -27,10 +26,10 @@ class SubscriptionLoaded extends SubscriptionState {
       plans.firstWhere((element) => element.type == 2);
 
   @override
-  SubscriptionLoaded(this.plans, {required this.isCoach});
+  SubscriptionLoaded(this.plans);
 
   @override
-  List<Object?> get props => [plans, isCoach];
+  List<Object?> get props => [plans];
 }
 
 class SubscriptionError extends SubscriptionState {

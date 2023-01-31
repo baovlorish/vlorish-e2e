@@ -150,9 +150,7 @@ class _SignupLandingLayoutState extends State<SignupLandingLayout> {
                         ButtonItem(
                           context,
                           buttonType: ButtonType.LargeText,
-                          text: byInvitation
-                              ? AppLocalizations.of(context)!.next
-                              : AppLocalizations.of(context)!.registerAsAUser,
+                          text: AppLocalizations.of(context)!.next,
                           focusNode: nextButtonNode,
                           onPressed: () {
                             if (byInvitation) {
@@ -180,37 +178,6 @@ class _SignupLandingLayoutState extends State<SignupLandingLayout> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 15.0,
-                  ),
-                  if (!byInvitation)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Label(
-                            text: AppLocalizations.of(context)!
-                                .workWithTheClientFinances,
-                            type: LabelType.General,
-                          ),
-                        ),
-                        Expanded(
-                          child: ButtonItem(
-                            context,
-                            buttonType: ButtonType.White,
-                            text:
-                                AppLocalizations.of(context)!.registerAsACoach,
-                            onPressed: () {
-                              if (_emailFormKey.currentState!.validate()) {
-                                signupLandingCubit.checkIfNotExistingUser(
-                                    context, email,
-                                    userRole: UserRole.coach());
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    )
                   // Center(
                   //   child: Label(
                   //     text: AppLocalizations.of(context)!.or,

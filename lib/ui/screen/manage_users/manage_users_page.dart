@@ -22,18 +22,26 @@ class ManageUsersPage {
                   diContractor.userRepository,
                   diContractor.subscriptionRepository,
                 ),
-                child: HomePage(
-                  isPremium: true,
-                  innerBlocProvider: BlocProvider<ManageUsersBloc>(
-                    lazy: false,
-                    create: (_) => ManageUsersBloc(
+                child: Builder(builder: (context) {
+                  return HomePage(
+                    isPremium: false,
+                    innerBlocProvider: BlocProvider<ManageUsersBloc>(
+                      lazy: false,
+                      create: (_) => ManageUsersBloc(
                         diContractor.authRepository,
                         diContractor.userRepository,
-                        diContractor.manageUsersRepository),
-                    child: ManageUsersLayout(),
-                  ),
-                  title: AppLocalizations.of(context!)!.manageUsers,
-                ),
+                        diContractor.manageUsersRepository,
+                        isAdvisorSubscription:
+                            BlocProvider.of<HomeScreenCubit>(context)
+                                .user
+                                .subscription!
+                                .isAdvisor,
+                      ),
+                      child: ManageUsersLayout(),
+                    ),
+                    title: AppLocalizations.of(context)!.manageUsers,
+                  );
+                }),
               )
             : defaultRoute;
       },

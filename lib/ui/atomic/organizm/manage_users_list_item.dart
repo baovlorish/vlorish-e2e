@@ -82,7 +82,7 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
   late final hasRequestSlots = widget.hasRequestSlots;
   late final canRequestToday = widget.canRequestToday;
 
-  late ManageUsersItemModel? model = widget.model;
+  late ManageUsersItemModel model = widget.model;
   var manageUsersBloc;
 
   @override
@@ -94,10 +94,10 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
       fillColor = focusNode.hasFocus
           ? CustomColorScheme.tableBorder
           : Colors.transparent;
-      if (!focusNode.hasFocus && _controller.text != model!.note) {
-        model = model!.copyWith(note: _controller.text);
-        widget.onItemChanged(model!);
-        manageUsersBloc.add(NoteEvent(model: model!));
+      if (!focusNode.hasFocus && _controller.text != model.note) {
+        model = model.copyWith(note: _controller.text);
+        widget.onItemChanged(model);
+        manageUsersBloc.add(NoteEvent(model: model));
       }
       setState(() {});
     });
@@ -105,17 +105,17 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
 
   @override
   Widget build(BuildContext context) {
-    if (model!.targetUserFirstName != null &&
-        model!.targetUserFirstName?.isNotEmpty == true) {
-      initials = model!.targetUserFirstName![0];
-      if ((model!.targetUserLastName != null &&
-          model!.targetUserLastName?.isNotEmpty == true)) {
-        initials += '${model!.targetUserLastName![0]}';
+    if (model.targetUserFirstName != null &&
+        model.targetUserFirstName?.isNotEmpty == true) {
+      initials = model.targetUserFirstName![0];
+      if ((model.targetUserLastName != null &&
+          model.targetUserLastName?.isNotEmpty == true)) {
+        initials += '${model.targetUserLastName![0]}';
       }
     } else {
-      if ((model!.targetUserLastName != null &&
-          model!.targetUserLastName?.isNotEmpty == true)) {
-        initials = model!.targetUserLastName![0];
+      if ((model.targetUserLastName != null &&
+          model.targetUserLastName?.isNotEmpty == true)) {
+        initials = model.targetUserLastName![0];
       }
     }
     return Column(
@@ -145,9 +145,9 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: AvatarWidget(
-                              imageUrl: model!.targetUserIconUrl,
+                              imageUrl: model.targetUserIconUrl,
                               initials: initials.toUpperCase(),
-                              colorGeneratorKey: model!.email,
+                              colorGeneratorKey: model.email,
                             ),
                           ),
                           Expanded(
@@ -155,8 +155,8 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                               alignment: Alignment.centerLeft,
                               fit: BoxFit.scaleDown,
                               child: Label(
-                                text: '${model!.targetUserFirstName ?? ''} '
-                                    '${model!.targetUserLastName ?? ''}',
+                                text: '${model.targetUserFirstName ?? ''} '
+                                    '${model.targetUserLastName ?? ''}',
                                 type: LabelType.General,
                               ),
                             ),
@@ -175,7 +175,7 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                     alignment: Alignment.centerLeft,
                     fit: BoxFit.scaleDown,
                     child: Label(
-                      text: model!.email,
+                      text: model.email,
                       type: LabelType.General,
                     ),
                   ),
@@ -192,9 +192,9 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                     alignment: Alignment.centerLeft,
                     fit: BoxFit.scaleDown,
                     child: Label(
-                      text: model!.role == 2
+                      text: widget.model.role == 2
                           ? AppLocalizations.of(context)!.partner
-                          : model!.role == 3
+                          : widget.model.role == 3
                               ? AppLocalizations.of(context)!.coach
                               : '',
                       type: LabelType.General,
@@ -213,8 +213,8 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                     alignment: Alignment.centerLeft,
                     fit: BoxFit.scaleDown,
                     child: Row(children: [
-                      if (model!.isAccessTypeChangingRequested &&
-                          !model!.isInvitation)
+                      if (model.isAccessTypeChangingRequested &&
+                          !model.isInvitation)
                         Padding(
                           padding: const EdgeInsets.only(right: 4.0),
                           child: CustomTooltip(
@@ -225,10 +225,10 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                           ),
                         ),
                       Label(
-                        text: model!.accessType == 2
-                            ? AppLocalizations.of(context)!.secondary
-                            : model!.accessType == 1
-                                ? AppLocalizations.of(context)!.limited
+                        text: model.accessType == 2
+                            ? AppLocalizations.of(context)!.editor
+                            : model.accessType == 1
+                                ? AppLocalizations.of(context)!.readOnly
                                 : '-',
                         type: LabelType.General,
                       ),
@@ -278,10 +278,10 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                       color: CustomColorScheme.tableBorder,
                     ),
                     SizedBox(
-                      width: model!.isInvitation ? 100 : 150,
+                      width: model.isInvitation ? 100 : 150,
                       child: isInvitation()
                           ? Row(
-                              key: Key(model!.status.toString() + model!.id),
+                              key: Key(model.status.toString() + model.id),
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 CustomTooltip(
@@ -374,26 +374,25 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                               ],
                             )
                           : Row(
-                              key: Key(model!.status.toString() + model!.id),
+                              key: Key(model.status.toString() + model.id),
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                if (!model!.isInvitation)
+                                if (!model.isInvitation)
                                   CustomTooltip(
-                                    message: model!.status == 1
+                                    message: model.status == 1
                                         ? AppLocalizations.of(context)!
                                             .theUserHasNotApproveTheRequest
                                         : null,
                                     child: CustomMaterialInkWell(
                                       borderRadius: BorderRadius.circular(22),
-                                      onTap: model!.status == 2
+                                      onTap: model.status == 2
                                           ? () {
                                               manageUsersBloc
                                                   .startForeignSession(
-                                                      model!.userId,
-                                                      model!.accessType!,
-                                                      model!
-                                                          .targetUserFirstName,
-                                                      model!.targetUserLastName,
+                                                      model.userId,
+                                                      model.accessType!,
+                                                      model.targetUserFirstName,
+                                                      model.targetUserLastName,
                                                       context);
                                             }
                                           : null,
@@ -404,7 +403,7 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                                           AssetImage(
                                             'assets/images/icons/trailing.png',
                                           ),
-                                          color: model!.status == 1
+                                          color: model.status == 1
                                               ? CustomColorScheme.textHint
                                               : CustomColorScheme
                                                   .mainDarkBackground,
@@ -415,13 +414,13 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                                   ),
                                 CustomTooltip(
                                   message:
-                                      model!.isInvitation || model!.status == 2
+                                      model.isInvitation || model.status == 2
                                           ? AppLocalizations.of(context)!.edit
                                           : null,
                                   child: CustomMaterialInkWell(
                                     borderRadius: BorderRadius.circular(22),
-                                    onTap: model!.isInvitation ||
-                                            model!.status == 2
+                                    onTap: model.isInvitation ||
+                                            model.status == 2
                                         ? () {
                                             showDialog(
                                                 context: context,
@@ -429,7 +428,7 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                                                   return InvitationRequestFormAlertDialog
                                                       .edit(
                                                     context,
-                                                    itemModel: model!,
+                                                    itemModel: model,
                                                     isInvitation: widget
                                                         .model.isInvitation,
                                                     canInviteCoach:
@@ -448,36 +447,27 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                                                               .mentionedUserIsAlreadyRegistered
                                                           : null;
                                                     },
-                                                    onButtonPress: (accessType,
-                                                        email, role, note) {
+                                                    onButtonPress: (accessType, email, role, note) {
+
                                                       manageUsersBloc.add(
                                                         EditItemEvent(
                                                             model: widget.model,
                                                             note: note,
-                                                            accessType:
-                                                                accessType,
+                                                            accessType: accessType,
                                                             role: role),
                                                       );
                                                       setState(() {
-                                                        model = model!.copyWith(
+
+                                                        model = model.copyWith(
                                                             role: role,
                                                             note: note,
-                                                            accessType: model!
-                                                                    .isInvitation
-                                                                ? accessType
-                                                                : model!
-                                                                    .accessType,
+                                                            accessType:
+                                                                model.isInvitation ? accessType : model.accessType,
                                                             isAccessTypeChangingRequested:
-                                                                model!.accessType !=
-                                                                        accessType &&
-                                                                    !model!
-                                                                        .isInvitation);
-                                                        _controller.text =
-                                                            note ??
-                                                                model!.note ??
-                                                                '';
-                                                        widget.onItemChanged(
-                                                            model!); //updating note in item
+                                                                model.accessType != accessType &&
+                                                                    !model.isInvitation);
+                                                        _controller.text = note ?? model.note ?? '';
+                                                        widget.onItemChanged(model); //updating note in item
                                                       });
                                                     },
                                                   );
@@ -570,9 +560,9 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                     child: Label(
                         text: widget.model.accessType == 1
                             ? AppLocalizations.of(context)!
-                                .theUserAskedToChangeTheAccessTypeLimitedToSecondary
+                                .theUserAskedToChangeTheAccessTypeReadOnlyToEditor
                             : AppLocalizations.of(context)!
-                                .theUserAskedToChangeTheAccessTypeSecondaryToLimited,
+                                .theUserAskedToChangeTheAccessTypeEditorToReadOnly,
                         type: LabelType.GeneralBold),
                   ),
                 ),
@@ -594,10 +584,10 @@ class _ManageUsersListItemState extends State<ManageUsersListItem>
                                     AcceptAccessTypeChangingEvent(
                                         model: widget.model),
                                   );
-                                  model = model!.copyWith(
+                                  model = model.copyWith(
                                       accessType:
                                           widget.model.requestedAccessType);
-                                  widget.onItemChanged(model!);
+                                  widget.onItemChanged(model);
                                 },
                               ),
                             );

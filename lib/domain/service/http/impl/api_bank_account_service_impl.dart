@@ -12,6 +12,8 @@ class ApiBankAccountServiceImpl extends ApiBankAccountService {
   final withoutUsageTypeEndpoint = '/bank-account/without-usage-type';
   final bankAccountEndpoint = '/bank-account';
   final manualAccountEndpoint = '/manual-account';
+  final manualAccountPersonalEndpoint = '/manual-account/personal';
+  final manualAccountBusinessEndpoint = '/manual-account/business';
   final changeBankAccountMuteModeEndpoint = '/bank-account/mute-mode';
   final changeManualAccountMuteModeEndpoint = '/manual-account/mute-mode';
   final setBankAccountNameEndpoint = '/bank-account/name';
@@ -42,9 +44,9 @@ class ApiBankAccountServiceImpl extends ApiBankAccountService {
   }
 
   @override
-  Future<Response> addManualAccount(AddManualAccountRequest account) async {
+  Future<Response> addManualAccount(AddManualAccountRequest account, bool isPersonal) async {
     return await httpManager.dio.post(
-      manualAccountEndpoint,
+      isPersonal? manualAccountPersonalEndpoint: manualAccountBusinessEndpoint,
       data: account.toJson(),
     );
   }

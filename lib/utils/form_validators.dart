@@ -325,6 +325,8 @@ class FormValidators {
       (String? currentPass, BuildContext context) {
     if (currentPass!.isEmpty) {
       return AppLocalizations.of(context)!.accountNameEmpty;
+    } else if (currentPass.length > 20){
+      return 'Please, fill Account Name field with 20 or less characters';
     } else {
       return null;
     }

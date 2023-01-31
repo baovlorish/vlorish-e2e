@@ -158,7 +158,7 @@ class GoalWidget extends StatelessWidget {
         ),
         Column(
           children: [
-            if (homeScreenCubit.currentForeignSession?.access.isLimited != true)
+            if (homeScreenCubit.currentForeignSession?.access.isReadOnly != true)
               Row(
                 children: [
                   ButtonItemTransparent(

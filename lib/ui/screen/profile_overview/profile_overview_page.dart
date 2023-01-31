@@ -27,14 +27,19 @@ class ProfileOverviewPage {
                   diContractor.userRepository,
                   diContractor.subscriptionRepository,
                 ),
-                child: HomePage(
-                  innerBlocProvider: BlocProvider<ProfileOverviewCubit>(
-                    create: (_) => ProfileOverviewCubit(
-                        diContractor.authRepository,
-                        diContractor.userRepository),
-                    child: ProfileOverviewLayout(),
-                  ),
-                  title: AppLocalizations.of(context!)!.profileOverview,
+                child: Builder(
+                  builder: (context) {
+                    BlocProvider.of<HomeScreenCubit>(context).getUserData(needUpdateUserData: true);
+                    return HomePage(
+                      innerBlocProvider: BlocProvider<ProfileOverviewCubit>(
+                        create: (_) => ProfileOverviewCubit(
+                            diContractor.authRepository,
+                            diContractor.userRepository),
+                        child: ProfileOverviewLayout(),
+                      ),
+                      title: AppLocalizations.of(context)!.profileOverview,
+                    );
+                  }
                 ),
               )
             : defaultRoute;

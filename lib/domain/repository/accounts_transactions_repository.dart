@@ -19,6 +19,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/template/bank_accounts_transact
 import 'package:burgundy_budgeting_app/ui/model/account_group.dart';
 import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
 import 'package:burgundy_budgeting_app/ui/model/filter_parameters_model.dart';
+import 'package:burgundy_budgeting_app/ui/model/investment_institution_account.dart';
 import 'package:burgundy_budgeting_app/ui/model/manual_account.dart';
 import 'package:burgundy_budgeting_app/ui/model/memo_note_model.dart';
 import 'package:burgundy_budgeting_app/ui/model/transaction_model.dart';
@@ -53,7 +54,7 @@ abstract class AccountsTransactionsRepository {
   });
 
   Future<List<AccountGroup>> getAccounts();
-
+  Future<List<InvestmentInstitutionAccount>> getAccountsByType(int type);
   Future<String?> addManualAccount({
     required AddManualAccountRequest request,
     required Function(Exception e) errorCallback,
@@ -327,11 +328,30 @@ class AccountsTransactionsRepositoryImpl
   }
 
   @override
+  Future<List<InvestmentInstitutionAccount>> getAccountsByType(int type) async {
+    var resultList = <InvestmentInstitutionAccount>[];
+    var response = await institutionService.getInstitutionAccountByType(type);
+    if (response.statusCode != null &&
+        response.statusCode! >= 200 &&
+        response.statusCode! < 300) {
+      for (var item in response.data['items']) {
+        resultList.add(
+          InvestmentInstitutionAccount.fromJson(item),
+        );
+      }
+      return resultList;
+    } else {
+      throw CustomException(response.data['message'] ?? generalErrorMessage);
+    }
+  }
+
+  @override
   Future<String?> addManualAccount({
     required AddManualAccountRequest request,
     required Function(Exception e) errorCallback,
   }) async {
-    var response = await bankAccountService.addManualAccount(request);
+    var response = await bankAccountService.addManualAccount(
+        request, request.isPersonalType);
     if (response.statusCode != null &&
         response.statusCode! >= 200 &&
         response.statusCode! < 300) {
@@ -618,20 +638,26 @@ class AccountsTransactionsRepositoryImpl
   }) async {
     var response =
         await institutionService.updateMode(id, accountsUpdate: true);
-    var token = response.data['linkToken'];
-    await PlaidLink.open(
-      PlaidLinkOptions(linkToken: token),
-      onSuccess: (publicToken, metadata) => () async {
-        var accounts = await _onSuccess(id);
-        onSuccessCallback.call(accounts);
-      },
-      onEvent: (event, metadata) async {
-        if (event == 'HANDOFF') {
+    if (response.statusCode != null &&
+        response.statusCode! >= 200 &&
+        response.statusCode! < 300) {
+      var token = response.data['linkToken'];
+      await PlaidLink.open(
+        PlaidLinkOptions(linkToken: token),
+        onSuccess: (publicToken, metadata) => () async {
           var accounts = await _onSuccess(id);
           onSuccessCallback.call(accounts);
-        }
-      },
-    );
+        },
+        onEvent: (event, metadata) async {
+          if (event == 'HANDOFF') {
+            var accounts = await _onSuccess(id);
+            onSuccessCallback.call(accounts);
+          }
+        },
+      );
+    } else {
+      throw (CustomException(response.data['message'] ?? generalErrorMessage));
+    }
   }
 
   Future<List<BankAccount>> _onSuccess(String id) async {

@@ -44,7 +44,8 @@ class SignupMailCodePage {
         );
       } else {
         return BlocProvider<SigninCubit>(
-            create: (_) => SigninCubit(diContractor.authRepository),
+            create: (_) => SigninCubit(diContractor.authRepository,
+                diContractor.userRepository),
             child: SigninLayout());
       }
     });

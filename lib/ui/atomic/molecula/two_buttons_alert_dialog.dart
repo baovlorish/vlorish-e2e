@@ -10,7 +10,7 @@ import 'label_button_item.dart';
 class TwoButtonsDialog extends AlertDialog {
   TwoButtonsDialog(
     BuildContext context, {
-    required String title,
+    String? title,
     required String mainButtonText,
     required void Function() onMainButtonPressed,
     bool enableNavigationPopMainButton = true,
@@ -49,11 +49,12 @@ class TwoButtonsDialog extends AlertDialog {
                   child: Column(
                     mainAxisAlignment: mainAxisAlignment,
                     children: [
-                      Label(
-                        text: title,
-                        type: LabelType.Header2,
-                        textAlign: TextAlign.center,
-                      ),
+                      if (title != null)
+                        Label(
+                          text: title,
+                          type: LabelType.Header2,
+                          textAlign: TextAlign.center,
+                        ),
                       if (message != null)
                         Label(
                           text: message,

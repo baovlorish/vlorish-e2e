@@ -147,7 +147,7 @@ class _ProfileOverviewLayoutState extends State<ProfileOverviewLayout> {
               secondName: model.lastName,
               memberSince: model.creationTimeUtc,
               imageUrl: model.imageUrl,
-              isPremium: model.subscription?.isPremiumOrHigher,
+              shouldDisplayMenageUsers: model.role.isCoach || model.role.isPrimary,
               isSmall: isSmall,
             ),
             CustomDivider(),

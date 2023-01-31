@@ -275,10 +275,10 @@ class _CategoriesColumn extends StatelessWidget {
               );
             }
           },
-          isCoachLimited: BlocProvider.of<HomeScreenCubit>(context)
+          isReadOnlyAdvisor: BlocProvider.of<HomeScreenCubit>(context)
                   .currentForeignSession
                   ?.access
-                  .isLimited ==
+                  .isReadOnly ==
               true,
         ),
     ]);

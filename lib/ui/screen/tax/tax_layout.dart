@@ -28,6 +28,16 @@ class _TaxLayoutState extends State<TaxLayout> {
   // to be updated later
   var years = [2022];
   bool shouldHideDisclaimer = false;
+  var isEditable = true;
+  @override
+  void initState() {
+    isEditable = BlocProvider.of<HomeScreenCubit>(context)
+            .currentForeignSession
+            ?.access
+            .isReadOnly !=
+        true;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,170 +89,176 @@ class _TaxLayoutState extends State<TaxLayout> {
             return Expanded(
               child: Align(
                 alignment: Alignment.topLeft,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      constraints: BoxConstraints(maxWidth: 1192),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 10.0,
-                                      color: CustomColorScheme.tableBorder,
-                                    ),
-                                  ],
-                                ),
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: IntrinsicHeight(
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TaxColumnChart(
-                                          data: state.estimatedTaxesModel
-                                              ?.taxBarChartData?.chartData,
-                                          maximum: state.estimatedTaxesModel
-                                              ?.taxBarChartData?.maximum,
-                                          updateDataCallback:
-                                              (bool isFICAIncluded) async {
-                                            await taxCubit.updateEstimatedTaxes(
-                                                isFICAIncluded: isFICAIncluded);
-                                          },
-                                        ),
-                                        VerticalDivider(),
-                                        TaxStatisticsWidget(
-                                          model: state.estimatedTaxesModel,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: LayoutBuilder(
-                                  builder: (context, constraints) {
-                                var maxWidth = constraints.maxWidth;
-                                if (maxWidth < 850) {
-                                  return Wrap(
-                                    children: [
-                                      Label(
-                                        text: AppLocalizations.of(context)!
-                                            .estimatedTaxCalculation,
-                                        type: LabelType.Header2,
-                                      ),
-                                      // Spacer(),
-                                      TaxPageTabSelector(taxCubit),
-                                    ],
-                                  );
-                                } else {
-                                  return Row(
-                                    children: [
-                                      Label(
-                                        text: AppLocalizations.of(context)!
-                                            .estimatedTaxCalculation,
-                                        type: LabelType.Header2,
-                                      ),
-                                      Spacer(),
-                                      TaxPageTabSelector(taxCubit),
-                                    ],
-                                  );
-                                }
-                              }),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 10.0,
-                                      color: CustomColorScheme.tableBorder,
-                                    ),
-                                  ],
-                                ),
-                                child: state.currentEstimationTab == 0 ||
-                                        state.currentEstimationTab == 1
-                                    ? PersonalInfoTab(
-                                        personalInfoModel:
-                                            state.personalInfoModel!,
-                                      )
-                                    : state.currentEstimationTab == 2
-                                        ? SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Container(
-                                              constraints: BoxConstraints(
-                                                maxWidth: 1180,
-                                              ),
-                                              child: TaxIncomeDetailsTab(
-                                                incomeDetailsModel:
-                                                    state.incomeDetailsModel!,
-                                              ),
-                                            ),
-                                          )
-                                        : SingleChildScrollView(
-                                            scrollDirection: Axis.horizontal,
-                                            child: Container(
-                                              constraints: BoxConstraints(
-                                                maxWidth: 1160,
-                                              ),
-                                              child: TaxCreditsAndAdjustmentTab(
-                                                creditsAndAdjustmentModel: state
-                                                    .creditsAndAdjustmentModel!,
-                                                personalInfoModel:
-                                                    state.personalInfoModel!,
-                                              ),
-                                            ),
-                                          ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (!shouldHideDisclaimer)
-                      Flexible(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(maxWidth: 1192),
                         child: SingleChildScrollView(
-                          controller: ScrollController(),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 16.0,
-                              bottom: 16.0,
-                              right: 16.0,
-                            ),
-                            child: Container(
-                              constraints: BoxConstraints(maxWidth: 400),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 10.0,
-                                    color: CustomColorScheme.tableBorder,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 10.0,
+                                        color: CustomColorScheme.tableBorder,
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: IntrinsicHeight(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TaxColumnChart(
+                                            data: state.estimatedTaxesModel
+                                                ?.taxBarChartData?.chartData,
+                                            maximum: state.estimatedTaxesModel
+                                                ?.taxBarChartData?.maximum,
+                                            updateDataCallback:
+                                                (bool isFICAIncluded) async {
+                                              await taxCubit
+                                                  .updateEstimatedTaxes(
+                                                      isFICAIncluded:
+                                                          isFICAIncluded);
+                                            },
+                                          ),
+                                          VerticalDivider(),
+                                          TaxStatisticsWidget(
+                                            model: state.estimatedTaxesModel,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              child: TaxDisclaimer(taxCubit),
-                            ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: LayoutBuilder(
+                                    builder: (context, constraints) {
+                                  var maxWidth = constraints.maxWidth;
+                                  if (maxWidth < 850) {
+                                    return Wrap(
+                                      children: [
+                                        Label(
+                                          text: AppLocalizations.of(context)!
+                                              .estimatedTaxCalculation,
+                                          type: LabelType.Header2,
+                                        ),
+                                        // Spacer(),
+                                        TaxPageTabSelector(taxCubit),
+                                      ],
+                                    );
+                                  } else {
+                                    return Row(
+                                      children: [
+                                        Label(
+                                          text: AppLocalizations.of(context)!
+                                              .estimatedTaxCalculation,
+                                          type: LabelType.Header2,
+                                        ),
+                                        Spacer(),
+                                        TaxPageTabSelector(taxCubit),
+                                      ],
+                                    );
+                                  }
+                                }),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 10.0,
+                                        color: CustomColorScheme.tableBorder,
+                                      ),
+                                    ],
+                                  ),
+                                  child: state.currentEstimationTab == 0 ||
+                                      state.currentEstimationTab == 1
+                                      ? PersonalInfoTab(
+                                    personalInfoModel:
+                                    state.personalInfoModel!,
+                                  )
+                                      : state.currentEstimationTab == 2
+                                          ? SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Container(
+                                                constraints: BoxConstraints(
+                                                  maxWidth: 1180,
+                                                ),
+                                                child: TaxIncomeDetailsTab(
+                                                  incomeDetailsModel:
+                                                      state.incomeDetailsModel!,
+                                                ),
+                                              ),
+                                            )
+                                          : SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Container(
+                                                constraints: BoxConstraints(
+                                                  maxWidth: 1160,
+                                                ),
+                                                child:
+                                                    TaxCreditsAndAdjustmentTab(
+                                                  creditsAndAdjustmentModel: state
+                                                      .creditsAndAdjustmentModel!,
+                                                  personalInfoModel:
+                                                      state.personalInfoModel!,
+                                                ),
+                                              ),
+                                            ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      )
-                  ],
+                      ),
+                      if (!shouldHideDisclaimer)
+                        Flexible(
+                          child: SingleChildScrollView(
+                            controller: ScrollController(),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 16.0,
+                                bottom: 16.0,
+                                right: 16.0,
+                              ),
+                              child: Container(
+                                constraints: BoxConstraints(maxWidth: 400),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 10.0,
+                                      color: CustomColorScheme.tableBorder,
+                                    ),
+                                  ],
+                                ),
+                                child: TaxDisclaimer(taxCubit),
+                              ),
+                            ),
+                          ),
+                        )
+                    ],
+                  ),
                 ),
               ),
             );
@@ -315,11 +331,6 @@ class TaxPageTabSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
-            .currentForeignSession
-            ?.access
-            .isLimited ??
-        false;
     var estimationStage = taxCubit.estimationStage ?? 0;
     var selectedTab = (taxCubit.state is TaxLoaded)
         ? (taxCubit.state as TaxLoaded).currentEstimationTab
@@ -332,11 +343,7 @@ class TaxPageTabSelector extends StatelessWidget {
               estimationStage.toString() +
               selectedTab.toString()),
           padding: EdgeInsets.only(right: 16),
-          onPressed: isLimitedCoach
-              ? null
-              : () {
-                  taxCubit.changeEstimationTab(1);
-                },
+          onPressed: () { taxCubit.changeEstimationTab(1); },
           isActive: estimationStage > 0,
           isSelected: selectedTab == 1,
         ),

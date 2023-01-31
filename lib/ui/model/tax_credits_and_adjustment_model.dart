@@ -144,7 +144,6 @@ class IncomeAdjustments {
     return 'IncomeAdjustments: {\n\tstudentInterestPaidDuringTheYear $studentInterestPaidDuringTheYear,\n\tstudentLoanInterestPaid $studentLoanInterestPaid,\n\tretirementContributionsNotDeductedFromPaycheck $retirementContributionsNotDeductedFromPaycheck,\n\tselfEmployedHealthInsurance $selfEmployedHealthInsurance,\n\thsaContribution $hsaContribution,\n\thalfOfSelfEmploymentTaxesPaid $halfOfSelfEmploymentTaxesPaid,\n\tother $other}';
   }
 
-  @override
   List<Object> get props => [
         selfEmployedHealthInsurance,
         hsaContribution,

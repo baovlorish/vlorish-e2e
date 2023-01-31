@@ -47,10 +47,10 @@ class _TaxCreditsAndAdjustmentTabState extends State<TaxCreditsAndAdjustmentTab>
       widget.creditsAndAdjustmentModel.copyWith();
   late TaxCreditsAndAdjustmentModel startCreditsAndAdjustmentModel =
       widget.creditsAndAdjustmentModel.copyWith();
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
       .currentForeignSession
       ?.access
-      .isLimited ?? false;
+      .isReadOnly ?? false;
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +101,7 @@ class _TaxCreditsAndAdjustmentTabState extends State<TaxCreditsAndAdjustmentTab>
             }
           },
           selectedIndex: selectedExpansionTile,
+          enabled: !isReadOnlyAdvisor,
         ),
         ItemizedDeductionsExpansionTile(
           itemizedDeductions: endCreditsAndAdjustmentModel.itemizedDeductions,
@@ -114,7 +115,7 @@ class _TaxCreditsAndAdjustmentTabState extends State<TaxCreditsAndAdjustmentTab>
               selectedExpansionTile = _TaxCreditsTile.none;
             }
           },
-          selectedIndex: selectedExpansionTile,
+          selectedIndex: selectedExpansionTile, enabled: !isReadOnlyAdvisor,
         ),
         QBIDeductionExpansionTile(
           qualifiedBusinessIncomeDeduction:
@@ -150,7 +151,7 @@ class _TaxCreditsAndAdjustmentTabState extends State<TaxCreditsAndAdjustmentTab>
               selectedExpansionTile = _TaxCreditsTile.none;
             }
           },
-          selectedIndex: selectedExpansionTile,
+          selectedIndex: selectedExpansionTile, enabled: !isReadOnlyAdvisor,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -164,8 +165,8 @@ class _TaxCreditsAndAdjustmentTabState extends State<TaxCreditsAndAdjustmentTab>
                   text: taxCubit.estimationStage == 4
                       ? AppLocalizations.of(context)!.apply
                       : AppLocalizations.of(context)!.done,
-                  enabled: !isLimitedCoach,
-                  onPressed: isLimitedCoach? (){} : () {
+                  enabled: !isReadOnlyAdvisor,
+                  onPressed: isReadOnlyAdvisor? (){} : () {
                     taxCubit.updateCreditsAndAdjustment(
                         endCreditsAndAdjustmentModel);
                     startCreditsAndAdjustmentModel =
@@ -191,14 +192,14 @@ class IncomeAdjustmentsExpansionTile extends StatefulWidget {
     required this.incomeAdjustments,
     required this.onUpdate,
     required this.onUpdateTiles,
-    required this.selectedIndex,
+    required this.selectedIndex, required this.enabled,
   }) : super(key: key);
 
   final IncomeAdjustments incomeAdjustments;
   final _TaxCreditsTile selectedIndex;
   final VoidCallback onUpdate;
   final void Function(bool isExpanded) onUpdateTiles;
-
+final bool enabled;
   @override
   State<IncomeAdjustmentsExpansionTile> createState() =>
       _IncomeAdjustmentsExpansionTileState();
@@ -265,6 +266,7 @@ class _IncomeAdjustmentsExpansionTileState
         ),
         children: [
           _RowInputItem(
+            enabled: widget.enabled,
               title: 'Self employed health insurance',
               value: widget.incomeAdjustments.selfEmployedHealthInsurance,
               onUpdateValue: (int value) {
@@ -274,6 +276,7 @@ class _IncomeAdjustmentsExpansionTileState
                 setState(() {});
               }),
           _RowInputItem(
+              enabled: widget.enabled,
               title: 'HSA contribution',
               value: widget.incomeAdjustments.hsaContribution,
               onUpdateValue: (int value) {
@@ -283,6 +286,7 @@ class _IncomeAdjustmentsExpansionTileState
                 setState(() {});
               }),
           _RowInputItem(
+              enabled: widget.enabled,
               title: 'Retirement contributions not deducted from paycheck',
               value: widget.incomeAdjustments
                   .retirementContributionsNotDeductedFromPaycheck,
@@ -298,6 +302,7 @@ class _IncomeAdjustmentsExpansionTileState
             value: widget.incomeAdjustments.studentInterestPaidDuringTheYear,
           ),
           _RowInputItem(
+              enabled: widget.enabled,
               title: 'Student loan interest paid',
               value: widget.incomeAdjustments.studentLoanInterestPaid,
               onUpdateValue: (int value) async {
@@ -313,6 +318,7 @@ class _IncomeAdjustmentsExpansionTileState
             value: widget.incomeAdjustments.halfOfSelfEmploymentTaxesPaid,
           ),
           _RowInputItem(
+              enabled: widget.enabled,
               title: 'Other',
               value: widget.incomeAdjustments.other,
               onUpdateValue: (int value) {
@@ -339,6 +345,7 @@ class ItemizedDeductionsExpansionTile extends StatefulWidget {
     required this.onUpdate,
     required this.onUpdateTiles,
     required this.selectedIndex,
+    required this.enabled,
   }) : super(key: key);
 
   final ItemizedDeductions itemizedDeductions;
@@ -347,6 +354,7 @@ class ItemizedDeductionsExpansionTile extends StatefulWidget {
   final void Function() onUpdate;
   final void Function(bool isExpanded) onUpdateTiles;
 
+  final bool enabled;
   @override
   State<ItemizedDeductionsExpansionTile> createState() =>
       _ItemizedDeductionsExpansionTileState();
@@ -410,6 +418,7 @@ class _ItemizedDeductionsExpansionTileState
         ),
         children: [
           _RowInputItem(
+              enabled: widget.enabled,
               title: 'Mortgage interest paid',
               value: widget.itemizedDeductions.mortgageInterestPaid,
               onUpdateValue: (int value) {
@@ -419,6 +428,7 @@ class _ItemizedDeductionsExpansionTileState
                 setState(() {});
               }),
           _RowInputItem(
+              enabled: widget.enabled,
               title: 'Property tax payments',
               value: widget.itemizedDeductions.propertyTaxPayments,
               onUpdateValue: (int value) {
@@ -428,6 +438,7 @@ class _ItemizedDeductionsExpansionTileState
                 setState(() {});
               }),
           _RowInputItem(
+              enabled: widget.enabled,
               title: 'Charitable contributions',
               value: widget.itemizedDeductions.charitableContributions,
               onUpdateValue: (int value) {
@@ -437,6 +448,7 @@ class _ItemizedDeductionsExpansionTileState
                 setState(() {});
               }),
           _RowInputItem(
+            enabled: widget.enabled,
             title: 'Other itemized deduction (deductible portion only)',
             value: widget.itemizedDeductions.otherItemizedDeduction,
             onUpdateValue: (int value) {
@@ -468,6 +480,7 @@ class QBIDeductionExpansionTile extends StatefulWidget {
 
   final void Function() onUpdate;
   final void Function(bool isExpanded) onUpdateTiles;
+
 
   const QBIDeductionExpansionTile({
     Key? key,
@@ -540,6 +553,7 @@ class TaxCreditExpansionTile extends StatefulWidget {
   final IncomeAdjustments incomAdjustments;
 
   final bool hasChildren;
+  final bool enabled;
 
   const TaxCreditExpansionTile({
     Key? key,
@@ -550,6 +564,7 @@ class TaxCreditExpansionTile extends StatefulWidget {
     required this.incomAdjustments,
     required this.taxFilingStatus,
     required this.hasChildren,
+    required this.enabled,
   }) : super(key: key);
 
   @override
@@ -618,7 +633,7 @@ class _TaxCreditExpansionTileState extends State<TaxCreditExpansionTile> {
             value: widget.taxCredits.childAndDependentCareCredit,
           ),
           _RowInputItem(
-            enabled: widget.taxFilingStatus != 1 && widget.hasChildren,
+            enabled: widget.taxFilingStatus != 1 && widget.hasChildren && widget.enabled,
             title: 'Total eligible childcare expenses',
             value: widget.taxCredits.totalEligibleChildcareExpenses,
             onUpdateValue: (int value) async {
@@ -632,6 +647,7 @@ class _TaxCreditExpansionTileState extends State<TaxCreditExpansionTile> {
             },
           ),
           _RowInputItem(
+            enabled: widget.enabled,
             title: 'Energy Credit',
             value: widget.taxCredits.energyCredit,
             onUpdateValue: (int value) {
@@ -641,7 +657,7 @@ class _TaxCreditExpansionTileState extends State<TaxCreditExpansionTile> {
               setState(() {});
             },
           ),
-          _RowInputItem(
+          _RowInputItem(            enabled: widget.enabled,
             title: 'Electric Vehicle Credit',
             value: widget.taxCredits.electricVehicleCredit,
             onUpdateValue: (int value) {
@@ -652,6 +668,8 @@ class _TaxCreditExpansionTileState extends State<TaxCreditExpansionTile> {
             },
           ),
           _RowInputItem(
+            enabled: widget.enabled,
+
             title: 'Other Tax Credit',
             value: widget.taxCredits.otherTaxCredit,
             onUpdateValue: (int value) {

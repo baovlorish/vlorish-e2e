@@ -43,7 +43,7 @@ abstract class UserRepository {
 
   Future<List<CityModel>> searchCity(String value);
 
-  Future<ProfileOverviewModel> getUserData();
+  Future<ProfileOverviewModel> getUserData({bool needUpdateUserData = false});
 
   void clearUserData();
 
@@ -256,8 +256,9 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<ProfileOverviewModel> getUserData() async {
-    if (_userDataService.user != null) {
+  Future<ProfileOverviewModel> getUserData(
+      {bool needUpdateUserData = false}) async {//fixme: not for everytime ProfileOverview call, only for return from Stripe
+    if (_userDataService.user != null && !needUpdateUserData) {
       return _userDataService.user!;
     } else {
       var data = await getProfileOverview();
@@ -442,7 +443,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<void> confirmUserEmail(String email, String code) async{
+  Future<void> confirmUserEmail(String email, String code) async {
     var response = await _apiUserService.confirmUserEmail(email, code);
 
     if (response.statusCode != null &&

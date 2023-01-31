@@ -25,6 +25,7 @@ import 'package:logger/logger.dart';
 class BudgetBloc extends Bloc<BudgetEvent, BudgetState> with HydratedMixin {
   final Logger logger = getLogger('Budget Bloc');
 
+  final bool isRegistrationStepsCompleted;
   final bool isPersonal;
   final BudgetRepository budgetRepository;
   final CategoryRepository categoryRepository;
@@ -65,11 +66,13 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> with HydratedMixin {
 
   BudgetBloc(this.budgetRepository, this.categoryRepository,
       this.transactionsRepository,
-      {required this.isPersonal})
+      {required this.isPersonal, required this.isRegistrationStepsCompleted})
       : super(BudgetInitialState()) {
     logger.i('Budget ${isPersonal ? 'personal' : 'business'} page');
     hydrate();
-    load();
+    if (isRegistrationStepsCompleted) {
+      load();
+    }
   }
 
   Future<void> load() async {

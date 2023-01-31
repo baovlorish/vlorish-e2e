@@ -127,7 +127,7 @@ class DebtsTableWidget extends StatelessWidget {
                           BlocProvider.of<HomeScreenCubit>(context)
                                   .currentForeignSession
                                   ?.access
-                                  .isSecondary ??
+                                  .isEditor ??
                               true,
                     ),
                   );

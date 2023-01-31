@@ -33,14 +33,13 @@ class SignupAddCardCubit extends Cubit<SignupAddCardState> {
     init();
   }
 
-  void connectPlaidAccount(BuildContext context) async {
+  void connectPlaidAccount(BuildContext context, bool isStandard) async {
     try {
       emit(LoadingAddCardState());
-
       await repository.openPlaidModalWindow(
         onSuccessCallback: (bankAccounts) async {
           await updateUserData();
-          onPlaidPopupSuccessClose(context, bankAccounts);
+          onPlaidPopupSuccessClose(context, bankAccounts, isStandard);
         },
         onExitCallback: () {
           emit(SignupAddCardInitial());
@@ -59,7 +58,7 @@ class SignupAddCardCubit extends Cubit<SignupAddCardState> {
   }
 
   void onPlaidPopupSuccessClose(
-      BuildContext context, List<BankAccount> bankAccounts) async {
+      BuildContext context, List<BankAccount> bankAccounts, bool isStandard) async {
     emit(LoadedAddCardState());
     var isDismissible = role != null && role!.isCoach;
     await showDialog(
@@ -69,6 +68,7 @@ class SignupAddCardCubit extends Cubit<SignupAddCardState> {
         return AddAccountFromPlaidPopup(
           browserBackButtonDismissible: false,
           showCancelOption: isDismissible,
+          isStandardSubscription: isStandard,
           businessNameList: [],
           onCancel: () => NavigatorManager.navigateTo(
             context,

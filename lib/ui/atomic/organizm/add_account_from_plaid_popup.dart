@@ -18,6 +18,7 @@ class AddAccountFromPlaidPopup extends AlertDialog {
   final bool showCancelOption;
   final bool showItemsValidation;
   final bool browserBackButtonDismissible;
+  final bool isStandardSubscription;
   final VoidCallback? onCancel;
   final List<String> businessNameList;
 
@@ -25,6 +26,7 @@ class AddAccountFromPlaidPopup extends AlertDialog {
     this.showCancelOption = false,
     this.showItemsValidation = true,
     this.browserBackButtonDismissible = true,
+    this.isStandardSubscription = false,
     required List<BankAccount> bankAccounts,
     required this.businessNameList,
     required AccountsTransactionsRepository plaidRepository,
@@ -62,6 +64,7 @@ class AddAccountFromPlaidPopup extends AlertDialog {
                     showValidation: showItemsValidation,
                     state: state,
                     onSuccessCallback: onSuccessCallback,
+                    showUsingType: !isStandardSubscription,
                   );
                 }),
               ),
@@ -72,9 +75,10 @@ class AddAccountFromPlaidPopup extends AlertDialog {
 
 class _InnerContent extends StatefulWidget {
   final List<BankAccount> bankAccounts;
-  final bool showCancelOption;
   final AddAccountPopupState state;
   final bool showValidation;
+  final bool showUsingType;
+  final bool showCancelOption;
   final VoidCallback? onCancel;
   final List<String> businessNameList;
   final Function() onSuccessCallback;
@@ -82,6 +86,7 @@ class _InnerContent extends StatefulWidget {
   _InnerContent({
     required this.showCancelOption,
     required this.showValidation,
+    required this.showUsingType,
     required this.bankAccounts,
     required this.state,
     required this.onSuccessCallback,
@@ -99,18 +104,14 @@ class __InnerContentState extends State<_InnerContent> {
   late final addAccountPopupCubit =
       BlocProvider.of<AddAccountPopupCubit>(context);
 
-  var firstUpdate = true;
-
   @override
   Widget build(BuildContext context) {
-    if (firstUpdate) {
-      if (widget.state is AddAccountPopupAccountErrorState) {
-        errors = (widget.state as AddAccountPopupAccountErrorState).errors;
-      } else {
-        errors = [];
-      }
-      firstUpdate = false;
+    if (widget.state is AddAccountPopupAccountErrorState) {
+      errors = (widget.state as AddAccountPopupAccountErrorState).errors;
+    } else {
+      errors = [];
     }
+
     _items.clear();
     for (var i in widget.bankAccounts) {
       _items.add(
@@ -128,6 +129,7 @@ class __InnerContentState extends State<_InnerContent> {
             addAccountPopupCubit.unvalidateAccount(
                 account, widget.bankAccounts);
           },
+          showUsageType: widget.showUsingType,
         ),
       );
     }

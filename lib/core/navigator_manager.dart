@@ -60,11 +60,11 @@ class NavigatorManager with DiProvider {
     router.notFoundHandler = NotFoundPage.initHandler(router, this);
 
     var redirectUnauthorizedOptions = BlocProvider<SigninCubit>(
-      create: (_) => SigninCubit(authRepository),
+      create: (_) => SigninCubit(authRepository, userRepository),
       child: SigninLayout(),
     );
 
-    SigninPage.initRoute(router, this);
+    SigninPage.initRoute(router, this, this);
     SigninGoogleCodePage.initRoute(router, this);
     PassRecoveryPage.initRoute(router, this);
 //    SplashScreen.initRoute(router, this);

@@ -17,17 +17,18 @@ class CustomTooltip extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => message != null && message!.isNotEmpty
-      ? Tooltip(
-    message: message!,
-    textStyle: CustomTextStyle.TooltipTextStyle(context),
-    preferBelow: preferBelow,
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(4),
-      color: color ?? CustomColorScheme.mainDarkBackground,
-    ),
-    child: child,
-  )
-      : child;
+  Widget build(BuildContext context) {
+    if (message == null || (message?.isEmpty ?? true)) return child;
+    return Tooltip(
+      message: message!,
+      textStyle: CustomTextStyle.TooltipTextStyle(context),
+      preferBelow: preferBelow,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: color ?? CustomColorScheme.mainDarkBackground,
+      ),
+      child: child,
+    );
+  }
 }

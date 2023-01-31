@@ -4,7 +4,6 @@ import 'package:burgundy_budgeting_app/domain/repository/accounts_transactions_r
 import 'package:burgundy_budgeting_app/domain/repository/budget_repository.dart';
 import 'package:burgundy_budgeting_app/domain/repository/networth_repository.dart';
 import 'package:burgundy_budgeting_app/domain/repository/user_repository.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen_cubit.dart';
 import 'package:burgundy_budgeting_app/ui/model/account.dart';
 import 'package:burgundy_budgeting_app/ui/model/account_group.dart';
 import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
@@ -179,7 +178,7 @@ class ManageAccountsCubit extends Cubit<ManageAccountsState> {
           id: id,
           onSuccessCallback: () async {
             await updateAccounts();
-            await BlocProvider.of<HomeScreenCubit>(context).updateUserData();
+
           });
     } catch (e) {
       emit(ManageAccountsError(e.toString()));

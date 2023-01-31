@@ -5,16 +5,17 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'signin_cubit.dart';
-
 class SigninPage {
   static const String routeName = '/signin';
 
-  static void initRoute(FluroRouter router, AuthContractor repository) {
+  static void initRoute(FluroRouter router, AuthContractor authContractor,
+      UserContractor userContractor) {
     var handler = Handler(
       handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
         return BlocProvider<SigninCubit>(
-          create: (_) => SigninCubit(repository.authRepository),
+          create: (_) => SigninCubit(
+              authContractor.authRepository,
+              userContractor.userRepository),
           child: SigninLayout(),
         );
       },

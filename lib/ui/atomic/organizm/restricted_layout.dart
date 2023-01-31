@@ -26,7 +26,7 @@ class RestrictedLayout extends StatelessWidget {
     RestrictionType.NotSubscribed: "You haven't subscribed yet",
     RestrictionType.Expired: 'Your subscription has expired',
     RestrictionType.RestrictedByPlan:
-        'Upgrade to Premium plan to use this feature',
+        'Upgrade to Business plan to use this feature',
     RestrictionType.NotActive: 'Your subscription is not active',
     RestrictionType.Partner: 'Partner access is in development'
   };

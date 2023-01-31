@@ -1,51 +1,21 @@
-import 'dart:async';
-import 'dart:io';
+import 'package:logger/logger.dart';
 
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+final logging = (Type type) => Logger(
+      printer: CustomerPrinter(type.toString()),
+      level: Level.verbose,
+    );
 
-class Report {
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
+class CustomerPrinter extends LogPrinter {
+  final String className;
 
-    return directory.path;
-  }
+  CustomerPrinter(this.className);
 
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/report.txt');
-  }
+  @override
+  List<String> log(LogEvent event) {
+    final color = PrettyPrinter.levelColors[event.level];
+    final emoji = PrettyPrinter.levelEmojis[event.level];
+    final message = event.message;
 
-  Future<int> readReport() async {
-    try {
-      final file = await _localFile;
-
-      // Read the file
-      final contents = await file.readAsString();
-
-      return int.parse(contents);
-    } catch (e) {
-      // If encountering an error, return 0
-      return 0;
-    }
-  }
-
-  Future<File> writeReport(String log) async {
-    final file = await _localFile;
-    print("write file!");
-    // Write the file
-    return file.writeAsString('$log');
-  }
-
-  Future<void> restoreFlutterError(Future<void> Function() call) async {
-    final originalOnError = FlutterError.onError!;
-    await call();
-    final overriddenOnError = FlutterError.onError!;
-
-    // restore FlutterError.onError
-    FlutterError.onError = (FlutterErrorDetails details) {
-      if (overriddenOnError != originalOnError) overriddenOnError(details);
-      originalOnError(details);
-    };
+    return [color!('$emoji $className: $message')];
   }
 }

@@ -42,10 +42,10 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
   var isSmallHeader = false;
   var controller = ScrollController();
 
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
           .currentForeignSession
           ?.access
-          .isLimited ??
+          .isReadOnly ??
       false;
 
   String? _name;
@@ -57,8 +57,8 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
   DateTime? _acquisitionDate;
   final _acquisitionDateNode = FocusNode();
 
-  int? _brokerage;
-  final _brokerageNode = FocusNode();
+  String? _details;
+  final _detailsNode = FocusNode();
 
   double? _currentCost;
   final _currentCostNode = FocusNode();
@@ -67,10 +67,7 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
 
   int? _costType;
   final _costTypeNode = FocusNode();
-  String? _address;
-  int? _usageType;
-  int? _otherType;
-  int? _exchange;
+  int? _usageType = 1; //personal by default
   double? _newCost;
   final _newCostNode = FocusNode();
 
@@ -85,7 +82,7 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
       _addInvestmentCubit.currentInvestmentGroup == InvestmentGroup.IndexFunds;
 
   late final bool isProperty =
-      _addInvestmentCubit.currentInvestmentGroup == InvestmentGroup.RealEstate;
+      _addInvestmentCubit.currentInvestmentGroup == InvestmentGroup.Property;
   late final bool isOther = _addInvestmentCubit.currentInvestmentGroup ==
       InvestmentGroup.OtherInvestments;
   late final bool isCrypto = _addInvestmentCubit.currentInvestmentGroup ==
@@ -100,7 +97,7 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
       return isAddScreen ? 'Add an Index Fund' : 'Edit an Index Fund';
     } else if (group == InvestmentGroup.Cryptocurrencies) {
       return isAddScreen ? 'Add a Cryptocurrency' : 'Edit a Cryptocurrency';
-    } else if (group == InvestmentGroup.RealEstate) {
+    } else if (group == InvestmentGroup.Property) {
       return isAddScreen ? 'Add a Inv. Properties' : 'Edit a Inv. Properties';
     } else if (group == InvestmentGroup.StartUps) {
       return isAddScreen ? 'Add a Startup' : 'Edit a Startup';
@@ -120,12 +117,9 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
       _name = widget.editInvestment!.name;
       _initialCost = widget.editInvestment!.initialCost;
       _currentCost = widget.editInvestment!.currentCost;
-      _brokerage = widget.editInvestment!.brokerage;
+      _details = widget.editInvestment!.details;
       _acquisitionDate = widget.editInvestment!.acquisitionDate;
-      _address = widget.editInvestment!.address;
       _usageType = widget.editInvestment!.usageType;
-      _otherType = widget.editInvestment!.otherType;
-      _exchange = widget.editInvestment!.exchange;
     }
     super.initState();
   }
@@ -136,7 +130,7 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
   Widget build(BuildContext context) {
     isSmallHeader = MediaQuery.of(context).size.width < 1070;
 
-    var enabled = checkEnabled() && !isLimitedCoach;
+    var enabled = checkEnabled() && !isReadOnlyAdvisor;
 
     return BlocConsumer<AddInvestmentCubit, AddInvestmentState>(
         listener: (context, state) {
@@ -192,14 +186,13 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
                                   _addInvestmentCubit.addInvestment(
                                     context,
                                     name: _name!,
-                                    brokerage: _brokerage,
-                                    address: _address,
+                                    details: _details,
                                     usageType: _usageType,
-                                    otherType: _otherType,
-                                    exchange: _exchange,
                                     acquisitionDate: _acquisitionDate!,
                                     initialCost: _initialCost!,
                                     currentCost: _currentCost ?? _initialCost,
+                                    investmentType: _addInvestmentCubit
+                                        .currentInvestmentGroup.index,
                                   ),
                                 }
                               : {
@@ -208,12 +201,11 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
                                       name: _name!,
                                       isManual: widget.editInvestment!.isManual,
                                       acquisitionDate: _acquisitionDate!,
-                                      brokerage: _brokerage,
-                                      address: _address,
+                                      details: _details,
                                       usageType: _usageType,
-                                      otherType: _otherType,
+                                      investmentType:
+                                          widget.editInvestment!.investmentType,
                                       initialCost: _initialCost!,
-                                      exchange: _exchange,
                                       currentCost: _currentCost!,
                                       transactions: [
                                         if (_newCost != null &&
@@ -286,7 +278,7 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
                                               setState(() {});
                                             },
                                             onEditingComplete: () =>
-                                                _brokerageNode.requestFocus(),
+                                                _detailsNode.requestFocus(),
                                             hintText: 'Vlorish',
                                             labelText: (isProperty
                                                     ? AppLocalizations.of(
@@ -305,21 +297,29 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
                                         if (isOther)
                                           SizedBox(
                                             width: shortWidth,
-                                            child: DropdownItem<int>(
-                                              initialValue: _otherType,
-                                              focusNode: _brokerageNode,
+                                            child: DropdownItem<String>(
+                                              initialValue: _details,
+                                              focusNode: _detailsNode,
                                               itemKeys: [
-                                                0, //- Other
-                                                1, //- CashHeld
-                                                2, //- BondsAndCDs
-                                                3, //- Loans
-                                                4, //- GoldMetals
-                                                5, //- PreciousMedal
-                                                6, //- Domains
-                                                7 //- OtherDigitalAssets
+                                                AppLocalizations.of(context)!
+                                                    .otherInvestments,
+                                                AppLocalizations.of(context)!
+                                                    .cashHeldAtBrokerageOrExchanges,
+                                                AppLocalizations.of(context)!
+                                                    .bondsAndCDs,
+                                                AppLocalizations.of(context)!
+                                                    .loansReceivableFromOthers,
+                                                AppLocalizations.of(context)!
+                                                    .goldMetals,
+                                                AppLocalizations.of(context)!
+                                                    .otherPreciousMedal,
+                                                AppLocalizations.of(context)!
+                                                    .domains,
+                                                AppLocalizations.of(context)!
+                                                    .otherDigitalAssets
                                               ],
                                               callback: (value) {
-                                                _otherType = value;
+                                                _details = value;
                                                 setState(() {});
 
                                                 isAddScreen
@@ -359,17 +359,17 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
                                         if (isCrypto)
                                           SizedBox(
                                             width: shortWidth,
-                                            child: DropdownItem<int>(
-                                              initialValue: _exchange,
-                                              focusNode: _brokerageNode,
+                                            child: DropdownItem<String>(
+                                              initialValue: _details,
+                                              focusNode: _detailsNode,
                                               itemKeys: [
-                                                1, //- 'Coinbase'
-                                                2, //- 'Gemini'
-                                                3, //-  'Binance'
-                                                0, //-  'Other'
+                                                'Coinbase', //fixme: localization
+                                                'Gemini',
+                                                'Binance',
+                                                'Other',
                                               ],
                                               callback: (value) {
-                                                _exchange = value;
+                                                _details = value;
                                                 setState(() {});
                                                 isAddScreen
                                                     ? _costNode.requestFocus()
@@ -393,22 +393,31 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
                                         if (hasBrokerage)
                                           SizedBox(
                                             width: shortWidth,
-                                            child: DropdownItem<int>(
-                                              initialValue: _brokerage,
-                                              focusNode: _brokerageNode,
+                                            child: DropdownItem<String>(
+                                              initialValue: _details,
+                                              focusNode: _detailsNode,
                                               itemKeys: [
-                                                1, //Robinhood
-                                                2, //Webull
-                                                3, //Fidelity
-                                                4, //Charleshwab
-                                                5, //TDAmeritrade
-                                                6, //ETrade
-                                                7, //AllyInvest
-                                                8, //IteractiveBorkers
-                                                0 //Other
+                                                AppLocalizations.of(context)!
+                                                    .robinhood,
+                                                AppLocalizations.of(context)!
+                                                    .webull,
+                                                AppLocalizations.of(context)!
+                                                    .fidelity,
+                                                AppLocalizations.of(context)!
+                                                    .charleshwab,
+                                                AppLocalizations.of(context)!
+                                                    .tdAmeritrade,
+                                                AppLocalizations.of(context)!
+                                                    .etrade,
+                                                AppLocalizations.of(context)!
+                                                    .allyInvest,
+                                                AppLocalizations.of(context)!
+                                                    .interactiveBrokers,
+                                                AppLocalizations.of(context)!
+                                                    .other,
                                               ],
                                               callback: (value) {
-                                                _brokerage = value;
+                                                _details = value;
                                                 setState(() {});
 
                                                 isAddScreen
@@ -489,14 +498,14 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
                                             min(516, constraints.maxWidth - 30),
                                         child: InputItem(
                                           enabled: true,
-                                          value: _address,
+                                          value: _details,
                                           labelText: 'Property address*',
                                           textInputFormatters: [
                                             LengthLimitingTextInputFormatter(
                                                 20),
                                           ],
                                           onChanged: (value) {
-                                            _address = value;
+                                            _details = value;
                                             setState(() {});
                                           },
                                         ),
@@ -716,7 +725,7 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
                                           type: LabelType.LinkLarge,
                                           fontSize: 16,
                                         ),
-                                        onPressed: isLimitedCoach
+                                        onPressed: isReadOnlyAdvisor
                                             ? () {}
                                             : () async {
                                                 await showDialog(
@@ -762,10 +771,10 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
   bool checkEnabled() {
     if (isProperty) {
       return _usageType != null &&
-          _address != null &&
+          _details != null &&
           _name != null &&
           _name!.isNotEmpty &&
-          _address!.isNotEmpty &&
+          _details!.isNotEmpty &&
           _acquisitionDate != null &&
           _initialCost != null &&
           _currentCost != null;
@@ -774,13 +783,13 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _brokerage != null;
+          _details != null;
     } else if (hasBrokerage && showExtraFieldInEditMode) {
       return _name != null &&
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _brokerage != null &&
+          _details != null &&
           _newCost != null &&
           _costType != null &&
           _currentCost != null;
@@ -789,27 +798,27 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _brokerage != null &&
+          _details != null &&
           _currentCost != null;
     } else if (isCrypto && widget.editInvestment == null) {
       return _name != null &&
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _exchange != null;
+          _details != null;
     } else if (isCrypto && !showExtraFieldInEditMode) {
       return _name != null &&
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _exchange != null &&
+          _details != null &&
           _currentCost != null;
     } else if (isCrypto && showExtraFieldInEditMode) {
       return _name != null &&
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _exchange != null &&
+          _details != null &&
           _newCost != null &&
           _costType != null &&
           _currentCost != null;
@@ -818,20 +827,20 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _otherType != null;
+          _details != null;
     } else if (isOther && !showExtraFieldInEditMode) {
       return _name != null &&
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _otherType != null &&
+          _details != null &&
           _currentCost != null;
     } else if (isOther && showExtraFieldInEditMode) {
       return _name != null &&
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _otherType != null &&
+          _details != null &&
           _newCost != null &&
           _costType != null &&
           _currentCost != null;

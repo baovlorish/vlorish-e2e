@@ -7,6 +7,7 @@ class CustomRadioButton extends StatelessWidget {
   final void Function() onTap;
   final Object value;
   final Object? groupValue;
+  final TextOverflow? titleTextOverflow;
 
   CustomRadioButton({
     Key? key,
@@ -14,6 +15,7 @@ class CustomRadioButton extends StatelessWidget {
     required this.groupValue,
     required this.value,
     required this.onTap,
+    this.titleTextOverflow,
   }) : super(key: key);
 
   @override
@@ -38,7 +40,10 @@ class CustomRadioButton extends StatelessWidget {
               ),
             ),
             SizedBox(width: 12),
-            Label(text: title, type: LabelType.General,),
+            Label(
+                text: title,
+                type: LabelType.General,
+                overflow: titleTextOverflow),
             SizedBox(width: 8),
           ],
         ),

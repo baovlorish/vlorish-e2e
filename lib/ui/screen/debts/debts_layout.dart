@@ -4,6 +4,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/atom/dashboard_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/maybe_scrollable_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/annual_monthly_button.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/error_alert_dialog.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/annual_monthly_switcher.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/debts_table_widget.dart';
@@ -121,19 +122,26 @@ class _DebtsState extends State<DebtsLayout> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0, top: 16.0),
-                        child: TwoOptionSwitcher(
-                          isFirstItemSelected: isPersonal,
-                          options: [
-                            AppLocalizations.of(context)!.personal,
-                            AppLocalizations.of(context)!.business
-                          ],
-                          onPressed: () {
-                            setState(() {
-                              isPersonal = !isPersonal;
-                              selectedCellIndex = null;
-                            });
-                          },
-                        ),
+                        child: homeScreenCubit.user.subscription!.isStandard
+                            ? TabSelectorButton(
+                                labelText:
+                                    AppLocalizations.of(context)!.personal,
+                                onPressed: null,
+                                isSelected: true,
+                              )
+                            : TwoOptionSwitcher(
+                                isFirstItemSelected: isPersonal,
+                                options: [
+                                  AppLocalizations.of(context)!.personal,
+                                  AppLocalizations.of(context)!.business
+                                ],
+                                onPressed: () {
+                                  setState(() {
+                                    isPersonal = !isPersonal;
+                                    selectedCellIndex = null;
+                                  });
+                                },
+                              ),
                       ),
                       Padding(
                         padding: showEmptyState

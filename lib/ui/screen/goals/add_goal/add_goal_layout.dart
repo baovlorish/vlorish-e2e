@@ -136,7 +136,7 @@ class _AddGoalLayoutState extends State<AddGoalLayout> {
                     labelText: AppLocalizations.of(context)!.totalAmount,
                     validateFunction: (value, context) {
                       var error = FormValidators.totalAmountValidateFunction(
-                          value, context);
+                          value?.replaceAll(',', ''), context);
                       if (error != null) {
                         return error;
                       } else if (_total < _funded) {

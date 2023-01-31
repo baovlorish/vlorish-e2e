@@ -59,10 +59,12 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   Period get shortPeriod =>
       state is HomeScreenLoaded ? user.shortTablePeriod : Period.fromNow();
 
-  Future<void> getUserData({bool initial = false}) async {
+  Future<void> getUserData(
+      {bool initial = false, bool needUpdateUserData = false}) async {
     emit(HomeScreenLoading());
     try {
-      user = await userRepository.getUserData();
+      user = await userRepository.getUserData(
+          needUpdateUserData: needUpdateUserData);
       logger.i('get user data successful');
       emit(HomeScreenLoaded(user));
       if (initial) {

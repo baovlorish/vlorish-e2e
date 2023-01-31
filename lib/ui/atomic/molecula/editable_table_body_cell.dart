@@ -82,6 +82,7 @@ class _EditableTableBodyCellState extends State<EditableTableBodyCell> {
   var showCursorOnEnter = true;
   late TextEditingController controller;
   var cursorVisible = false;
+  var isFirstDoubleTap = true;
   late var node = FocusNode(
     onKey: (FocusNode node, RawKeyEvent evt) {
       if (!cursorVisible && evt.isKeyPressed(LogicalKeyboardKey.backspace)) {
@@ -254,9 +255,15 @@ class _EditableTableBodyCellState extends State<EditableTableBodyCell> {
                           FocusScope.of(context).nextFocus();
                         },
                         onDoubleTap: () {
-                          controller.selection = TextSelection(
-                              baseOffset: 0,
-                              extentOffset: controller.text.length);
+                          if (isFirstDoubleTap) {
+                            cursorVisible = true;
+                            isFirstDoubleTap = false;
+                            setState(() {});
+                          } else {
+                            controller.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: controller.text.length);
+                          }
                         },
                         type: InkWellType.Transparent,
                         child: TextFormField(

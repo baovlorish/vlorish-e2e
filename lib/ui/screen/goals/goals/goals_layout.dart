@@ -325,7 +325,7 @@ class _GoalsLayoutState extends State<GoalsLayout> {
               buttonType: TransparentButtonType.LargeText,
             ),
             SizedBox(width: 20),
-            if (_homeScreenCubit.currentForeignSession?.access.isLimited !=
+            if (_homeScreenCubit.currentForeignSession?.access.isReadOnly !=
                 true)
               ButtonItem(
                 context,

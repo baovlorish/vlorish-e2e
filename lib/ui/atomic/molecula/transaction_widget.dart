@@ -105,12 +105,12 @@ class _TransactionWidgetState extends State<TransactionWidget> {
   }
 
   late var bloc = BlocProvider.of<BankAccountsAndStatisticsBloc>(context);
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
       .currentForeignSession
       ?.access
-      .isLimited;
+      .isReadOnly;
 
-  late var hasBulkCheckbox = _shouldShowDropdowns && isLimitedCoach != true;
+  late var hasBulkCheckbox = _shouldShowDropdowns && isReadOnlyAdvisor != true;
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +198,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
               flex: widget.combined,
               child: CustomMaterialInkWell(
                 type: InkWellType.Grey,
-                onDoubleTap: isLimitedCoach != true && _shouldShowDropdowns
+                onDoubleTap: isReadOnlyAdvisor != true && _shouldShowDropdowns
                     ? () {
                         _showSplitOrUniteDialog(widget.transaction);
                       }
@@ -376,7 +376,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                               height: 40,
                               child: DropdownItem<String>(
                                 isSmall: true,
-                                enabled: isLimitedCoach != true,
+                                enabled: isReadOnlyAdvisor != true,
                                 items: parentNames,
                                 initialValue: parentCategoryId,
                                 itemKeys: parentKeys,
@@ -395,7 +395,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                                   DropdownItem<String>(
                                     key: ObjectKey(parentCategoryId),
                                     isSmall: true,
-                                    enabled: isLimitedCoach != true,
+                                    enabled: isReadOnlyAdvisor != true,
                                     items: childNames,
                                     itemKeys: childKeys,
                                     initialValue: categoryId,

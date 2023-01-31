@@ -18,6 +18,7 @@ class AddAccountFromPlaidPopupItem extends StatefulWidget {
   final void Function(BankAccount account) onNotValid;
   final bool showValidIndicator;
   final bool showDivider;
+  final bool showUsageType;
   final AddPlaidAccountError? error;
   final List<String> businessNameList;
 
@@ -29,6 +30,7 @@ class AddAccountFromPlaidPopupItem extends StatefulWidget {
     required this.showValidIndicator,
     this.showDivider = true,
     this.error,
+    this.showUsageType = false,
     required this.businessNameList,
   }) : super(key: key);
 
@@ -48,7 +50,7 @@ class _AddAccountFromPlaidPopupItemState
   late final List<String> _businessAccountTypes;
 
   final _focusNode = FocusNode();
-
+  final formKey = GlobalKey<FormState>();
   bool isMortgageLoanAccountType = false;
 
   @override
@@ -74,7 +76,8 @@ class _AddAccountFromPlaidPopupItemState
   bool get isValid {
     if (_createAccountNameValue.isNotEmpty &&
         _usageType != 0 &&
-        (businessName != null || _usageType == 1)) {
+        (businessName != null || _usageType == 1) &&
+        formKey.currentState != null && formKey.currentState!.validate()) {
       return true;
     }
     return false;
@@ -116,6 +119,13 @@ class _AddAccountFromPlaidPopupItemState
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.showUsageType) {
+        _usageType = 1;
+        _chosenAccountType = 0;
+        businessName = null;
+        copyWithActualProperties(callIsValid: isValid);
+    }
+
     isMortgageLoanAccountType = _personalAccountTypes[_chosenAccountType] ==
         AppLocalizations.of(context)!.mortgageLoan;
     var dropdownErrorText = widget.error?.incorrectType == true
@@ -146,224 +156,233 @@ class _AddAccountFromPlaidPopupItemState
     }
 
     var isInvestment = widget.bankAccount.type != 0;
-    return Container(
-      color: (isValid && (widget.error == null) && widget.showValidIndicator)
-          ? Colors.greenAccent.withOpacity(0.05)
-          : Colors.transparent,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 16.0,
-              right: 16.0,
-              top: 16.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Label(
-                        text: AppLocalizations.of(context)!.accountNum,
-                        type: LabelType.General),
-                    SizedBox(width: 30),
-                    Label(
-                        text:
-                            '**** **** **** ${widget.bankAccount.lastFourDigits}',
-                        type: LabelType.GeneralBold),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  children: [
-                    Label(
-                        text: AppLocalizations.of(context)!.bankName,
-                        type: LabelType.General),
-                    SizedBox(width: 30),
-                    Label(
-                        text: widget.bankAccount.bankName,
-                        type: LabelType.GeneralBold),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Row(
-                  children: [
-                    Label(
-                        text: AppLocalizations.of(context)!.balance,
-                        type: LabelType.General),
-                    SizedBox(width: 30),
-                    if (widget.bankAccount.currency == 'USD')
+    return Form(
+      key: formKey,
+      child: Container(
+        color: (isValid && (widget.error == null) && widget.showValidIndicator)
+            ? Colors.greenAccent.withOpacity(0.05)
+            : Colors.transparent,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 16.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
                       Label(
-                        text: '\$',
+                          text: AppLocalizations.of(context)!.accountNum,
+                          type: LabelType.General),
+                      SizedBox(width: 30),
+                      Label(
+                          text:
+                              '**** **** **** ${widget.bankAccount.lastFourDigits}',
+                          type: LabelType.GeneralBold),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Label(
+                          text: AppLocalizations.of(context)!.bankName,
+                          type: LabelType.General),
+                      SizedBox(width: 30),
+                      Label(
+                          text: widget.bankAccount.bankName,
+                          type: LabelType.GeneralBold),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Label(
+                          text: AppLocalizations.of(context)!.balance,
+                          type: LabelType.General),
+                      SizedBox(width: 30),
+                      if (widget.bankAccount.currency == 'USD')
+                        Label(
+                          text: '\$',
+                          type: LabelType.GeneralBold,
+                        ),
+                      Label(
+                        text: widget.bankAccount.balance.toString(),
                         type: LabelType.GeneralBold,
                       ),
-                    Label(
-                      text: widget.bankAccount.balance.toString(),
-                      type: LabelType.GeneralBold,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  if (widget.showUsageType)
+                    Row(
                       children: [
-                        if (!isInvestment)
-                          Label(
-                              text: AppLocalizations.of(context)!
-                                  .chooseAccountType,
-                              type: LabelType.General),
-                        SizedBox(
-                          height: 10,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (!isInvestment)
+                              Label(
+                                  text: AppLocalizations.of(context)!
+                                      .chooseAccountType,
+                                  type: LabelType.General),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            if (!isInvestment)
+                              Row(
+                                children: [
+                                  CustomRadioButton(
+                                    title:
+                                        AppLocalizations.of(context)!.personal,
+                                    value: 1,
+                                    groupValue: _usageType,
+                                    onTap: () => setState(() {
+                                      _usageType = 1;
+                                      _chosenAccountType = 0;
+                                      businessName = null;
+                                      copyWithActualProperties(
+                                          callIsValid: isValid);
+                                    }),
+                                  ),
+                                  SizedBox(width: 24),
+                                  CustomRadioButton(
+                                    title:
+                                        AppLocalizations.of(context)!.business,
+                                    value: 2,
+                                    groupValue: _usageType,
+                                    onTap: () => setState(() {
+                                      _usageType = 2;
+                                      _chosenAccountType = 0;
+                                      copyWithActualProperties(
+                                          callIsValid: isValid);
+                                    }),
+                                  ),
+                                ],
+                              ),
+                          ],
                         ),
-                        if (!isInvestment)
-                          Row(
-                            children: [
-                              CustomRadioButton(
-                                title: AppLocalizations.of(context)!.personal,
-                                value: 1,
-                                groupValue: _usageType,
-                                onTap: () => setState(() {
-                                  _usageType = 1;
-                                  _chosenAccountType = 0;
-                                  businessName = null;
+                        SizedBox(width: 8),
+                        if (_usageType != 2) Spacer(),
+                        if (_usageType == 2)
+                          Expanded(
+                            child: TextFieldWithSuggestion<String>(
+                                search: (value) => widget.businessNameList
+                                    .where((element) => element.contains(value))
+                                    .toList(),
+                                hideOnEmpty: true,
+                                maxSymbols: 15,
+                                onSelectedModel: (value) {
+                                  businessName = value;
                                   copyWithActualProperties(
                                       callIsValid: isValid);
-                                }),
-                              ),
-                              SizedBox(width: 24),
-                              CustomRadioButton(
-                                title: AppLocalizations.of(context)!.business,
-                                value: 2,
-                                groupValue: _usageType,
-                                onTap: () => setState(() {
-                                  _usageType = 2;
-                                  _chosenAccountType = 0;
+                                },
+                                shouldEraseOnFocus: false,
+                                onSaved: (value) {
+                                  businessName = value;
                                   copyWithActualProperties(
                                       callIsValid: isValid);
-                                }),
-                              ),
-                            ],
+                                },
+                                hintText: 'Enter business name',
+                                label: 'Business name'),
                           ),
                       ],
                     ),
-                    SizedBox(width: 8),
-                    if (_usageType != 2) Spacer(),
-                    if (_usageType == 2)
-                      Expanded(
-                        child: TextFieldWithSuggestion<String>(
-                            search: (value) => widget.businessNameList
-                                .where((element) => element.contains(value))
-                                .toList(),
-                            hideOnEmpty: true,
-                            maxSymbols: 15,
-                            onSelectedModel: (value) {
-                              businessName = value;
-                              copyWithActualProperties(callIsValid: isValid);
-                            },
-                            shouldEraseOnFocus: false,
-                            onSaved: (value) {
-                              businessName = value;
-                              copyWithActualProperties(callIsValid: isValid);
-                            },
-                            hintText: 'Enter business name',
-                            label: 'Business name'),
-                      ),
-                  ],
-                ),
-                (_usageType == 1)
-                    ? DropdownItem<int>(
-                        key: Key('personal'),
-                        enabled: _usageType != 0 && !isInvestment,
-                        labelText: AppLocalizations.of(context)!.chooseCategory,
-                        items: _personalAccountTypes,
-                        hintText: '',
-                        initialValue: isInvestment
-                            ? _personalAccountTypes.indexOf(
-                                _personalAccountTypes[_chosenAccountType])
-                            : 0,
-                        errorText: dropdownErrorText,
-                        validateFunction:
-                            FormValidators.accountCategoryValidateFunction,
-                        callback: (value) {
-                          _chosenAccountType = value;
-                          copyWithActualProperties(callIsValid: isValid);
-                          setState(() {});
-                        },
-                      )
-                    : DropdownItem<int>(
-                        key: Key('business'),
-                        enabled: _usageType != 0,
-                        labelText: AppLocalizations.of(context)!.chooseCategory,
-                        items: _businessAccountTypes,
-                        hintText: '',
-                        initialValue: 0,
-                        errorText: dropdownErrorText,
-                        validateFunction:
-                            FormValidators.accountCategoryValidateFunction,
-                        callback: (value) {
-                          copyWithActualProperties(callIsValid: isValid);
-                          setState(() {});
-                        },
-                      ),
-                SizedBox(height: 30),
-                if (!isInvestment)
-                  DropdownItem<int>(
-                    enabled: _usageType != 0 && !isMortgageLoanAccountType,
-                    labelText: AppLocalizations.of(context)!
-                        .chooseDataAcquisitionPeriod,
-                    items: [
-                      AppLocalizations.of(context)!.dataOptionOne,
-                      AppLocalizations.of(context)!.dataOptionTwo,
-                      AppLocalizations.of(context)!.none,
-                    ],
-                    initialValue:
-                        isMortgageLoanAccountType || isInvestment ? 2 : 0,
-                    //AquisitionPeriod none if MortgageLoan or investment
-                    hintText: '',
+                  (_usageType == 1)
+                      ? DropdownItem<int>(
+                          key: Key('personal'),
+                          enabled: _usageType != 0 && !isInvestment,
+                          labelText: AppLocalizations.of(context)!.chooseCategory,
+                          items: _personalAccountTypes,
+                          hintText: '',
+                          initialValue: isInvestment
+                              ? _personalAccountTypes.indexOf(
+                                  _personalAccountTypes[_chosenAccountType])
+                              : 0,
+                          errorText: dropdownErrorText,
+                          validateFunction:
+                              FormValidators.accountCategoryValidateFunction,
+                          callback: (value) {
+                            _chosenAccountType = value;
+                            copyWithActualProperties(callIsValid: isValid);
+                            setState(() {});
+                          },
+                        )
+                      : DropdownItem<int>(
+                          key: Key('business'),
+                          enabled: _usageType != 0,
+                          labelText: AppLocalizations.of(context)!.chooseCategory,
+                          items: _businessAccountTypes,
+                          hintText: '',
+                          initialValue: 0,
+                          errorText: dropdownErrorText,
+                          validateFunction:
+                              FormValidators.accountCategoryValidateFunction,
+                          callback: (value) {
+                            copyWithActualProperties(callIsValid: isValid);
+                            setState(() {});
+                          },
+                        ),
+                  SizedBox(height: 30),
+                  if (!isInvestment)
+                    DropdownItem<int>(
+                      enabled: _usageType != 0 && !isMortgageLoanAccountType,
+                      labelText: AppLocalizations.of(context)!
+                          .chooseDataAcquisitionPeriod,
+                      items: [
+                        AppLocalizations.of(context)!.dataOptionOne,
+                        AppLocalizations.of(context)!.dataOptionTwo,
+                        AppLocalizations.of(context)!.none,
+                      ],
+                      initialValue:
+                          isMortgageLoanAccountType || isInvestment ? 2 : 0,
+                      //AquisitionPeriod none if MortgageLoan or investment
+                      hintText: '',
+                      validateFunction:
+                          FormValidators.accountDataPeriodValidateFunction,
+                      callback: (value) {
+                        _dataAcquisitionStart = value;
+                        copyWithActualProperties(callIsValid: isValid);
+                      },
+                    ),
+                  if (!isInvestment) SizedBox(height: 30),
+                  InputItem(
+                    labelText: AppLocalizations.of(context)!.createAccountName,
+                    errorText: widget.error?.nonUniqueName == true
+                        ? AppLocalizations.of(context)!
+                            .accountsShouldHaveUniqueNames
+                        : null,
+                    value: widget.bankAccount.externalName,
                     validateFunction:
-                        FormValidators.accountDataPeriodValidateFunction,
-                    callback: (value) {
-                      _dataAcquisitionStart = value;
+                        FormValidators.accountNameValidateFunction,
+                    hintText: AppLocalizations.of(context)!.accountName,
+                    key: Key(widget.bankAccount.id),
+                    textInputFormatters: [LengthLimitingTextInputFormatter(20)],
+                    focusNode: _focusNode,
+                    onChanged: (value) {
+                      _createAccountNameValue = value;
                       copyWithActualProperties(callIsValid: isValid);
                     },
                   ),
-                if (!isInvestment) SizedBox(height: 30),
-                InputItem(
-                  labelText: AppLocalizations.of(context)!.createAccountName,
-                  errorText: widget.error?.nonUniqueName == true
-                      ? AppLocalizations.of(context)!
-                          .accountsShouldHaveUniqueNames
-                      : null,
-                  value: widget.bankAccount.externalName,
-                  validateFunction: FormValidators.accountNameValidateFunction,
-                  hintText: AppLocalizations.of(context)!.accountName,
-                  key: Key(widget.bankAccount.id),
-                  textInputFormatters: [LengthLimitingTextInputFormatter(20)],
-                  focusNode: _focusNode,
-                  onChanged: (value) {
-                    _createAccountNameValue = value;
-                    copyWithActualProperties(callIsValid: isValid);
-                  },
-                ),
-                if (widget.error?.otherMessages != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: Text(
-                      widget.error!.otherMessages!,
-                      style: CustomTextStyle.ErrorTextStyle(context),
+                  if (widget.error?.otherMessages != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        widget.error!.otherMessages!,
+                        style: CustomTextStyle.ErrorTextStyle(context),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-          if (widget.showDivider)
-            Padding(
-              padding: const EdgeInsets.only(top: 24.0),
-              child: CustomDivider(),
-            ),
-        ],
+            if (widget.showDivider)
+              Padding(
+                padding: const EdgeInsets.only(top: 24.0),
+                child: CustomDivider(),
+              ),
+          ],
+        ),
       ),
     );
   }

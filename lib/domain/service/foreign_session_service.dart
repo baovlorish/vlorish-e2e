@@ -49,7 +49,7 @@ class ForeignSessionServiceImpl extends ForeignSessionService {
   ForeignSessionParams? currentForeignSession() => _currentForeignSession;
 }
 
-enum _ForeignSessionAccessType { none, limited, secondary }
+enum _ForeignSessionAccessType { none, readOnly, editor }
 
 class ForeignSessionParams {
   ForeignSessionParams({
@@ -91,16 +91,16 @@ class ForeignSessionAccess {
     switch (_type) {
       case _ForeignSessionAccessType.none:
         return 0;
-      case _ForeignSessionAccessType.limited:
+      case _ForeignSessionAccessType.readOnly:
         return 1;
-      case _ForeignSessionAccessType.secondary:
+      case _ForeignSessionAccessType.editor:
         return 2;
     }
   }
 
-  bool get isLimited => _type == _ForeignSessionAccessType.limited;
+  bool get isReadOnly => _type == _ForeignSessionAccessType.readOnly;
 
-  bool get isSecondary => _type == _ForeignSessionAccessType.secondary;
+  bool get isEditor => _type == _ForeignSessionAccessType.editor;
 
   static ForeignSessionAccess fromMapped(int value) {
     assert(value < _ForeignSessionAccessType.values.length,
@@ -108,12 +108,12 @@ class ForeignSessionAccess {
     return ForeignSessionAccess(_ForeignSessionAccessType.values[value]);
   }
 
-  factory ForeignSessionAccess.limited() {
-    return ForeignSessionAccess(_ForeignSessionAccessType.limited);
+  factory ForeignSessionAccess.readOnly() {
+    return ForeignSessionAccess(_ForeignSessionAccessType.readOnly);
   }
 
-  factory ForeignSessionAccess.secondary() {
-    return ForeignSessionAccess(_ForeignSessionAccessType.secondary);
+  factory ForeignSessionAccess.editor() {
+    return ForeignSessionAccess(_ForeignSessionAccessType.editor);
   }
 
   @override

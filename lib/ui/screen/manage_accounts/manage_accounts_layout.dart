@@ -119,8 +119,11 @@ class _ManageAccountsLayoutState extends State<ManageAccountsLayout> {
                             },
                           ),
                           onMainButtonPressed: () async {
-                            var businessNameList =
-                                await _manageAccountsCubit.businessNameList();
+                            var businessNameList = [''];
+                            if(!_homeScreenCubit.user.subscription!.isStandard){
+                              businessNameList =
+                                  await _manageAccountsCubit.businessNameList();
+                            }
                             if (isManual != null) {
                               if (isManual == false) {
                                 _manageAccountsCubit.addPlaidAccount(
@@ -139,6 +142,8 @@ class _ManageAccountsLayoutState extends State<ManageAccountsLayout> {
                                     return AddManualAccountPopup(
                                       context,
                                       businessNameList: businessNameList,
+                                      isStandardSubscription:
+                                          BlocProvider.of<HomeScreenCubit>(context).user.subscription!.isStandard,
                                       addAccountFunction: (
                                           {required String name,
                                           required int usageType,

@@ -42,10 +42,10 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
   var isSmallHeader = false;
   var controller = ScrollController();
 
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
           .currentForeignSession
           ?.access
-          .isLimited ??
+          .isReadOnly ??
       false;
 
   String? _name;
@@ -56,7 +56,7 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
 
   DateTime? _acquisitionDate;
   final _acquisitionDateNode = FocusNode();
-  int? _custodian;
+  String? _custodian;
   final _investTypeNode = FocusNode();
   final _custodianNode = FocusNode();
   double? _currentCost;
@@ -99,7 +99,7 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
   Widget build(BuildContext context) {
     isSmallHeader = MediaQuery.of(context).size.width < 1070;
 
-    var enabled = checkEnabled() && !isLimitedCoach;
+    var enabled = checkEnabled() && !isReadOnlyAdvisor;
 
     return BlocConsumer<AddRetirementCubit, AddRetirementState>(
         listener: (context, state) {
@@ -290,20 +290,29 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                       children: [
                                         SizedBox(
                                           width: shortWidth,
-                                          child: DropdownItem<int>(
+                                          child: DropdownItem<String>(
                                             initialValue: _custodian,
                                             focusNode: _custodianNode,
                                             itemKeys: [
-                                              1, //'Guideline'
-                                              2, //'Human Interest',
-                                              3, //'Betterment',
-                                              4, //'Wealthfront',
-                                              5, //'Fidelity',
-                                              6, // 'T. Rowe Price',
-                                              7, //'Merril Edge',
-                                              8, // 'Charles Scwab',
-                                              9, // 'ADP',
-                                              0, // 'Other',
+                                              AppLocalizations.of(context)!
+                                                  .guideline,
+                                              AppLocalizations.of(context)!
+                                                  .humanInterest,
+                                              AppLocalizations.of(context)!
+                                                  .betterment,
+                                              AppLocalizations.of(context)!
+                                                  .wealthfront,
+                                              AppLocalizations.of(context)!
+                                                  .fidelity,
+                                              AppLocalizations.of(context)!
+                                                  .tRowePrice,
+                                              AppLocalizations.of(context)!
+                                                  .merrilEdge,
+                                              AppLocalizations.of(context)!
+                                                  .charlesScwab,
+                                              AppLocalizations.of(context)!.adp,
+                                              AppLocalizations.of(context)!
+                                                  .other,
                                             ],
                                             callback: (value) {
                                               _custodian = value;
@@ -315,18 +324,30 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                                           .requestFocus()
                                                       : null;
                                             },
-                                            labelText: 'Custodian*',
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                        .custodian +
+                                                    '*',
                                             items: [
-                                              'Guideline',
-                                              'Human Interest',
-                                              'Betterment',
-                                              'Wealthfront',
-                                              'Fidelity',
-                                              'T. Rowe Price',
-                                              'Merril Edge',
-                                              'Charles Scwab',
-                                              'ADP',
-                                              'Other',
+                                              AppLocalizations.of(context)!
+                                                  .guideline,
+                                              AppLocalizations.of(context)!
+                                                  .humanInterest,
+                                              AppLocalizations.of(context)!
+                                                  .betterment,
+                                              AppLocalizations.of(context)!
+                                                  .wealthfront,
+                                              AppLocalizations.of(context)!
+                                                  .fidelity,
+                                              AppLocalizations.of(context)!
+                                                  .tRowePrice,
+                                              AppLocalizations.of(context)!
+                                                  .merrilEdge,
+                                              AppLocalizations.of(context)!
+                                                  .charlesScwab,
+                                              AppLocalizations.of(context)!.adp,
+                                              AppLocalizations.of(context)!
+                                                  .other,
                                             ],
                                             hintText:
                                                 AppLocalizations.of(context)!
@@ -545,7 +566,7 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                           type: LabelType.LinkLarge,
                                           fontSize: 16,
                                         ),
-                                        onPressed: isLimitedCoach
+                                        onPressed: isReadOnlyAdvisor
                                             ? () {}
                                             : () async {
                                                 await showDialog(

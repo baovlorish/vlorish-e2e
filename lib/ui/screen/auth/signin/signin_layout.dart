@@ -172,6 +172,7 @@ class _SigninLayoutState extends State<SigninLayout> {
                           focusNode: signInButtonNode,
                           text: AppLocalizations.of(context)!.signIn,
                           buttonType: ButtonType.LargeText,
+                          enabled: state is! LoadingState,
                           onPressed: () {
                             clearErrors();
                             if (_signInFormKey.currentState!.validate()) {

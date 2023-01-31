@@ -114,7 +114,7 @@ class NetWorthTableWidget extends StatelessWidget {
                     child: TogglingRowsTable(
                       tableData: tableData,
                       allowEditableCells: homeScreenCubit
-                              .currentForeignSession?.access.isSecondary ??
+                              .currentForeignSession?.access.isEditor ??
                           true,
                     ),
                   );

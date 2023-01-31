@@ -5,20 +5,9 @@ import 'package:burgundy_budgeting_app/domain/service/http/api_investments_servi
 import 'package:dio/dio.dart';
 
 class ApiInvestmentsServiceImpl extends ApiInvestmentsService {
-  final String postIndexFunds = '/indexfunds';
   final String investmentsEndpoint = '/investments';
-  final String postStocks = '/stocks';
-  final String postProperties = '/properties';
-  final String postStartUps = '/startups';
-  final String postCryptocurrencies = '/cryptocurrencies';
-  final String postOtherInvestments = '/otherinvestments';
 
-  ///Need to add { id } in the end.
-  final String getIndexFundsEndpoint = '/indexfunds/';
-  final String getStocksEndpoint = '/stocks/';
-  final String getStartUpsEndpoint = '/startups/';
-  final String getCryptocurrenciesEndpoint = '/cryptocurrencies/';
-  final String getOtherInvestmentsEndpoint = '/otherinvestments/';
+  final String overviewEndpoint = '/overview';
 
   ///Need to add { id } in the end.
   final String availableEndpoint = '/available';
@@ -32,27 +21,40 @@ class ApiInvestmentsServiceImpl extends ApiInvestmentsService {
 
   ApiInvestmentsServiceImpl(this.httpManager) : super(httpManager);
 
+  /// backed enum
+  /// 0 - None,
+  /// 1 - Stocks,
+  /// 2 - RealEstate,
+  /// 3 - IndexFunds,
+  /// 4 - Cryptocurrency,
+  /// 5 - StartUp,
+  /// 6 - Other;
+  int investToBackendEnumTransform(InvestmentGroup tab) {
+    return tab.index + 1;
+  }
+
   @override
   Future<Response> getInvestment(InvestmentGroup investmentGroup) async {
-    return await httpManager.dio.get(endpointSelector(investmentGroup));
+    return await httpManager.dio.get(investmentsEndpoint +
+        '?type=' +
+        investToBackendEnumTransform(investmentGroup).toString());
   }
 
   @override
   Future<Response> getInvestmentsDashboardData() async {
-    return await httpManager.dio.get(investmentsEndpoint);
+    return await httpManager.dio.get(investmentsEndpoint + overviewEndpoint);
   }
 
   @override
   Future<Response> addInvestment(InvestmentModel model) async {
-    var response = await httpManager.dio
-        .post(endpointSelector(model.investmentGroup), data: model.toJson());
+    var response =
+        await httpManager.dio.post(investmentsEndpoint, data: model.toJson());
     return response;
   }
 
   @override
   Future<Response> getInvestmentWithTransactions(InvestmentModel model) async {
-    return await httpManager.dio
-        .get(endpointSelector(model.investmentGroup) + model.id!);
+    return await httpManager.dio.get(investmentsEndpoint + '/' + model.id!);
   }
 
   @override
@@ -61,8 +63,7 @@ class ApiInvestmentsServiceImpl extends ApiInvestmentsService {
     DateTime? sellDate,
     bool removeHistory,
   ) async {
-    return await httpManager.dio.delete(
-        endpointSelector(model.investmentGroup) + model.id!,
+    return await httpManager.dio.delete(investmentsEndpoint + '/' + model.id!,
         data: model.deleteInvestmentByIdToJson(
             sellDate: sellDate?.toIso8601String(),
             removeHistory: removeHistory));
@@ -71,45 +72,8 @@ class ApiInvestmentsServiceImpl extends ApiInvestmentsService {
   @override
   Future<Response> addTransactionsToInvestmentById(
       InvestmentModel model) async {
-    return await httpManager.dio.put(
-        endpointSelector(model.investmentGroup) + model.id!,
-        data: model.toJson());
-  }
-
-  @override
-  Future<Response> getAvailableInvestment(
-      InvestmentGroup investmentGroup) async {
     return await httpManager.dio
-        .get(endpointSelector(investmentGroup) + availableEndpoint);
-  }
-
-  @override
-  Future<Response> availableInvestmentAttach(InvestmentGroup investmentGroup,
-      List<AttachInvestmentRetirementModel> attachModel) async {
-    var jsonAttachList = <Map>[];
-    attachModel.forEach((element) {
-      jsonAttachList.add(element.toJson());
-    });
-    return await httpManager.dio.post(
-        endpointSelector(investmentGroup) + postAvailableAttachEndpointEndPart,
-        data: {'items': jsonAttachList});
-  }
-
-  String endpointSelector(InvestmentGroup investmentGroup) {
-    switch (investmentGroup) {
-      case InvestmentGroup.IndexFunds:
-        return postIndexFunds + '/';
-      case InvestmentGroup.Stocks:
-        return postStocks + '/';
-      case InvestmentGroup.RealEstate:
-        return postProperties + '/';
-      case InvestmentGroup.StartUps:
-        return postStartUps + '/';
-      case InvestmentGroup.Cryptocurrencies:
-        return postCryptocurrencies + '/';
-      case InvestmentGroup.OtherInvestments:
-        return postOtherInvestments + '/';
-    }
+        .put(investmentsEndpoint + '/' + model.id!, data: model.toJson());
   }
 
   @override
@@ -119,27 +83,12 @@ class ApiInvestmentsServiceImpl extends ApiInvestmentsService {
   }
 
   @override
-  Future<Response> availableRetirementAttach(
-      List<Map<String, dynamic>> items) async {
-    return await httpManager.dio.post(
-        retirementsEndpoint + attachEndpointEndPart,
-        data: {'items': items});
-  }
-
-  @override
   Future<Response> deleteRetirementById(
       RetirementModel model, DateTime? sellDate, bool removeHistory) async {
-    return await httpManager.dio.delete(
-        retirementsEndpoint + '/${model.id}',
+    return await httpManager.dio.delete(retirementsEndpoint + '/${model.id}',
         data: model.deleteInvestmentByIdToJson(
             sellDate: sellDate?.toIso8601String(),
             removeHistory: removeHistory));
-  }
-
-  @override
-  Future<Response> getAvailableRetirements(int type) async {
-    return await httpManager.dio
-        .get(retirementsEndpoint + availableEndpoint + '/$type');
   }
 
   @override

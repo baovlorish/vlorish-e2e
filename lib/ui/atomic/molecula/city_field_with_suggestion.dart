@@ -21,6 +21,7 @@ class TextFieldWithSuggestion<T> extends StatefulWidget {
   final int? maxSymbols;
   final bool? hideOnEmpty;
   final bool unfocusWhenSuggestion;
+  final bool enabled;
 
   const TextFieldWithSuggestion({
     Key? key,
@@ -37,6 +38,7 @@ class TextFieldWithSuggestion<T> extends StatefulWidget {
     this.label,
     this.onSaved,
     this.unfocusWhenSuggestion = false,
+    this.enabled = true,
   }) : super(key: key);
 
   @override
@@ -82,8 +84,10 @@ class _TextFieldWithSuggestionState<T> extends State<TextFieldWithSuggestion> {
             height: 10,
           ),
         TypeAheadFormField<T>(
+          enabled: widget.enabled,
           hideOnEmpty: widget.hideOnEmpty ?? false,
           textFieldConfiguration: TextFieldConfiguration(
+            enabled: widget.enabled,
             focusNode: focusNode,
             controller: controller,
             onTap: () {

@@ -18,6 +18,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
+enum _ViewInvestmentType {
+  Brokerage,
+  Property,
+  Other,
+  Crypto,
+  StartUp;
+
+  static _ViewInvestmentType? fromInvestmentGroup(InvestmentGroup group) {
+    if (group == InvestmentGroup.Stocks || group == InvestmentGroup.IndexFunds) return _ViewInvestmentType.Brokerage;
+    if (group == InvestmentGroup.Property) return _ViewInvestmentType.Property;
+    if (group == InvestmentGroup.OtherInvestments) return _ViewInvestmentType.Other;
+    if (group == InvestmentGroup.Cryptocurrencies) return _ViewInvestmentType.Crypto;
+    if (group == InvestmentGroup.StartUps) return _ViewInvestmentType.StartUp;
+    return null;
+  }
+
+}
+
 class InvestmentList extends StatefulWidget {
   final double width;
 
@@ -43,16 +61,33 @@ class _InvestmentListState extends State<InvestmentList>
       (investmentCubit.state as InvestmentsLoaded).isRetirement;
   late int retirementTab =
       (investmentCubit.state as InvestmentsLoaded).retirementTab;
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
-      .currentForeignSession
-      ?.access
-      .isLimited ?? false;
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
+          .currentForeignSession
+          ?.access
+          .isReadOnly ??
+      false;
+
+
+  _ViewInvestmentType? investmentType;
+
+  bool get hasBrokerage => investmentType == _ViewInvestmentType.Brokerage;
+
+  bool get isProperty => investmentType == _ViewInvestmentType.Property;
+
+  bool get isOther => investmentType == _ViewInvestmentType.Other;
+
+  bool get isCrypto => investmentType == _ViewInvestmentType.Crypto;
+
+  bool get isStartUp => investmentType == _ViewInvestmentType.StartUp;
 
   @override
   void initState() {
+    super.initState();
     investmentCubit = BlocProvider.of<InvestmentsCubit>(context);
     investments = (investmentCubit.state as InvestmentsLoaded).investments!;
-    super.initState();
+    if (investments.isNotEmpty && !isRetirement) {
+      investmentType = _ViewInvestmentType.fromInvestmentGroup(investments.first.investmentGroup);
+    }
   }
 
   @override
@@ -85,7 +120,7 @@ class _InvestmentListState extends State<InvestmentList>
                       child: Label(
                         text: isRetirement
                             ? 'Invest Type'
-                            : investments.first.address != null
+                            : isProperty
                                 ? AppLocalizations.of(context)!.propertyName
                                 : AppLocalizations.of(context)!.companyName,
                         type: LabelType.TableHeader,
@@ -105,7 +140,7 @@ class _InvestmentListState extends State<InvestmentList>
                         ),
                       ),
                     ),
-                  if (!isRetirement && investments.first.brokerage != null)
+                  if (hasBrokerage)
                     Expanded(
                       flex: listOfFlexFactorsHeader[1],
                       child: Padding(
@@ -117,7 +152,7 @@ class _InvestmentListState extends State<InvestmentList>
                         ),
                       ),
                     )
-                  else if (!isRetirement && investments.first.address != null)
+                  else if (isProperty)
                     Expanded(
                       flex: listOfFlexFactorsHeader[1],
                       child: Padding(
@@ -129,7 +164,7 @@ class _InvestmentListState extends State<InvestmentList>
                         ),
                       ),
                     )
-                  else if (!isRetirement && investments.first.exchange != null)
+                  else if (isCrypto)
                     Expanded(
                       flex: listOfFlexFactorsHeader[1],
                       child: Padding(
@@ -224,12 +259,14 @@ class _InvestmentListState extends State<InvestmentList>
                   padding: const EdgeInsets.only(left: 8.0, bottom: 16.0),
                   child: SizedBox(
                     width: 130,
-                    child: isLimitedCoach? SizedBox() : TextButtonWithIcon(
-                      iconData: Icons.add_circle_rounded,
-                      text: AppLocalizations.of(context)!.addAnother,
-                      buttonColor: CustomColorScheme.menuBackgroundActive,
-                      onTap: () => widget.showPopUpCallback(),
-                    ),
+                    child: isReadOnlyAdvisor
+                        ? SizedBox()
+                        : TextButtonWithIcon(
+                            iconData: Icons.add_circle_rounded,
+                            text: AppLocalizations.of(context)!.addAnother,
+                            buttonColor: CustomColorScheme.menuBackgroundActive,
+                            onTap: () => widget.showPopUpCallback(),
+                          ),
                   ),
                 ),
               ),
@@ -267,10 +304,11 @@ class _InvestmentItemState extends State<InvestmentItem>
       : 100 *
           (widget.retirement!.currentCost! - widget.retirement!.initialCost!) /
           widget.retirement!.initialCost!;
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
-      .currentForeignSession
-      ?.access
-      .isLimited ?? false;
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
+          .currentForeignSession
+          ?.access
+          .isReadOnly ??
+      false;
   var exchangeMap = {
     1: 'Coinbase',
     2: 'Gemini',
@@ -326,35 +364,14 @@ class _InvestmentItemState extends State<InvestmentItem>
               ],
             ),
           ),
-          if (widget.item?.brokerage != null)
+          if (widget.item?.details != null &&
+              widget.item!.investmentGroup != InvestmentGroup.OtherInvestments)
             Expanded(
               flex: listOfFlexFactorsHeader[1],
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Label(
-                  text: brokerageToString(context, widget.item!.brokerage!),
-                  type: LabelType.General,
-                ),
-              ),
-            )
-          else if (widget.item?.address != null)
-            Expanded(
-              flex: listOfFlexFactorsHeader[1],
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Label(
-                  text: widget.item!.address!,
-                  type: LabelType.General,
-                ),
-              ),
-            )
-          else if (widget.item?.exchange != null)
-            Expanded(
-              flex: listOfFlexFactorsHeader[1],
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Label(
-                  text: exchangeMap[widget.item!.exchange] ?? '',
+                  text: widget.item!.details!,
                   type: LabelType.General,
                 ),
               ),
@@ -365,8 +382,7 @@ class _InvestmentItemState extends State<InvestmentItem>
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Label(
-                  text: custodianToString(
-                      context, widget.retirement!.custodian ?? 0),
+                  text: widget.retirement!.custodian!,
                   type: LabelType.General,
                 ),
               ),
@@ -415,55 +431,64 @@ class _InvestmentItemState extends State<InvestmentItem>
               ),
             ),
           ),
-          Expanded(
-            flex: listOfFlexFactorsItem[5],
-            child: Row(
-              children: [
-                if ((widget.item?.id != null && widget.item!.isManual) ||
-                    (widget.retirement?.id != null &&
-                        widget.retirement!.isManual))
-                  CustomTooltip(
-                    message: AppLocalizations.of(context)!.edit,
-                    child: CustomMaterialInkWell(
-                      borderRadius: BorderRadius.circular(22),
-                      type: InkWellType.Purple,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: isLimitedCoach? SizedBox() :  ImageIcon(
-                          AssetImage(
-                            'assets/images/icons/edit_ic.png',
+          if (!isReadOnlyAdvisor)
+            Expanded(
+              flex: listOfFlexFactorsItem[5],
+              child: Row(
+                children: [
+                  if ((widget.item?.id != null && widget.item!.isManual) ||
+                      (widget.retirement?.id != null &&
+                          widget.retirement!.isManual))
+                    CustomTooltip(
+                      message: AppLocalizations.of(context)!.edit,
+                      child: CustomMaterialInkWell(
+                        borderRadius: BorderRadius.circular(22),
+                        type: InkWellType.Purple,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ImageIcon(
+                            AssetImage(
+                              'assets/images/icons/edit_ic.png',
+                            ),
+                            color: CustomColorScheme.mainDarkBackground,
+                            size: 24,
                           ),
-                          color: CustomColorScheme.mainDarkBackground,
-                          size: 24,
                         ),
-                      ),
-                      onTap: () => widget.editInvestment(
-                          widget.item?.id! ?? widget.retirement!.id!),
-                    ),
-                  ),
-                SizedBox(width: 16),
-                CustomTooltip(
-                  message: AppLocalizations.of(context)!.delete,
-                  child: CustomMaterialInkWell(
-                    borderRadius: BorderRadius.circular(22),
-                    type: InkWellType.Purple,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: isLimitedCoach? SizedBox() : ImageIcon(
-                        AssetImage(
-                          'assets/images/icons/delete.png',
-                        ),
-                        color: CustomColorScheme.mainDarkBackground,
-                        size: 24,
+                        onTap: () => widget.editInvestment(
+                            widget.item?.id! ?? widget.retirement!.id!),
                       ),
                     ),
-                    onTap:  () => widget
-                        .removeInvestment(widget.item ?? widget.retirement!),
-                  ),
-                ),
-              ],
-            ),
-          )
+                  SizedBox(width: 16),
+                  if (widget.item?.isManual ??
+                      widget.retirement?.isManual ??
+                      false)
+                    CustomTooltip(
+                      message: AppLocalizations.of(context)!.delete,
+                      child: CustomMaterialInkWell(
+                        borderRadius: BorderRadius.circular(22),
+                        type: InkWellType.Purple,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ImageIcon(
+                            AssetImage(
+                              'assets/images/icons/delete.png',
+                            ),
+                            color: CustomColorScheme.mainDarkBackground,
+                            size: 24,
+                          ),
+                        ),
+                        onTap: () => widget.removeInvestment(
+                            widget.item ?? widget.retirement!),
+                      ),
+                    ),
+                ],
+              ),
+            )
+          else
+            Expanded(
+              flex: listOfFlexFactorsItem[5],
+              child: SizedBox(),
+            )
         ],
       ),
     );
@@ -489,33 +514,6 @@ class _InvestmentItemState extends State<InvestmentItem>
         return AppLocalizations.of(context)!.allyInvest;
       case 8:
         return AppLocalizations.of(context)!.interactiveBrokers;
-      default:
-        return AppLocalizations.of(context)!.unknown;
-    }
-  }
-
-  String custodianToString(BuildContext context, int custodian) {
-    switch (custodian) {
-      case 1:
-        return 'Guideline';
-      case 2:
-        return 'Human Interest';
-      case 3:
-        return 'Betterment';
-      case 4:
-        return 'Wealthfront';
-      case 5:
-        return 'Fidelity';
-      case 6:
-        return 'T. Rowe Price';
-      case 7:
-        return 'Merril Edge';
-      case 8:
-        return 'Charles Scwab';
-      case 9:
-        return 'ADP';
-      case 0:
-        return 'Other';
       default:
         return AppLocalizations.of(context)!.unknown;
     }

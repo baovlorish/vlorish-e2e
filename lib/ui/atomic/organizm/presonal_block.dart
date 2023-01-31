@@ -15,17 +15,18 @@ class PersonalBlock extends StatelessWidget {
   final String? secondName;
   final String memberSince;
   final String? imageUrl;
-  final bool? isPremium;
   final bool isSmall;
-  const PersonalBlock(
-      {Key? key,
-      required this.name,
-      required this.secondName,
-      required this.memberSince,
-      this.imageUrl,
-      required this.isPremium,
-      required this.isSmall})
-      : super(key: key);
+  final bool shouldDisplayMenageUsers;
+
+  const PersonalBlock({
+    Key? key,
+    required this.name,
+    required this.secondName,
+    required this.memberSince,
+    required this.isSmall,
+    required this.shouldDisplayMenageUsers,
+    this.imageUrl,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -112,22 +113,10 @@ class PersonalBlock extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (isPremium == true && !isSmall)
+                if (!isSmall && shouldDisplayMenageUsers)
                   Align(
                     alignment: Alignment.topRight,
-                    child: SizedBox(
-                      width: 200,
-                      child: ButtonItem(
-                        context,
-                        text: AppLocalizations.of(context)!.manageUsersLower,
-                        onPressed: () {
-                          NavigatorManager.navigateTo(
-                            context,
-                            ManageUsersPage.routeName,
-                          );
-                        },
-                      ),
-                    ),
+                    child: manageUsersButton(context),
                   ),
               ],
             ),
@@ -137,8 +126,8 @@ class PersonalBlock extends StatelessWidget {
               children: [
                 SizedBox(height: 16),
                 profileDetailsButton(context, profileOverviewCubit),
-                SizedBox(height: 16),
-                if (isPremium == true) manageUsersButton(context)
+                if (shouldDisplayMenageUsers) SizedBox(height: 16),
+                if (shouldDisplayMenageUsers) manageUsersButton(context)
               ],
             ),
         ],

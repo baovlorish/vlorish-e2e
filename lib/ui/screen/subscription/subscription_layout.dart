@@ -6,9 +6,9 @@ import 'package:burgundy_budgeting_app/ui/atomic/molecula/clip_selector_element.
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/error_alert_dialog.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/success_alert_dialog.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/success_auth_widget.dart';
-import 'package:burgundy_budgeting_app/ui/screen/auth/auth_screen/auth_screen.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/details_subscribe_container.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen_cubit.dart';
+import 'package:burgundy_budgeting_app/ui/screen/auth/auth_screen/auth_screen.dart';
 import 'package:burgundy_budgeting_app/ui/screen/auth/signup/add_card/signup_add_card_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/budget/personal/budget_personal_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/subscription/subscription_cubit.dart';
@@ -57,6 +57,9 @@ class _SubscriptionLayoutState extends State<SubscriptionLayout> {
       isAnnual = widget.listChips.first.selected;
     });
   }
+
+  String get subscriptionHint =>
+      '${AppLocalizations.of(context)!.subscriptionHint1}\n${AppLocalizations.of(context)!.subscriptionHint2}';
 
   @override
   Widget build(BuildContext context) {
@@ -167,24 +170,24 @@ class _SubscriptionLayoutState extends State<SubscriptionLayout> {
   List<Widget> contentBlocks(
       bool isSmall, bool isAnnual, SubscriptionLoaded state) {
     return [
-      if (!(state.isCoach))
+
         _wrapperExpanded(
           isSmall,
           DetailsSubscribeContainer(
               DetailsSubscribeContainerModel(
-                title: state.standardPlan.name,
-                planType: state.standardPlan.type,
+                title: state.personalPlan.name,
+                planType: state.personalPlan.type,
                 details:
                     'Designed for individuals with one or more w-2 income but no freelance or self-employed/business income.',
                 logo: 'images/folder_multiple_image.png',
                 price:
-                    '\$${isAnnual ? state.standardPlan.yearly.pricePerMonth : state.standardPlan.monthly.pricePerMonth}',
+                    '\$${isAnnual ? state.personalPlan.yearly.pricePerMonth : state.personalPlan.monthly.pricePerMonth}',
                 pricePersion: PricePersion.MONTH,
-                resultButton: 'Start with Standard',
+                resultButton: 'Start with ${state.personalPlan.name}',
                 onPressedResultButton: () {
                   _subscriptionCubit.subscribe(isAnnual
-                      ? state.standardPlan.yearly.id
-                      : state.standardPlan.monthly.id);
+                      ? state.personalPlan.yearly.id
+                      : state.personalPlan.monthly.id);
                 },
                 featureList: <FeatureSubscriptionItem>[
                   FeatureSubscriptionItem('Two-way Budget Tracking', ''),
@@ -195,11 +198,11 @@ class _SubscriptionLayoutState extends State<SubscriptionLayout> {
                   FeatureSubscriptionItem('Investment Tracking', ''),
                   FeatureSubscriptionItem('Peer Score™', ''),
                 ],
-              ),
-              isSmall),
-        ),
-      if (!(state.isCoach))
-        SizedBox(
+                hint: subscriptionHint,
+            ),
+            isSmall),
+      ),
+      SizedBox(
           width: isSmall ? 0 : 36.0,
           height: isSmall ? 36.0 : 0.0,
         ),
@@ -216,7 +219,7 @@ class _SubscriptionLayoutState extends State<SubscriptionLayout> {
                 price:
                     '\$${isAnnual ? state.premiumPlan.yearly.pricePerMonth : state.premiumPlan.monthly.pricePerMonth}',
                 pricePersion: PricePersion.MONTH,
-                resultButton: 'Get Premium',
+                resultButton: 'Get ${state.premiumPlan.name}',
                 onPressedResultButton: () {
                   _subscriptionCubit.subscribe(isAnnual
                       ? state.premiumPlan.yearly.id
@@ -232,6 +235,7 @@ class _SubscriptionLayoutState extends State<SubscriptionLayout> {
                   FeatureSubscriptionItem('Peer Score™', ''),
                   FeatureSubscriptionItem('Realtime Tax Estimates', ''),
                 ],
+                hint: subscriptionHint,
               ),
               isSmall),
         ),
@@ -252,7 +256,7 @@ class _SubscriptionLayoutState extends State<SubscriptionLayout> {
               price:
                   '\$${isAnnual ? state.advisorPlan.yearly.pricePerMonth : state.advisorPlan.monthly.pricePerMonth}',
               pricePersion: PricePersion.MONTH,
-              resultButton: 'Get Adviser',
+              resultButton: 'Get ${state.advisorPlan.name}',
               onPressedResultButton: () {
                 _subscriptionCubit.subscribe(isAnnual
                     ? state.advisorPlan.yearly.id
@@ -268,6 +272,7 @@ class _SubscriptionLayoutState extends State<SubscriptionLayout> {
                 FeatureSubscriptionItem('Peer Score™', ''),
                 FeatureSubscriptionItem('Realtime Tax Estimates', ''),
               ],
+              hint: subscriptionHint,
             ),
             isSmall),
       ),

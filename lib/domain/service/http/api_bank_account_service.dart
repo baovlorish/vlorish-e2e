@@ -16,7 +16,7 @@ abstract class ApiBankAccountService {
 
   Future<Response<dynamic>> getBankAccount();
 
-  Future<Response<dynamic>> addManualAccount(AddManualAccountRequest account);
+  Future<Response<dynamic>> addManualAccount(AddManualAccountRequest account, bool isPersonal);
 
   Future<Response<dynamic>> changeBankAccountMuteMode(
       ChangeBankAccountMuteModeRequest request);

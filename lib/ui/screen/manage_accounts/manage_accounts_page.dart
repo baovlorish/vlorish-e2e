@@ -43,34 +43,47 @@ class ManageAccountsPage {
                           diContractor.netWorthRepository);
                       return manageAccountsCubitInstance;
                     },
-                    child: ManageAccountsLayout(
-                      onSuccessCallback:
-                          (List<BankAccount> bankAccounts) async {
-                        var businessNameList = await manageAccountsCubitInstance
-                            .businessNameList();
-                        await showDialog(
-                          context: context!,
-                          barrierDismissible: false,
-                          builder: (_) {
-                            return BlocProvider<ManageAccountsCubit>.value(
-                              value: manageAccountsCubitInstance,
-                              child: AddAccountFromPlaidPopup(
-                                bankAccounts: bankAccounts,
-                                businessNameList: businessNameList,
-                                showCancelOption: true,
-                                plaidRepository:
-                                    diContractor.accountsTransactionsRepository,
-                                netWorthRepository:
-                                    diContractor.netWorthRepository,
-                                onSuccessCallback: () {
-                                  manageAccountsCubitInstance.getAccounts();
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    child: Builder(builder: (context) {
+                      return ManageAccountsLayout(
+                        onSuccessCallback:
+                            (List<BankAccount> bankAccounts) async {
+                          final isStandard =
+                              BlocProvider.of<HomeScreenCubit>(context)
+                                  .user
+                                  .subscription!
+                                  .isStandard;
+
+                          var businessNameList = [''];
+                          if (!isStandard) {
+                            businessNameList = await manageAccountsCubitInstance
+                                .businessNameList();
+                          }
+
+                          await showDialog(//todo: add to invest page
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) {
+                              return BlocProvider<ManageAccountsCubit>.value(
+                                value: manageAccountsCubitInstance,
+                                child: AddAccountFromPlaidPopup(
+                                  bankAccounts: bankAccounts,
+                                  businessNameList: businessNameList,
+                                  showCancelOption: true,
+                                  isStandardSubscription: isStandard,
+                                  plaidRepository: diContractor
+                                      .accountsTransactionsRepository,
+                                  netWorthRepository:
+                                      diContractor.netWorthRepository,
+                                  onSuccessCallback: () {
+                                    manageAccountsCubitInstance.getAccounts();
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }),
                   ),
                   title: AppLocalizations.of(context!)!.manageAccounts,
                 ),

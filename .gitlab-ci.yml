@@ -58,7 +58,7 @@ Sync files to prod:
     - unzip awscliv2.zip
     - ./aws/install
     - aws --version
-    - export SENTRY_RELEASE='burgundy_budgeting_app@1.2.0'
+    - export SENTRY_RELEASE='burgundy_budgeting_app@1.0.12'
     - export OUTPUT_FOLDER_WEB=./build/web/
     - curl -sL https://sentry.io/get-cli/ | bash
     - flutter build web --dart-define=SENTRY_RELEASE=$SENTRY_RELEASE --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false --source-maps
@@ -66,4 +66,4 @@ Sync files to prod:
     - sentry-cli releases finalize $SENTRY_RELEASE
 
     - aws s3 sync --cache-control 'no-cache' --delete build/web s3://vlorish-production-website/
-    - aws cloudfront create-invalidation --distribution-id E20ISAF1QSSFIE --paths /*
+    - aws cloudfront create-invalidation --distribution-id E1TPCR23YVTMNN --paths /*

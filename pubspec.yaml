@@ -6,7 +6,7 @@ description: Vlorish budgeting app
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 
-version: 3.3.10
+version: 1.0.12
 
 environment:
   sdk: '>=2.17.0-0 <3.0.0'
@@ -34,7 +34,7 @@ dependencies:
   flutter_typeahead: ^4.0.0
   hydrated_bloc: 7.0.0
   path_provider: ^2.0.1
-  syncfusion_flutter_charts: ^20.1.56
+  syncfusion_flutter_charts: 20.4.42
   hive: 2.0.4
   hive_flutter: 1.1.0
   syncfusion_flutter_datepicker: ^20.1.56

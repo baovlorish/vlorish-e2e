@@ -22,18 +22,25 @@ class BudgetPersonalPage {
                   diContractor.userRepository,
                   diContractor.subscriptionRepository,
                 ),
-                child: HomePage(
-                  innerBlocProvider: BlocProvider<BudgetBloc>(
-                    create: (_) => BudgetBloc(
-                      diContractor.budgetRepository,
-                      diContractor.categoryRepository,
-                      diContractor.accountsTransactionsRepository,
-                      isPersonal: true,
+                child: Builder(builder: (context) {
+                  return HomePage(
+                    innerBlocProvider: BlocProvider<BudgetBloc>(
+                      create: (_) => BudgetBloc(
+                        diContractor.budgetRepository,
+                        diContractor.categoryRepository,
+                        diContractor.accountsTransactionsRepository,
+                        isPersonal: true,
+                        isRegistrationStepsCompleted:
+                            BlocProvider.of<HomeScreenCubit>(context)
+                                    .user
+                                    .registrationStep ==
+                                8,
+                      ),
+                      child: BudgetLayout(isPersonal: true),
                     ),
-                    child: BudgetLayout(isPersonal: true),
-                  ),
-                  title: AppLocalizations.of(context!)!.personalBudget,
-                ),
+                    title: AppLocalizations.of(context)!.personalBudget,
+                  );
+                }),
               )
             : defaultRoute;
       },

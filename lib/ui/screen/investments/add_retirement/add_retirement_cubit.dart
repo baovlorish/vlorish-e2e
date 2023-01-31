@@ -37,7 +37,7 @@ class AddRetirementCubit extends Cubit<AddRetirementState> {
     required double initialCost,
     int? investType,
     double? currentCost,
-    int? custodian,
+    String? custodian,
   }) async {
     try {
       emit(AddRetirementLoading());
@@ -64,7 +64,7 @@ class AddRetirementCubit extends Cubit<AddRetirementState> {
       required bool isManual,
       required DateTime acquisitionDate,
       int? investType,
-      int? custodian,
+        String? custodian,
       required double initialCost,
       required double currentCost,
       List<InvestmentTransaction>? transactions}) async {

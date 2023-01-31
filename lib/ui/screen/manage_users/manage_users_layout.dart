@@ -148,34 +148,35 @@ class _ManageUsersLayoutState extends State<ManageUsersLayout> {
                                 state.invitationsPageModel.invitationStatus,
                           ),
                   ),
-                  Expanded(
-                    child: state.requestsPageModel.requests.isEmpty &&
-                            state.requestsPageModel.requestsStatus == 0
-                        ? EmptyManageUsersCard(
-                            header:
-                                AppLocalizations.of(context)!.accessToOthers,
-                            message: AppLocalizations.of(context)!
-                                .youHaveNotTheRequestsUsersYet,
-                            buttonText:
-                                AppLocalizations.of(context)!.sendRequest,
-                            onPressed: () {
-                              showRequestAlertOrForm(
-                                  !state.requestsPageModel.hasRequestSlots,
-                                  !state.requestsPageModel.canRequestToday);
-                            },
-                          )
-                        : ManageUsersList(
-                            state.requestsPageModel,
-                            () {
-                              showRequestAlertOrForm(
-                                  !state.requestsPageModel.hasRequestSlots,
-                                  !state.requestsPageModel.canRequestToday);
-                            },
-                            key: ObjectKey(state.requestsPageModel),
-                            filterPosition:
-                                state.requestsPageModel.requestsStatus,
-                          ),
-                  ),
+                  if (_homeScreenCubit.user.subscription!.isAdvisor)
+                    Expanded(
+                      child: state.requestsPageModel.requests.isEmpty &&
+                              state.requestsPageModel.requestsStatus == 0
+                          ? EmptyManageUsersCard(
+                              header:
+                                  AppLocalizations.of(context)!.accessToOthers,
+                              message: AppLocalizations.of(context)!
+                                  .youHaveNotTheRequestsUsersYet,
+                              buttonText:
+                                  AppLocalizations.of(context)!.sendRequest,
+                              onPressed: () {
+                                showRequestAlertOrForm(
+                                    !state.requestsPageModel.hasRequestSlots,
+                                    !state.requestsPageModel.canRequestToday);
+                              },
+                            )
+                          : ManageUsersList(
+                              state.requestsPageModel,
+                              () {
+                                showRequestAlertOrForm(
+                                    !state.requestsPageModel.hasRequestSlots,
+                                    !state.requestsPageModel.canRequestToday);
+                              },
+                              key: ObjectKey(state.requestsPageModel),
+                              filterPosition:
+                                  state.requestsPageModel.requestsStatus,
+                            ),
+                    ),
                 ],
               ),
             );
@@ -222,6 +223,7 @@ class _ManageUsersLayoutState extends State<ManageUsersLayout> {
             },
             canInviteCoach: canInviteCoach,
             canInvitePartner: canInvitePartner,
+            isAdvisor: _homeScreenCubit.user.subscription!.isAdvisor,
           );
         },
       );
@@ -329,7 +331,9 @@ class _ManageUsersLayoutState extends State<ManageUsersLayout> {
                     type: LabelType.General,
                     textAlign: TextAlign.justify,
                     color: Colors.white,
-                    text: AppLocalizations.of(context)!.helpHintManageUsers,
+                    text: _homeScreenCubit.user.subscription!.isBusiness
+                        ? '  To share your budget, send the invitation. After the invitation is confirmed by mentioned user, they will have the access to your budget. You can have up to 3 active invitations: 2 coach types and 1 with partner type.'
+                        : AppLocalizations.of(context)!.helpHintManageUsers,
                   ),
                 ),
               ),

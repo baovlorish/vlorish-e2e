@@ -11,6 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../atomic/organizm/add_account_from_plaid_popup.dart';
+import '../../../model/bank_account.dart';
+import '../investments/investments_state.dart';
+
 class EditInvestmentPage {
   static const String routeName = '/edit_investment';
 
@@ -18,6 +22,8 @@ class EditInvestmentPage {
       {required Widget defaultRoute}) {
     var handler = Handler(
         handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+      var investmentsCubitInstance;
+
       if (diContractor.authRepository.sessionExists()) {
         if (context != null) {
           final investment = context.settings?.arguments as InvestmentModel?;
@@ -33,11 +39,50 @@ class EditInvestmentPage {
               child: HomePage(
                 innerBlocProvider: BlocProvider<InvestmentsCubit>(
                   lazy: false,
-                  create: (_) => InvestmentsCubit(
-                      diContractor.investmentRepository,
-                      isRetirement: false,
-                      investmentTab: investment!.investmentGroup.index),
-                  child: InvestmentsLayout(),
+                  create: (_) {
+                    investmentsCubitInstance = InvestmentsCubit(
+                        diContractor.investmentRepository,
+                        diContractor.accountsTransactionsRepository,
+                        isRetirement: false,
+                        investmentTab: investment!.investmentGroup.index);
+                    return investmentsCubitInstance;
+                  },
+                  child: Builder(builder: (context) {
+                    final isStandard = BlocProvider.of<HomeScreenCubit>(context)
+                        .user
+                        .subscription!
+                        .isStandard;
+                    return InvestmentsLayout(
+                      onSuccessCallback:
+                          (List<BankAccount> bankAccounts) async {
+                        await showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) {
+                            return BlocProvider<InvestmentsCubit>.value(
+                              value: investmentsCubitInstance,
+                              child: AddAccountFromPlaidPopup(
+                                bankAccounts: bankAccounts,
+                                businessNameList: [],
+                                showCancelOption: true,
+                                isStandardSubscription: isStandard,
+                                plaidRepository:
+                                    diContractor.accountsTransactionsRepository,
+                                netWorthRepository:
+                                    diContractor.netWorthRepository,
+                                onSuccessCallback: () {
+                                  investmentsCubitInstance.loadInvestments(
+                                      tab: (investmentsCubitInstance.state
+                                              as InvestmentsLoaded)
+                                          .investmentsTab);
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }),
                 ),
                 title: AppLocalizations.of(context)!.investments,
               ),

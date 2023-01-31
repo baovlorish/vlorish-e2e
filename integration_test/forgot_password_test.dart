@@ -1,12 +1,14 @@
 import 'package:burgundy_budgeting_app/utils/logger.dart';
+import 'dart:developer' as developer;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import './lib/test_lib_common.dart';
+import './lib/test_lib_const.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'package:logger/logger.dart';
 import 'screen/dashboard.dart';
-import 'screen/fileReport.dart';
 import 'screen/forgotPassword.dart';
 import 'screen/signin.dart';
 import 'screen/signup.dart';
@@ -16,21 +18,20 @@ void main() async {
   SignUpScreenTest signUpScreen;
   DashboardScreenTest dashboardScreen;
   ForgotPasswordScreenTest forgotPassScreen;
-  Report report;
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Authentication Test', () {
     testWidgets('BAR-T1 SignUp Web with empty email', (tester) async {
       final Logger logger = getLogger('Signin test');
-      final FlutterExceptionHandler? originalOnError = FlutterError.onError;
+      //final FlutterExceptionHandler? originalOnError = FlutterError.onError;
       // final originalOnError = FlutterError.onError!;
       // FlutterError.onError = (FlutterErrorDetails details) async {
       await app.main();
+      developer.log('log me', name: 'my.app.category');
       signInScreen = SignInScreenTest(tester);
       signUpScreen = SignUpScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
       forgotPassScreen = ForgotPasswordScreenTest(tester);
-      report = Report();
 
       try {
         print('T66 User is redirected  to the Forgot Password flow pages');
@@ -38,7 +39,9 @@ void main() async {
         await signInScreen.clickForgotPassword();
         await forgotPassScreen.verifyForgotPasswordPage();
         print('Complete case T66');
+        logger.e('Complete case T66');
       } catch (e) {
+        logger.e(e);
         print('Error case T66');
       }
 
@@ -325,9 +328,9 @@ void main() async {
         print('Error case T95');
       }
 
-      // originalOnError(details); // call test framework's error handler
+      // originalOnError!(details); // call test framework's error handler
       //};
-      FlutterError.onError = originalOnError;
+      //FlutterError.onError = originalOnError;
     });
   });
 }

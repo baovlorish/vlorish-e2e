@@ -1,34 +1,33 @@
-import 'package:burgundy_budgeting_app/core/navigator_manager.dart';
 import 'package:burgundy_budgeting_app/domain/model/response/index_funds_response.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_loading_indicator.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_tooltip.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_vertical_devider.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/maybe_scrollable_widget.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/atom/text_styles.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/annual_monthly_button.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/molecula/dropdown_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/error_alert_dialog.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/molecula/inform_alert_dialog.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/two_buttons_alert_dialog.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/organizm/investment_institution_accounts_popup.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/investment_list.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/investments_column_chart.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/investments_statistics_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/tax_statistics_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen_cubit.dart';
+import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/investments/investments_cubit.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/investments/investments_state.dart';
 import 'package:burgundy_budgeting_app/ui/screen/manage_accounts/manage_accounts_layout.dart';
-import 'package:burgundy_budgeting_app/ui/screen/manage_accounts/manage_accounts_page.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InvestmentsLayoutWidget extends StatefulWidget {
-  const InvestmentsLayoutWidget({Key? key}) : super(key: key);
+  final Function(List<BankAccount> bankAccounts) onSuccessCallback;
+
+  const InvestmentsLayoutWidget({Key? key, required this.onSuccessCallback})
+      : super(key: key);
 
   @override
   _InvestmentsLayoutWidgetState createState() =>
@@ -37,8 +36,6 @@ class InvestmentsLayoutWidget extends StatefulWidget {
 
 class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
   late var investmentsCubit = BlocProvider.of<InvestmentsCubit>(context);
-
-  // late var state = investmentsCubit.state as InvestmentsLoaded;
 
   InvestmentGroup? tabToInvestTransform(int tab) {
     switch (tab) {
@@ -49,7 +46,7 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
       case 2:
         return InvestmentGroup.Cryptocurrencies;
       case 3:
-        return InvestmentGroup.RealEstate;
+        return InvestmentGroup.Property;
       case 4:
         return InvestmentGroup.StartUps;
       case 5:
@@ -75,10 +72,10 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
     'Other':
         'All other investments that are not covered in other asset types above',
   };
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
           .currentForeignSession
           ?.access
-          .isLimited ??
+          .isReadOnly ??
       false;
 
   @override
@@ -307,16 +304,21 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
                                               text:
                                                   AppLocalizations.of(context)!
                                                       .connect,
-                                              enabled: !isLimitedCoach,
-                                              onPressed: () {
-                                            var invest = tabToInvestTransform(
-                                                (investmentsCubit.state
-                                                        as InvestmentsLoaded)
-                                                    .investmentsTab);
-                                            if (invest != null) {
-                                              showAddInvestPopUp(invest);
-                                            }
-                                          }),
+                                              enabled: !isReadOnlyAdvisor,
+                                              onPressed: !isReadOnlyAdvisor
+                                                  ? () {
+                                                      var invest =
+                                                          tabToInvestTransform(
+                                                              (investmentsCubit
+                                                                          .state
+                                                                      as InvestmentsLoaded)
+                                                                  .investmentsTab);
+                                                      if (invest != null) {
+                                                        showAddInvestPopUp(
+                                                            invest);
+                                                      }
+                                                    }
+                                                  : () {}),
                                         ),
                                       ],
                                     ),
@@ -339,7 +341,7 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
 
   void showAddInvestPopUp(InvestmentGroup invest) async {
     if (invest == InvestmentGroup.StartUps ||
-        invest == InvestmentGroup.RealEstate) {
+        invest == InvestmentGroup.Property) {
       investmentsCubit.navigateToAddInvestmentPage(
         context,
         investmentGroup: invest,
@@ -385,247 +387,30 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
           }).then((value) async {
         ///choose plaid investments pop up
         if (isManual == false && isMainButtonClicked) {
-          var available = await investmentsCubit.getAvailableInvestment(
-              tabToInvestTransform((investmentsCubit.state as InvestmentsLoaded)
-                  .investmentsTab)!);
-          if (available != null && available.isNotEmpty) {
-            var checkList = <bool>[];
-            for (var i = 0; i <= available.length - 1; i++) {
-              checkList.add(false);
-            }
-            await showDialog(
-              context: context,
-              builder: (context) {
-                return _AddInvestmentsViaPlaidPopUp(
-                  investmentsCubit: investmentsCubit,
-                  availableInvestments: available,
-                  tabTexts: tabTexts,
-                );
-              },
-            );
-          } else {
-            await showDialog(
-              context: context,
-              builder: (context) {
-                return InformAlertDialog(
-                  context,
-                  icon: Icons.info_rounded,
-                  title:
-                      'Sorry, you haven’t connected Plaid accounts for ${tabTexts[(investmentsCubit.state as InvestmentsLoaded).investmentsTab]}',
-                  text:
-                      'If you want to add account via Plaid, please, go to manage page',
-                  buttonText: AppLocalizations.of(context)!.manageAccounts,
-                  onButtonPress: () {
-                    NavigatorManager.navigateTo(
-                        context, ManageAccountsPage.routeName);
-                  },
-                );
-              },
-            );
-          }
+          var accounts =
+              await investmentsCubit.getInvestmentInstitutionAccounts();
+          accounts.isEmpty
+              ? await investmentsCubit.addPlaidAccount(
+                  onSuccessCallback: widget.onSuccessCallback,
+                  type: LinkTokenType.Investments.index,
+                )
+              : await showDialog(
+                  context: context,
+                  builder: (context) => ChooseInvestmentInstitutionAccountPopup(
+                        accounts: accounts,
+                        onSubmit: (String id, bool isLoginRequired) async =>
+                            isLoginRequired
+                                ? await investmentsCubit.loginWithPlaid(id, context)
+                                : await investmentsCubit.manageInstitution(id,
+                                    onSuccessCallback:
+                                        widget.onSuccessCallback),
+                        onAddAnother: () async => await investmentsCubit.addPlaidAccount(
+                          onSuccessCallback: widget.onSuccessCallback,
+                          type: LinkTokenType.Investments.index,
+                        ),
+                      ));
         }
       });
     }
   }
 }
-
-class _AddInvestmentsViaPlaidPopUp extends StatefulWidget {
-  final List<AvailableInvestment> availableInvestments;
-  final tabTexts;
-  final InvestmentsCubit investmentsCubit;
-
-  const _AddInvestmentsViaPlaidPopUp({
-    Key? key,
-    required this.availableInvestments,
-    required this.tabTexts,
-    required this.investmentsCubit,
-  }) : super(key: key);
-
-  @override
-  State<_AddInvestmentsViaPlaidPopUp> createState() =>
-      _AddInvestmentsViaPlaidPopUpState();
-}
-
-class _AddInvestmentsViaPlaidPopUpState
-    extends State<_AddInvestmentsViaPlaidPopUp> {
-  var popUpState = PopUpState.ChooseInvestments;
-  var checkList = <bool>[];
-  var brokerageList = <int?>[];
-
-  @override
-  void initState() {
-    for (var i = 0; i <= widget.availableInvestments.length - 1; i++) {
-      checkList.add(false);
-    }
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TwoButtonsDialog(
-      context,
-      width: 500,
-      title:
-          'Choose ${widget.tabTexts[(widget.investmentsCubit.state as InvestmentsLoaded).investmentsTab]}',
-      bodyWidget: popUpState == PopUpState.ChooseInvestments
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (int i = 0;
-                    i <= widget.availableInvestments.length - 1;
-                    i++)
-                  Row(
-                    children: [
-                      Checkbox(
-                        side: MaterialStateBorderSide.resolveWith(
-                          (states) => BorderSide(
-                              width: 2.0, color: CustomColorScheme.button),
-                        ),
-                        checkColor: CustomColorScheme.button,
-                        activeColor:
-                            CustomColorScheme.tableCellGeneralBackground,
-                        value: checkList[i],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            checkList[i] = value!;
-                          });
-                        },
-                      ),
-                      Label(
-                          text: widget.availableInvestments[i].name!,
-                          type: LabelType.General),
-                    ],
-                  ),
-                SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: RichText(
-                    text: TextSpan(children: [
-                      TextSpan(
-                        text:
-                            'If you want to add another account via Plaid go to ',
-                        style: CustomTextStyle.LabelTextStyle(context),
-                      ),
-                      TextSpan(
-                          text: 'manage page',
-                          style: CustomTextStyle.LinkTextStyle(context),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              NavigatorManager.navigateTo(
-                                  context, ManageAccountsPage.routeName);
-                            }),
-                    ]),
-                  ),
-                ),
-              ],
-            )
-          : Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    for (int i = 0;
-                        i <= widget.availableInvestments.length - 1;
-                        i++)
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 32.0, bottom: 24.0),
-                              child: Label(
-                                text: widget.availableInvestments[i].name!,
-                                type: LabelType.Header3,
-                              ),
-                            ),
-                            DropdownItem<int>(
-                              itemKeys: [
-                                1, //Robinhood
-                                2, //Webull
-                                3, //Fidelity
-                                4, //Charleshwab
-                                5, //TDAmeritrade
-                                6, //ETrade
-                                7, //AllyInvest
-                                8, //IteractiveBorkers
-                                0 //Other
-                              ],
-                              callback: (value) {
-                                brokerageList[i] = value;
-                                checkList[i] = true;
-                                setState(() {});
-                              },
-                              labelText:
-                                  AppLocalizations.of(context)!.brokerage + '*',
-                              items: [
-                                AppLocalizations.of(context)!.robinhood,
-                                AppLocalizations.of(context)!.webull,
-                                AppLocalizations.of(context)!.fidelity,
-                                AppLocalizations.of(context)!.charleshwab,
-                                AppLocalizations.of(context)!.tdAmeritrade,
-                                AppLocalizations.of(context)!.etrade,
-                                AppLocalizations.of(context)!.allyInvest,
-                                AppLocalizations.of(context)!
-                                    .interactiveBrokers,
-                                AppLocalizations.of(context)!.other,
-                              ],
-                              hintText: AppLocalizations.of(context)!
-                                  .chooseTheBrokerageType,
-                            ),
-                          ],
-                        ),
-                      ),
-                    SizedBox(height: 8)
-                  ],
-                ),
-              ),
-            ),
-      enableMainButton: popUpState == PopUpState.ChooseInvestments
-          ? checkList.contains(true)
-          : !checkList.contains(false) && !brokerageList.contains(null),
-      mainButtonText: AppLocalizations.of(context)!.continueWord,
-      dismissButtonText: AppLocalizations.of(context)!.cancel,
-      enableNavigationPopMainButton: popUpState == PopUpState.ChooseBrokerage,
-      onMainButtonPressed: () async {
-        if (popUpState == PopUpState.ChooseInvestments) {
-          for (var i = widget.availableInvestments.length - 1; i >= 0; i--) {
-            if (checkList[i] == false) {
-              widget.availableInvestments.removeAt(i);
-            }
-          }
-
-          checkList.clear();
-          for (var i = 0; i <= widget.availableInvestments.length - 1; i++) {
-            checkList.add(false);
-            brokerageList.add(null);
-          }
-
-          popUpState = PopUpState.ChooseBrokerage;
-        } else if (popUpState == PopUpState.ChooseBrokerage) {
-          var attachInvestments = <AttachInvestmentRetirementModel>[];
-          for (var i = 0; i <= widget.availableInvestments.length - 1; i++) {
-            attachInvestments.add(
-              AttachInvestmentRetirementModel(
-                  id: widget.availableInvestments[i].id,
-                  brokerage: brokerageList[i],
-                  acquisitionMonthYear: DateTime.now()),
-            );
-          }
-          await widget.investmentsCubit
-              .availableInvestmentAttach(
-                  attachInvestments,
-                  InvestmentGroup.values[
-                      (widget.investmentsCubit.state as InvestmentsLoaded)
-                          .investmentsTab])
-              .then((value) async => await widget.investmentsCubit.selectTab(
-                  (widget.investmentsCubit.state as InvestmentsLoaded)
-                      .investmentsTab));
-          Navigator.pop(context);
-        }
-        setState(() {});
-      },
-    );
-  }
-}
-
-enum PopUpState { ChooseInvestments, ChooseBrokerage }

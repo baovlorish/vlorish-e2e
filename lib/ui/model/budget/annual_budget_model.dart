@@ -184,20 +184,20 @@ class AnnualBudgetModel extends BaseBudgetModel {
     var freeCash;
     var totalCashReserves;
     if (isPersonal) {
-      totalCashReserves =
-          BudgetAnnualCalculatedRow.totalCashReservesPersonalCalculated(
-              netIncome,
-              totalCashReservesOnStartOfPeriod,
-              period,
-              yearIncomeTotalSum,
-              type);
       freeCash = BudgetAnnualCalculatedRow.freeCashPersonalCalculated(
-          totalCashReserves,
+          netIncome,
           expensesSeparated!.totalByMonth.amount,
           investments!.totalByMonth.amount,
           period,
           yearIncomeTotalSum,
           type);
+      totalCashReserves =
+          BudgetAnnualCalculatedRow.totalCashReservesPersonalCalculated(
+              freeCash,
+              totalCashReservesOnStartOfPeriod,
+              period,
+              yearIncomeTotalSum,
+              type);
     } else {
       freeCash = BudgetAnnualCalculatedRow.freeCashBusinessCalculated(
           netIncome,
@@ -896,7 +896,7 @@ class BudgetAnnualCalculatedRow {
       Period period,
       int totalIncome,
       TableType type) {
-    var values = totalCashReserves.totalByMonth.amount;
+    var values = totalCashReserves.totalByMonth.amount.toList();
 
     var totalByYear = 0;
     for (var i = 0; i < 12; i++) {

@@ -29,14 +29,19 @@ class Price {
   final int recurringType;
   final double pricePerMonth;
 
-  Price(
-      {required this.id,
-      required this.recurringType,
-      required this.pricePerMonth});
+  ///archived === old prices
+  final bool archived;
+  Price({
+    required this.id,
+    required this.recurringType,
+    required this.pricePerMonth,
+    required this.archived,
+  });
 
   factory Price.fromJson(Map<String, dynamic> json) => Price(
         id: json['id'],
         recurringType: json['recurringType'],
         pricePerMonth: json['pricePerMonth'],
+        archived: json['archived'],
       );
 }

@@ -10,10 +10,10 @@ class ApiClient {
   static final String BASE_URL = _getBaseUrl(GetIt.instance<Environment>());
 
   static final String ENV_BASE_URL =
-  _getEnvBaseUrl(GetIt.instance<Environment>());
+      _getEnvBaseUrl(GetIt.instance<Environment>());
 
   static final Map<String, String> ENV_COGNITO_CREDENTIALS =
-  _getEnvCognitoCredentials(GetIt.instance<Environment>());
+      _getEnvCognitoCredentials(GetIt.instance<Environment>());
 
   static final Map<String, String> ENV_GEO_CREDENTIALS =
       _getEnvGeoCredentials(GetIt.instance<Environment>());
@@ -22,7 +22,7 @@ class ApiClient {
       _getEnvPubNubCredentials(GetIt.instance<Environment>());
 
   static final String ENV_STRIPE_API_KEY =
-  _getEnvStripeApiKey(GetIt.instance<Environment>());
+      _getEnvStripeApiKey(GetIt.instance<Environment>());
 
   static final String ENV_SENTRY = _getEnvSentry(GetIt.instance<Environment>());
 
@@ -64,7 +64,7 @@ class ApiClient {
           'clientId': '7prqokk80kc31usqnladdlogfa',
           'redirectURL': 'https://develop-vlorish.itomy.ch/signin_google_code',
           'cognitoPoolUrl':
-          'https://bargundy-dev.auth.us-east-2.amazoncognito.com',
+              'https://bargundy-dev.auth.us-east-2.amazoncognito.com',
         };
       case Environment.STAGE:
         return {
@@ -73,7 +73,7 @@ class ApiClient {
           // TODO: setup proper url when google sign unfreezes
           'redirectURL': 'https://stage-vlorish.itomy.ch/signin_google_code',
           'cognitoPoolUrl':
-          'https://bargundy-stage.auth.us-east-2.amazoncognito.com',
+              'https://bargundy-stage.auth.us-east-2.amazoncognito.com',
         };
       case Environment.PROD:
         return {

@@ -1,3 +1,4 @@
+import 'package:burgundy_budgeting_app/ui/atomic/atom/hint_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/text_styles.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
@@ -32,8 +33,10 @@ class InputItem extends StatefulWidget {
   final TextStyle? style;
 
   final Function? onValueUpdate;
-
+  final bool enabledTextStyleAnyway;
   final bool enabled;
+  final String? tooltipText;
+
   InputItem({
     this.labelText,
     this.isPassword = false,
@@ -59,6 +62,8 @@ class InputItem extends StatefulWidget {
     this.textInputType,
     this.onValueUpdate,
     this.enabled = true,
+    this.enabledTextStyleAnyway = false,
+    this.tooltipText,
   }) : super(key: key ?? UniqueKey());
 
   @override
@@ -99,13 +104,23 @@ class _InputItemState extends State<InputItem> {
     });
   }
 
+  bool get showLabel => widget.labelText != null;
+
+  bool get showTooltip => widget.tooltipText != null;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.labelText != null)
-          Label(text: widget.labelText!, type: LabelType.General),
+        if (showLabel)
+          Row(
+            children: [
+              Label(text: widget.labelText!, type: LabelType.General),
+              SizedBox(width: 8),
+              if (showTooltip) HintWidget(hint: widget.tooltipText!)
+            ],
+          ),
         if (widget.labelText != null) SizedBox(height: 10),
         TextFormField(
           enabled: widget.enabled,
@@ -121,9 +136,11 @@ class _InputItemState extends State<InputItem> {
               return widget.validateFunction!(value, context);
             }
           },
-          style: widget.enabled
-              ? widget.style ?? CustomTextStyle.LabelTextStyle(context)
-              : CustomTextStyle.HintTextStyle(context),
+          style: widget.enabledTextStyleAnyway
+              ? CustomTextStyle.LabelTextStyle(context)
+              : widget.enabled
+                  ? widget.style ?? CustomTextStyle.LabelTextStyle(context)
+                  : CustomTextStyle.HintTextStyle(context),
           minLines: widget.minLines,
           maxLines: obscureText ? 1 : widget.maxLines,
           textInputAction: TextInputAction.next,

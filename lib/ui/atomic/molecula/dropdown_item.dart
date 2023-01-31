@@ -1,3 +1,4 @@
+import 'package:burgundy_budgeting_app/ui/atomic/atom/hint_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/text_styles.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
@@ -16,6 +17,7 @@ class DropdownItem<ValueType> extends StatefulWidget {
   final bool isSmall;
   final FocusNode? focusNode;
   final bool autofocus;
+  final String? tooltipText;
 
   @override
   final Key? key;
@@ -34,6 +36,7 @@ class DropdownItem<ValueType> extends StatefulWidget {
     this.focusNode,
     this.autofocus = false,
     this.errorText,
+    this.tooltipText,
   });
 
   @override
@@ -41,6 +44,10 @@ class DropdownItem<ValueType> extends StatefulWidget {
 }
 
 class _DropdownItemState<ValueType> extends State<DropdownItem<ValueType>> {
+  bool get showLabel => !widget.isSmall && widget.labelText != null;
+
+  bool get showTooltip => widget.tooltipText != null;
+
   @override
   Widget build(BuildContext context) {
     var items = getItems(widget.items);
@@ -49,8 +56,14 @@ class _DropdownItemState<ValueType> extends State<DropdownItem<ValueType>> {
       key: widget.key,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!widget.isSmall && widget.labelText != null)
-          Label(text: widget.labelText!, type: LabelType.General),
+        if (showLabel)
+          Row(
+            children: [
+              Label(text: widget.labelText!, type: LabelType.General),
+              SizedBox(width: 8),
+              if (showTooltip) HintWidget(hint: widget.tooltipText!)
+            ],
+          ),
         if (!widget.isSmall && widget.labelText != null) SizedBox(height: 10),
         DropdownButtonFormField(
           autofocus: widget.autofocus,

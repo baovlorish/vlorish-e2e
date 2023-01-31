@@ -11,7 +11,7 @@ class CategoryGroupTile extends StatefulWidget {
   final EdgeInsets padding;
   final double width;
   final bool isInUse;
-  final bool isCoachLimited;
+  final bool isReadOnlyAdvisor;
   final Function(String) onCategoryReassigned;
   final Function(ManagementSubcategory) onSubcategoryReassigned;
 
@@ -23,7 +23,7 @@ class CategoryGroupTile extends StatefulWidget {
     required this.isInUse,
     required this.onCategoryReassigned,
     required this.onSubcategoryReassigned,
-    required this.isCoachLimited,
+    required this.isReadOnlyAdvisor,
   }) : super(key: key);
 
   @override
@@ -67,7 +67,7 @@ class _CategoryGroupTileState extends State<CategoryGroupTile> {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _categoryButton(widget.isCoachLimited),
+              _categoryButton(widget.isReadOnlyAdvisor),
               ImageIcon(
                 isExpanded
                     ? AssetImage('assets/images/icons/arrow_up.png')
@@ -110,11 +110,11 @@ class _CategoryGroupTileState extends State<CategoryGroupTile> {
                           widget.isInUse
                               ? Icons.remove_circle
                               : Icons.add_circle,
-                          color: item.cannotBeHidden || widget.isCoachLimited
+                          color: item.cannotBeHidden || widget.isReadOnlyAdvisor
                               ? CustomColorScheme.clipElementInactive
                               : CustomColorScheme.mainDarkBackground,
                         ),
-                        onPressed: item.cannotBeHidden || widget.isCoachLimited
+                        onPressed: item.cannotBeHidden || widget.isReadOnlyAdvisor
                             ? null
                             : () {
                                 widget.onSubcategoryReassigned(item);
@@ -130,8 +130,8 @@ class _CategoryGroupTileState extends State<CategoryGroupTile> {
     );
   }
 
-  Widget _categoryButton(bool isCoachLimited) {
-    var shouldShowTooltip = !isCoachLimited
+  Widget _categoryButton(bool isReadOnlyAdvisor) {
+    var shouldShowTooltip = !isReadOnlyAdvisor
         ? (widget.categoryModel.hasTransactions ||
                 widget.categoryModel.cannotBeHidden) &&
             widget.isInUse
@@ -139,11 +139,11 @@ class _CategoryGroupTileState extends State<CategoryGroupTile> {
     var button = IconButton(
       icon: Icon(
         widget.isInUse ? Icons.remove_circle : Icons.add_circle,
-        color: shouldShowTooltip || isCoachLimited
+        color: shouldShowTooltip || isReadOnlyAdvisor
             ? CustomColorScheme.clipElementInactive
             : CustomColorScheme.mainDarkBackground,
       ),
-      onPressed: shouldShowTooltip || isCoachLimited
+      onPressed: shouldShowTooltip || isReadOnlyAdvisor
           ? null
           : () {
               widget.onCategoryReassigned(widget.categoryModel.id);

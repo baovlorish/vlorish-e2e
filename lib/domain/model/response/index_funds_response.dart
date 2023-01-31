@@ -4,11 +4,37 @@ import 'package:flutter/material.dart';
 
 enum InvestmentGroup {
   Stocks,
+  Property,
   IndexFunds,
   Cryptocurrencies,
-  RealEstate,
   StartUps,
-  OtherInvestments
+  OtherInvestments;
+
+  static InvestmentGroup getInvestGroupFromIndex(int index) {
+    switch (index) {
+      case 1:
+        return InvestmentGroup.values[2];
+      case 2:
+        return InvestmentGroup.values[3];
+      case 3:
+        return InvestmentGroup.values[1];
+      default:
+        return InvestmentGroup.values[index];
+    }
+  }
+
+  static int getIndexFromInvestGroup(int index) {//fixme: kiss
+    switch (index) {
+      case 1:
+        return 3;
+      case 2:
+        return 1;
+      case 3:
+        return 2;
+      default:
+        return index;
+    }
+  }
 }
 
 abstract class AvailableInvestmentInterface {
@@ -103,7 +129,7 @@ class InvestmentsDashboardItem {
   });
 
   factory InvestmentsDashboardItem.fromJson(Map<String, dynamic> json) {
-    var type = json['type'] ?? 0;
+    var type = json['investmentType'] ?? 0;
     //different order on be enum
     if (type == 2) {
       type = 4;
@@ -163,14 +189,12 @@ class InvestmentModel implements InvestmentGroupInterface {
   final DateTime? acquisitionDate;
   @override
   final double? currentCost;
-  final int? exchange;
-  final String? address;
-  final int? brokerage;
+  final String? details;
   final List<InvestmentTransaction>? transactions;
   @override
   final InvestmentGroup investmentGroup;
   final int? usageType;
-  final int? otherType;
+  final int? investmentType;
   final bool isManual;
 
   InvestmentModel({
@@ -179,14 +203,12 @@ class InvestmentModel implements InvestmentGroupInterface {
     required this.initialCost,
     required this.acquisitionDate,
     this.currentCost,
-    this.address,
     this.usageType,
-    this.exchange,
-    this.brokerage,
+    this.investmentType,
+    this.details,
     this.transactions,
     required this.isManual,
     required this.investmentGroup,
-    this.otherType,
   });
 
   factory InvestmentModel.fromJson(
@@ -197,18 +219,20 @@ class InvestmentModel implements InvestmentGroupInterface {
         transactions.add(InvestmentTransaction.fromJson(element));
       });
     }
+    var investmentType =json['investmentType'];
+
     return InvestmentModel(
         id: json['id'],
-        address: json['address'],
         usageType: json['usageType'],
-        otherType: json['type'],
+        investmentType: investmentType != null
+            ? investmentType - 1
+            : null, //to frontEnd investType enum
         isManual: json['isManual'] ?? false,
         name: json['name'],
         initialCost: json['initialCost'],
         acquisitionDate: DateTime.parse(json['acquisitionDate']),
         currentCost: json['currentCost'],
-        brokerage: json['brokerage'],
-        exchange: json['exchange'],
+        details: json['details'],
         transactions: transactions,
         investmentGroup: investmentGroup);
   }
@@ -217,20 +241,22 @@ class InvestmentModel implements InvestmentGroupInterface {
     final data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
-    data['address'] = address;
     data['usageType'] = usageType;
+    data['investmentType'] = investmentType != null
+        ? investmentType! + 1
+        : investmentType; //to backEnd investType enum
     data['cost'] = initialCost;
     data['acquisitionDate'] = acquisitionDate?.toIso8601String();
     if (currentCost != null) data['currentCost'] = currentCost;
-    data['brokerage'] = brokerage;
-    data['exchange'] = exchange;
+    data['details'] = details;
     if (transactions != null) {
       data['transactions'] =
           transactions!.map((transaction) => transaction.toJson()).toList();
     }
-    data['type'] = otherType;
     return data;
   }
+
+  bool get isPersonalType => usageType == 1;
 
   Map<String, dynamic> deleteInvestmentByIdToJson(
       {String? sellDate, required bool removeHistory}) {
@@ -244,7 +270,7 @@ class InvestmentModel implements InvestmentGroupInterface {
     final data = <String, dynamic>{};
     data['name'] = name;
     data['currentCost'] = currentCost;
-    data['brokerage'] = brokerage;
+    data['details'] = details;
     if (transactions != null) {
       data['transactions'] =
           transactions!.map((transaction) => transaction.toJson()).toList();
@@ -258,7 +284,7 @@ class InvestmentModel implements InvestmentGroupInterface {
     transactions?.forEach((element) {
       transactionList += element.toString();
     });
-    return 'id: $id, name: $name, initialCost: $initialCost, acquisitionDate: $acquisitionDate,currentCost: $currentCost, exchange: $exchange, brokerage: $brokerage,transactions: [$transactionList]';
+    return 'id: $id, name: $name, initialCost: $initialCost, acquisitionDate: $acquisitionDate,currentCost: $currentCost, details: $details,transactions: [$transactionList]';
   }
 }
 
@@ -285,31 +311,5 @@ class InvestmentTransaction {
   @override
   String toString() {
     return '{ amount:$amount, type:$type\n}';
-  }
-}
-
-class AttachInvestmentRetirementModel {
-  final int? brokerage;
-  final int? custodian;
-  final int? investType;
-  final DateTime? acquisitionMonthYear;
-  final String? id;
-
-  AttachInvestmentRetirementModel({
-    this.brokerage,
-    this.acquisitionMonthYear,
-    this.id,
-    this.custodian,
-    this.investType,
-  });
-
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['brokerage'] = brokerage;
-    data['acquisitionMonthYear'] = acquisitionMonthYear?.toIso8601String();
-    data['id'] = id;
-    data['custodian'] = custodian;
-    data['investType'] = investType;
-    return data;
   }
 }

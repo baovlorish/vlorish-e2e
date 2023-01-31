@@ -109,7 +109,10 @@ class InstitutionView extends StatelessWidget {
           key: UniqueKey(),
           account: item,
           muteCallBack: () async {
-            var businessNameList = await manageAccountsCubit.businessNameList();
+            var businessNameList=[''];
+            if(!user.subscription!.isStandard) {
+               businessNameList = await manageAccountsCubit.businessNameList();
+            }
             await showDialog(
               context: context,
               builder: (_context) {
@@ -124,6 +127,7 @@ class InstitutionView extends StatelessWidget {
                         onSuccessCallback: () async {
                           await manageAccountsCubit.updateAccounts();
                         },
+                        isStandardSubscription: user.subscription!.isStandard,
                       )
                     : _getMuteDialog(context, item);
               },

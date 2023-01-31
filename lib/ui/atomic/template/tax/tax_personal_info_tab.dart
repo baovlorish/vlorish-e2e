@@ -33,11 +33,11 @@ class _PersonalInfoTabState extends State<PersonalInfoTab> {
   late TaxPersonalInfoModel endPersonalInfoModel;
   late TaxPersonalInfoModel startPersonalInfoModel;
 
-
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
-      .currentForeignSession
-      ?.access
-      .isLimited ?? false;
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
+          .currentForeignSession
+          ?.access
+          .isReadOnly ??
+      false;
 
   @override
   void initState() {
@@ -76,6 +76,7 @@ class _PersonalInfoTabState extends State<PersonalInfoTab> {
             children: [
               Flexible(
                 child: ChildrenAndStateTaxBlock(
+                  isEditable: !isReadOnlyAdvisor,
                   personalInfoModel: endPersonalInfoModel,
                   onUpdate: () {
                     setState(() {});
@@ -88,6 +89,7 @@ class _PersonalInfoTabState extends State<PersonalInfoTab> {
                   onUpdate: () {
                     setState(() {});
                   },
+                  isEditable: !isReadOnlyAdvisor,
                 ),
               ),
             ],
@@ -105,7 +107,7 @@ class _PersonalInfoTabState extends State<PersonalInfoTab> {
             text: taxCubit.estimationStage == 4
                 ? AppLocalizations.of(context)!.apply
                 : AppLocalizations.of(context)!.continueCalculations,
-            onPressed: canContinue && !isLimitedCoach
+            onPressed: canContinue
                 ? () {
                     if (formKey.currentState!.validate()) {
                       BlocProvider.of<TaxCubit>(context)
@@ -115,7 +117,7 @@ class _PersonalInfoTabState extends State<PersonalInfoTab> {
                     // widget.onContinueCalculation();
                   }
                 : () {},
-            enabled: canContinue && !isLimitedCoach,
+            enabled: canContinue,
           ),
         ),
         SizedBox(height: 12),
@@ -127,9 +129,12 @@ class _PersonalInfoTabState extends State<PersonalInfoTab> {
 class ChildrenAndStateTaxBlock extends StatefulWidget {
   final TaxPersonalInfoModel personalInfoModel;
   final VoidCallback onUpdate;
-
+  final bool isEditable;
   const ChildrenAndStateTaxBlock(
-      {Key? key, required this.personalInfoModel, required this.onUpdate})
+      {Key? key,
+      required this.personalInfoModel,
+      required this.onUpdate,
+      required this.isEditable})
       : super(key: key);
 
   @override
@@ -140,7 +145,7 @@ class ChildrenAndStateTaxBlock extends StatefulWidget {
 class _ChildrenAndStateTaxBlockState extends State<ChildrenAndStateTaxBlock> {
   @override
   Widget build(BuildContext context) {
-    if(widget.personalInfoModel.taxFilingStatus==1) {
+    if (widget.personalInfoModel.taxFilingStatus == 1) {
       widget.personalInfoModel.children13andYoungerCount = 0;
       widget.personalInfoModel.children17andYoungerCount = 0;
     }
@@ -159,6 +164,7 @@ class _ChildrenAndStateTaxBlockState extends State<ChildrenAndStateTaxBlock> {
             Flexible(
               child: Container(
                 child: DropdownItem<int>(
+                  enabled: widget.isEditable,
                   items: [
                     AppLocalizations.of(context)!.relationshipStatusSingle,
                     AppLocalizations.of(context)!.relationshipStatusMarried,
@@ -202,7 +208,8 @@ class _ChildrenAndStateTaxBlockState extends State<ChildrenAndStateTaxBlock> {
                   ],
                   itemKeys: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                   hintText: '',
-                  enabled: widget.personalInfoModel.taxFilingStatus!=1,
+                  enabled: widget.personalInfoModel.taxFilingStatus != 1 &&
+                      widget.isEditable,
                   initialValue:
                       widget.personalInfoModel.children17andYoungerCount,
                   validateFunction: <int>(int? value, BuildContext context) {
@@ -246,7 +253,8 @@ class _ChildrenAndStateTaxBlockState extends State<ChildrenAndStateTaxBlock> {
                     '9',
                     '10'
                   ],
-                  enabled: widget.personalInfoModel.taxFilingStatus!=1,
+                  enabled: widget.personalInfoModel.taxFilingStatus != 1 &&
+                      widget.isEditable,
                   itemKeys: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                   hintText: AppLocalizations.of(context)!.statusName,
                   initialValue:
@@ -273,6 +281,7 @@ class _ChildrenAndStateTaxBlockState extends State<ChildrenAndStateTaxBlock> {
                 SizedBox(
                   width: 150,
                   child: TextFieldWithSuggestion<String>(
+                    enabled: widget.isEditable,
                     key: Key('cityModel'),
                     model: widget.personalInfoModel.stateCode,
                     unfocusWhenSuggestion: true,
@@ -302,9 +311,12 @@ class _ChildrenAndStateTaxBlockState extends State<ChildrenAndStateTaxBlock> {
 class SourceOfSalaryBlock extends StatefulWidget {
   final List<TaxSalaryPaycheck> salaryPaychecks;
   final VoidCallback onUpdate;
-
+  final bool isEditable;
   const SourceOfSalaryBlock(
-      {Key? key, required this.salaryPaychecks, required this.onUpdate})
+      {Key? key,
+      required this.salaryPaychecks,
+      required this.onUpdate,
+      required this.isEditable})
       : super(key: key);
 
   @override
@@ -336,6 +348,7 @@ class _SourceOfSalaryBlockState extends State<SourceOfSalaryBlock> {
                   Flexible(
                     child: Container(
                       child: DropdownItem<int>(
+                        enabled: widget.isEditable,
                         items: [
                           AppLocalizations.of(context)!.employed,
                           AppLocalizations.of(context)!.selfEmployed
@@ -365,6 +378,7 @@ class _SourceOfSalaryBlockState extends State<SourceOfSalaryBlock> {
                       flex: 3,
                       child: Container(
                         child: InputItem(
+                            enabled: widget.isEditable,
                             focusNode: annualSalaryFocusNode,
                             prefix: '\$ ',
                             value: item.annualSalary == null

@@ -5,6 +5,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/investments/investment_retirement_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/investments/investments_layout_widget.dart';
+import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/investments/investments_cubit.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/investments/investments_state.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InvestmentsLayout extends StatefulWidget {
-  const InvestmentsLayout();
+  final Function(List<BankAccount> bankAccounts) onSuccessCallback;
+  const InvestmentsLayout({required this.onSuccessCallback});
 
   @override
   State<InvestmentsLayout> createState() => _InvestmentsLayoutState();
@@ -32,8 +34,13 @@ class _InvestmentsLayoutState extends State<InvestmentsLayout> {
                     state is InvestmentsLoaded ? state.isRetirement : false),
             bodyWidget: state is InvestmentsLoaded
                 ? state.isRetirement
-                    ? InvestmentsRetirementWidget()
-                    : InvestmentsLayoutWidget()
+                    ? InvestmentsRetirementWidget(
+              onSuccessCallback: widget.onSuccessCallback,
+
+            )
+                    : InvestmentsLayoutWidget(
+                        onSuccessCallback: widget.onSuccessCallback,
+                      )
                 : state is InvestmentsLoading
                     ? CustomLoadingIndicator()
                     : Container(),

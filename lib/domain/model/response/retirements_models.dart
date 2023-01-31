@@ -8,7 +8,7 @@ class RetirementModel {
   final double? initialCost;
   final DateTime? acquisitionDate;
   final double? currentCost;
-  final int? custodian;
+  final String? custodian;
   final List<InvestmentTransaction>? transactions;
   final int? investType;
   int? retirementType;
@@ -89,7 +89,7 @@ class RetirementModel {
       initialCost: json['initialCost'],
       acquisitionDate: DateTime.parse(json['acquisitionDate']),
       currentCost: json['currentCost'],
-      custodian: json['custodian'],
+      custodian: json['details'],
       transactions: transactions,
     );
   }
@@ -102,7 +102,7 @@ class RetirementModel {
     data['cost'] = initialCost;
     data['acquisitionDate'] = acquisitionDate?.toIso8601String();
     if (currentCost != null) data['currentCost'] = currentCost;
-    data['custodian'] = custodian;
+    data['details'] = custodian;
     if (transactions != null) {
       data['transactions'] =
           transactions!.map((transaction) => transaction.toJson()).toList();

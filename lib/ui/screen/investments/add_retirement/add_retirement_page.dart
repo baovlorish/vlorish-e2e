@@ -1,6 +1,8 @@
 import 'package:burgundy_budgeting_app/core/di_provider.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/organizm/add_account_from_plaid_popup.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_page.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen_cubit.dart';
+import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/add_retirement/add_retirement_cubit.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/add_retirement/add_retirement_layout.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/investments/investments_cubit.dart';
@@ -32,9 +34,39 @@ class AddRetirementPage {
                 lazy: false,
                 create: (_) => InvestmentsCubit(
                     diContractor.investmentRepository,
+                    diContractor.accountsTransactionsRepository,
                     isRetirement: true,
                     retirementTab: retirementType),
-                child: InvestmentsLayout(),
+                child: Builder(builder: (context) {
+                  final isStandard = BlocProvider.of<HomeScreenCubit>(context)
+                      .user
+                      .subscription!
+                      .isStandard;
+                  return InvestmentsLayout(
+                    onSuccessCallback:
+                        (List<BankAccount> bankAccounts) async {
+                      await showDialog(
+                        //todo: add to invest page
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) {
+                          return AddAccountFromPlaidPopup(
+                            bankAccounts: bankAccounts,
+                            businessNameList: [],
+                            showCancelOption: true,
+                            isStandardSubscription: isStandard,
+                            plaidRepository:
+                            diContractor.accountsTransactionsRepository,
+                            netWorthRepository:
+                            diContractor.netWorthRepository,
+                            onSuccessCallback: () {
+                            },
+                          );
+                        },
+                      );
+                    },
+                  );
+                }),
               ),
               title: AppLocalizations.of(context!)!.investments,
             ),

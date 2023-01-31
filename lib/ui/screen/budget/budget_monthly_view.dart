@@ -27,7 +27,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BudgetMonthlyView extends StatefulWidget {
   final bool isPersonal;
-  final bool isLimitedCoach;
+  final bool isReadOnlyAdvisor;
   final MonthlyBudgetModel model;
   final void Function(MonthlyFormulaDataModel model) onEditableCellDoubleTap;
   final double? initialHorizontalScrollOffset;
@@ -46,7 +46,7 @@ class BudgetMonthlyView extends StatefulWidget {
     required this.model,
     required this.isPersonal,
     required this.onEditableCellDoubleTap,
-    required this.isLimitedCoach,
+    required this.isReadOnlyAdvisor,
     required this.user,
     required this.isCoach,
   });
@@ -220,8 +220,8 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
         AppLocalizations.of(context)!.netIncome,
         [
           widget.model.netIncome.plannedAmount,
-          widget.model.netIncome.plannedAmount,
-          widget.model.netIncome.plannedAmount,
+          widget.model.netIncome.actualAmount,
+          widget.model.netIncome.differenceAmount,
         ],
         TableRowDecorationModel.netIncome(widget.isPersonal),
       ),
@@ -250,8 +250,8 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
             : AppLocalizations.of(context)!.retainedInTheBusiness,
         [
           widget.model.totalFreeCash.plannedAmount,
-          widget.model.totalFreeCash.plannedAmount,
-          widget.model.totalFreeCash.plannedAmount,
+          widget.model.totalFreeCash.actualAmount,
+          widget.model.totalFreeCash.differenceAmount,
         ],
         TableRowDecorationModel.freeCash(widget.isPersonal),
       ),
@@ -332,7 +332,7 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                     sideColor: decorationModel.rowBackgroundColor,
                     onDoubleTap: (managementSubcategory != null &&
                                 !managementSubcategory.cannotBeHidden) &&
-                            !widget.isLimitedCoach
+                            !widget.isReadOnlyAdvisor
                         ? () {
                             if (managementSubcategory.hasTransactions) {
                               showDialog(
@@ -369,7 +369,7 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                           : subcategory.nodes[0].amount
                               .numericFormattedString(),
                       hasRightBorder: true,
-                      isEditable: !widget.isLimitedCoach && isTableEditable,
+                      isEditable: !widget.isReadOnlyAdvisor && isTableEditable,
                       hasError:
                           subcategory.nodes[0].expression?.isValid == false,
                       isHighlighted: _budgetLayoutInherited.data?.monthYear ==
@@ -432,7 +432,7 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                               notifier: notifiers[0]);
                         }
                       },
-                      onDoubleTap: !widget.isLimitedCoach
+                      onDoubleTap: !widget.isReadOnlyAdvisor
                           ? () {
                               widget.onEditableCellDoubleTap(
                                   MonthlyFormulaDataModel(
@@ -450,7 +450,7 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                         : subcategory.nodes[1].amount.numericFormattedString(),
                     hasRightBorder: true,
                     //only goals are editable
-                    isEditable: isGoal && !widget.isLimitedCoach,
+                    isEditable: isGoal && !widget.isReadOnlyAdvisor,
                     hasError: subcategory.nodes[1].expression?.isValid == false,
                     isHighlighted: _budgetLayoutInherited.data?.monthYear ==
                             widget.model.monthYear &&
@@ -519,7 +519,7 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                               childCategoryId: categories[index].id,
                             );
                           }
-                        : isGoal && !widget.isLimitedCoach
+                        : isGoal && !widget.isReadOnlyAdvisor
                             ? () {
                                 widget.onEditableCellDoubleTap(
                                     MonthlyFormulaDataModel(

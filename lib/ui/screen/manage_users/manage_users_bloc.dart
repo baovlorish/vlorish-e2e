@@ -4,6 +4,7 @@ import 'package:burgundy_budgeting_app/domain/model/response/check_email.dart';
 import 'package:burgundy_budgeting_app/domain/repository/auth_repository.dart';
 import 'package:burgundy_budgeting_app/domain/repository/manage_users_repository.dart';
 import 'package:burgundy_budgeting_app/domain/repository/user_repository.dart';
+import 'package:burgundy_budgeting_app/ui/model/requests_page_model.dart';
 import 'package:burgundy_budgeting_app/ui/screen/budget/personal/budget_personal_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/manage_users/manage_users_event.dart';
 import 'package:burgundy_budgeting_app/ui/screen/manage_users/manage_users_state.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 
-import 'manage_users_event.dart';
 
 class ManageUsersBloc extends Bloc<ManageUsersEvent, ManageUsersState> {
   final Logger logger = getLogger('ManageUsers Bloc');
@@ -22,9 +22,11 @@ class ManageUsersBloc extends Bloc<ManageUsersEvent, ManageUsersState> {
   late final AuthRepository authRepository;
   final UserRepository userRepository;
   final ManageUsersRepository manageUsersRepository;
+  final bool isAdvisorSubscription;
 
   ManageUsersBloc(
-      this.authRepository, this.userRepository, this.manageUsersRepository)
+      this.authRepository, this.userRepository, this.manageUsersRepository,
+      {required this.isAdvisorSubscription})
       : super(ManageUsersInitial()) {
     logger.i('Manage users page');
     add(ManageUsersInitialLoadingEvent());
@@ -120,9 +122,20 @@ class ManageUsersBloc extends Bloc<ManageUsersEvent, ManageUsersState> {
   Stream<ManageUsersState> initialLoadingEventToState(
       ManageUsersInitialLoadingEvent event) async* {
     try {
-      var initialRequestsPageModel =
-          await manageUsersRepository.fetchRequestsPage(event.pageNumber,
-              event.requestsStatus); //event.pageNumber = 1,requestsStatus = 1
+      RequestsPageModel initialRequestsPageModel;
+
+      if (isAdvisorSubscription) {
+        initialRequestsPageModel = await manageUsersRepository
+            .fetchRequestsPage(event.pageNumber, event.requestsStatus);
+      } else {
+        initialRequestsPageModel = RequestsPageModel(
+            pageCount: 0,
+            pageNumber: 1,
+            requests: [],
+            hasRequestSlots: false,
+            canRequestToday: false,
+            requestsStatus: 1);
+      } //event.pageNumber = 1,requestsStatus = 1
       // logger.i(
       //     'Manage Users initialLoadingEventToState ${initialRequestsPageModel.toString()} ');
       var initialInvitationsPageModel =

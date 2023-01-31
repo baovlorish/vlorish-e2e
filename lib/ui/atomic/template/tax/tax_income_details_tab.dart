@@ -49,10 +49,12 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
     }
     totalAmount = amount;
   }
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
-      .currentForeignSession
-      ?.access
-      .isLimited ?? false;
+
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
+          .currentForeignSession
+          ?.access
+          .isReadOnly ??
+      false;
   @override
   void initState() {
     super.initState();
@@ -126,7 +128,7 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
               endIncomeDetailsModel = endIncomeDetailsModel
                   .updateWithSalary(newModel as TaxSalaryPaycheck);
               setState(() {});
-            },
+            }, isEditable: !isReadOnlyAdvisor,
           ),
         for (var item in endIncomeDetailsModel.incomeSources)
           _IncomeDetailsItemRow(
@@ -135,7 +137,7 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
               endIncomeDetailsModel = endIncomeDetailsModel
                   .updateWithSource(newModel as TaxIncomeDetailSource);
               setState(() {});
-            },
+            },isEditable: !isReadOnlyAdvisor,
           ),
         Container(
           height: 50,
@@ -196,7 +198,7 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
               text: taxCubit.estimationStage == 4
                   ? AppLocalizations.of(context)!.apply
                   : AppLocalizations.of(context)!.continueCalculations,
-              onPressed: canContinue &&!isLimitedCoach
+              onPressed: canContinue && !isReadOnlyAdvisor
                   ? () {
                       var canUpdate = true;
                       for (var item in endIncomeDetailsModel.salaryPaychecks) {
@@ -225,7 +227,7 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
                       }
                     }
                   : () {},
-              enabled: canContinue,
+              enabled: canContinue && !isReadOnlyAdvisor,
             ),
           ),
         ),
@@ -237,6 +239,7 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
 class _IncomeDetailsItemRow extends StatefulWidget {
   final dynamic itemModel;
   final bool isSalary;
+  final bool isEditable;
   final Function(dynamic newModel) onUpdate;
 
   const _IncomeDetailsItemRow(
@@ -244,6 +247,7 @@ class _IncomeDetailsItemRow extends StatefulWidget {
     Key? key,
     this.isSalary = false,
     required this.onUpdate,
+    required this.isEditable,
   }) : super(key: key);
 
   @override
@@ -325,7 +329,8 @@ class _IncomeDetailsItemRowState extends State<_IncomeDetailsItemRow>
                 horizontal: 8.0,
                 vertical: 4.0,
               ),
-              child: CustomTextSwitch(
+              child: CustomTextSwitch
+                (enabled: widget.isEditable,
                 onSelected: (value) {
                   var newModel = widget.isSalary
                       ? (widget.itemModel as TaxSalaryPaycheck).copyWith(
@@ -373,6 +378,7 @@ class _IncomeDetailsItemRowState extends State<_IncomeDetailsItemRow>
                       SizedBox(
                         width: 152,
                         child: InputItem(
+                          enabled: widget.isEditable,
                           value: (widget.itemModel as TaxSalaryPaycheck)
                                       .beforeTaxAmount !=
                                   null

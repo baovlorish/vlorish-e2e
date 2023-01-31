@@ -1,7 +1,10 @@
 import 'package:burgundy_budgeting_app/core/navigator_manager.dart';
 import 'package:burgundy_budgeting_app/domain/model/response/index_funds_response.dart';
 import 'package:burgundy_budgeting_app/domain/model/response/retirements_models.dart';
+import 'package:burgundy_budgeting_app/domain/repository/accounts_transactions_repository.dart';
 import 'package:burgundy_budgeting_app/domain/repository/investments_repository.dart';
+import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
+import 'package:burgundy_budgeting_app/ui/model/investment_institution_account.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/add_investment/add_investment_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/add_retirement/add_retirement_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/add_retirement/edit_retirement_page.dart';
@@ -17,8 +20,10 @@ import 'investments_state.dart';
 class InvestmentsCubit extends Cubit<InvestmentsState> {
   final Logger logger = getLogger('InvestmentsCubit');
   final InvestmentsRepository investmentRepository;
+  final AccountsTransactionsRepository accountsTransactionsRepository;
 
-  InvestmentsCubit(this.investmentRepository,
+  InvestmentsCubit(
+      this.investmentRepository, this.accountsTransactionsRepository,
       {required bool isRetirement, int? investmentTab, int? retirementTab})
       : super(InvestmentsInitial()) {
     logger.i('isRetirement $isRetirement');
@@ -32,7 +37,8 @@ class InvestmentsCubit extends Cubit<InvestmentsState> {
   Future<void> loadInvestments({int? tab, int? retirementTab}) async {
     var dashboardData =
         await investmentRepository.getInvestmentsDashboardData();
-    var investments = await getInvestments(tab ?? 0);
+    var investments = await investmentRepository
+        .getInvestmentType(InvestmentGroup.getInvestGroupFromIndex(tab ?? 0));
 
     emit(
       InvestmentsLoaded(
@@ -46,9 +52,7 @@ class InvestmentsCubit extends Cubit<InvestmentsState> {
 
   Future<void> loadRetirements({int retirementTab = 1}) async {
     await loadInvestments(retirementTab: retirementTab);
-    await changeTopTab(
-        isRetirement: true,
-        retirementTab: retirementTab);
+    await changeTopTab(isRetirement: true, retirementTab: retirementTab);
   }
 
   Future<void> changeTopTab(
@@ -62,7 +66,7 @@ class InvestmentsCubit extends Cubit<InvestmentsState> {
       emit(
         (state as InvestmentsLoaded).copyWith(
           isRetirement: isRetirement,
-          investmentsTab: 0,
+          investmentsTab: InvestmentGroup.Stocks.index,
           retirements: page,
           retirementTab: retirementTab,
           retirementGrowth: page?.availableTypes,
@@ -159,7 +163,8 @@ class InvestmentsCubit extends Cubit<InvestmentsState> {
 
     List<InvestmentModel>? investments;
     try {
-      investments = await getInvestments(index);
+      investments = await investmentRepository
+          .getInvestmentType(InvestmentGroup.getInvestGroupFromIndex(index));
       emit((state as InvestmentsLoaded).copyWith(
           investmentsTab: index,
           investments: investments,
@@ -175,14 +180,17 @@ class InvestmentsCubit extends Cubit<InvestmentsState> {
     var prevState = state as InvestmentsLoaded;
     try {
       if (model is InvestmentModel) {
-        await investmentRepository.deleteInvestmentById(model, sellDate, removeHistory);
-        var dashboardData = await investmentRepository.getInvestmentsDashboardData();
+        await investmentRepository.deleteInvestmentById(
+            model, sellDate, removeHistory);
+        var dashboardData =
+            await investmentRepository.getInvestmentsDashboardData();
         await selectTab(
           (state as InvestmentsLoaded).investmentsTab,
           dashboardData: dashboardData,
         );
       } else if (model is RetirementModel) {
-        await investmentRepository.deleteRetirementById(model, sellDate, removeHistory);
+        await investmentRepository.deleteRetirementById(
+            model, sellDate, removeHistory);
         var newRetirements = await investmentRepository.getRetirements();
         var retirementPage = RetirementPageModel(models: newRetirements ?? []);
         emit(prevState.copyWith(retirements: retirementPage));
@@ -193,57 +201,86 @@ class InvestmentsCubit extends Cubit<InvestmentsState> {
     }
   }
 
-  Future<List<AvailableInvestment>?> getAvailableInvestment(
-      InvestmentGroup investmentGroup) async {
-    var availableInvestments =
-        await investmentRepository.getAvailableInvestment(investmentGroup);
-    return availableInvestments;
-  }
-
-  Future<List<AvailableInvestment>?> getAvailableRetirements() async {
-    var availableRetirements = await investmentRepository
-        .getAvailableRetirements((state as InvestmentsLoaded).retirementTab);
-    return availableRetirements;
-  }
-
-  Future<void> availableInvestmentAttach(
-      List<AttachInvestmentRetirementModel> chosenAvailableInvestments,
-      InvestmentGroup investmentGroup) async {
-    await investmentRepository.availableInvestmentAttach(
-        investmentGroup, chosenAvailableInvestments);
-  }
-
-  Future<void> availableRetirementAttach(
-      List<AttachInvestmentRetirementModel> chosenAvailableInvestments,
-      int type) async {
-    var prevState = state;
+  Future<void> addPlaidAccount({
+    required Function(List<BankAccount>) onSuccessCallback,
+    required int type,
+  }) async {
+    var prevState = state as InvestmentsLoaded;
     try {
-      await investmentRepository.availableRetirementAttach(
-          chosenAvailableInvestments, type);
+      await accountsTransactionsRepository.openPlaidModalWindow(
+        onSuccessCallback: (List<BankAccount> bankAccounts) async {
+          onSuccessCallback(bankAccounts);
+          await updateInvestment(prevState);
+        },
+        onExitCallback: () async {
+          await updateInvestment(prevState);
+        },
+        onError: (Exception e) {
+          emit(InvestmentsError(e.toString()));
+        },
+        index: type,
+      );
     } catch (e) {
       emit(InvestmentsError(e.toString()));
       emit(prevState);
+      rethrow;
     }
-
-    var retirements = await investmentRepository.getRetirements();
-    emit((prevState as InvestmentsLoaded)
-        .copyWith(retirements: RetirementPageModel(models: retirements ?? [])));
   }
 
-  Future<List<InvestmentModel>?> getInvestments(int investIndex) async {
-    switch (investIndex) {
-      case 0:
-        return await investmentRepository.getStocks();
-      case 1:
-        return await investmentRepository.getIndexFunds();
-      case 2:
-        return await investmentRepository.getCryptocurrencies();
-      case 3:
-        return await investmentRepository.getRealEstate();
-      case 4:
-        return await investmentRepository.getStartUps();
-      case 5:
-        return await investmentRepository.getOtherInvestments();
+  Future<void> manageInstitution(String id,
+      {required Function onSuccessCallback}) async {
+    var prevState = state as InvestmentsLoaded;
+    try {
+      await accountsTransactionsRepository
+          .openPlaidModalWindowUpdateAccountsMode(
+              id: id,
+              onSuccessCallback: (List<BankAccount> bankAccounts) async {
+                try {
+                  onSuccessCallback(bankAccounts);
+                } catch (e) {
+                  emit(InvestmentsError(e.toString()));
+                }
+                await updateInvestment(prevState);
+              });
+    } catch (e) {
+      emit(InvestmentsError(e.toString()));
+      emit(prevState);
+      rethrow;
+    }
+  }
+
+  Future<void> updateInvestment(InvestmentsLoaded prevState) async {
+    if (prevState.isRetirement) {
+      await loadRetirements(retirementTab: prevState.retirementTab);
+    } else {
+      await loadInvestments(tab: prevState.investmentsTab);
+    }
+  }
+
+  Future<List<InvestmentInstitutionAccount>>
+      getInvestmentInstitutionAccounts() async {
+    var prevState = state as InvestmentsLoaded;
+    try {
+      var accounts = await accountsTransactionsRepository.getAccountsByType(2);
+      return accounts;
+    } catch (e) {
+      emit(InvestmentsError(e.toString()));
+      emit(prevState);
+      rethrow;
+    }
+  }
+
+  Future<void> loginWithPlaid(String id, context) async {
+    var prevState = state as InvestmentsLoaded;
+    try {
+      await accountsTransactionsRepository.openPlaidModalWindowUpdateMode(
+          id: id,
+          onSuccessCallback: () async {
+            await updateInvestment(prevState);
+          });
+    } catch (e) {
+      emit(InvestmentsError(e.toString()));
+      rethrow;
     }
   }
 

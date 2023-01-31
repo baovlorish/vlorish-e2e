@@ -22,23 +22,30 @@ class BudgetBusinessPage {
                   diContractor.userRepository,
                   diContractor.subscriptionRepository,
                 ),
-                child: HomePage(
-                  innerBlocProvider: BlocProvider<BudgetBloc>(
-                    create: (_) => BudgetBloc(
-                      diContractor.budgetRepository,
-                      diContractor.categoryRepository,
-                      diContractor.accountsTransactionsRepository,
-                      isPersonal: false,
+                child: Builder(builder: (context) {
+                  return HomePage(
+                    innerBlocProvider: BlocProvider<BudgetBloc>(
+                      create: (_) => BudgetBloc(
+                        diContractor.budgetRepository,
+                        diContractor.categoryRepository,
+                        diContractor.accountsTransactionsRepository,
+                        isPersonal: false,
+                        isRegistrationStepsCompleted:
+                            BlocProvider.of<HomeScreenCubit>(context)
+                                    .user
+                                    .registrationStep ==
+                                8,
+                      ),
+                      child: BudgetLayout(isPersonal: false),
                     ),
-                    child: BudgetLayout(isPersonal: false),
-                  ),
-                  title: AppLocalizations.of(context!)!.businessBudget,
-                ),
+                    title: AppLocalizations.of(context)!.businessBudget,
+                    isPremium: true,
+                  );
+                }),
               )
             : defaultRoute;
       },
     );
-
     router.define(routeName, handler: handler);
   }
 }

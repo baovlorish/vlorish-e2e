@@ -29,10 +29,10 @@ class FiScoreLayout extends StatefulWidget {
 class _FiScoreLayoutState extends State<FiScoreLayout> {
   late final FiScoreCubit _fiScoreCubit;
 
-  late var isLimitedCoach = BlocProvider.of<HomeScreenCubit>(context)
+  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
       .currentForeignSession
       ?.access
-      .isLimited ?? false;
+      .isReadOnly ?? false;
 
   @override
   void initState() {
@@ -295,7 +295,7 @@ class _FiScoreLayoutState extends State<FiScoreLayout> {
                                                   AppLocalizations.of(context)!
                                                       .vlorishScore,
                                               type: LabelType.Header3),
-                                          if(!isLimitedCoach)
+                                          if(!isReadOnlyAdvisor)
                                           CustomTooltip(
                                             message: 'Refresh score',
                                             child: Container(

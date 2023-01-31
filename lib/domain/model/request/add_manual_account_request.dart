@@ -14,6 +14,7 @@ class AddManualAccountRequest {
   int? get usageType => _usageType;
   String? get businessName => _businessName;
 
+  bool get isPersonalType => _usageType == 1;
   AddManualAccountRequest({
     int? accountType,
     String? name,

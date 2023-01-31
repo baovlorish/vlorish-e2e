@@ -27,7 +27,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BudgetAnnualView extends StatefulWidget {
   final bool isPersonal;
-  final bool isLimitedCoach;
+  final bool isReadOnlyAdvisor;
   final double? initialHorizontalScrollOffset;
   final double? initialVerticalScrollOffset;
   final double? Function(double?) onHorizontalScrollOffset;
@@ -43,7 +43,7 @@ class BudgetAnnualView extends StatefulWidget {
     required this.onHorizontalScrollOffset,
     required this.onVerticalScrollOffset,
     required this.model,
-    required this.isLimitedCoach,
+    required this.isReadOnlyAdvisor,
     required this.isPersonal,
     this.initialHorizontalScrollOffset,
     this.initialVerticalScrollOffset,
@@ -118,7 +118,7 @@ class _BudgetAnnualViewState extends State<BudgetAnnualView> {
     for (var item in model.period.months) {
       var hasDoubleTap = model.type == TableType.Budgeted &&
           item.isBefore(widget.userPeriod.months.last) &&
-          !widget.isLimitedCoach &&
+          !widget.isReadOnlyAdvisor &&
           isTableEditable;
       monthHeaderCells.add(
         CellData(
@@ -316,7 +316,7 @@ class _BudgetAnnualViewState extends State<BudgetAnnualView> {
                 sideColor: decorationModel.rowBackgroundColor,
                 onDoubleTap: (managementSubcategory != null &&
                         !managementSubcategory.cannotBeHidden &&
-                        !widget.isLimitedCoach)
+                        !widget.isReadOnlyAdvisor)
                     ? () {
                         if (managementSubcategory.hasTransactions) {
                           showDialog(
@@ -358,7 +358,7 @@ class _BudgetAnnualViewState extends State<BudgetAnnualView> {
               var isEditable =
                   ((categoryGroup.tableType == TableType.Budgeted && !isGoal) ||
                           isEditableGoal) &&
-                      !widget.isLimitedCoach &&
+                      !widget.isReadOnlyAdvisor &&
                       isTableEditable;
               var isHighlighted =
                   _budgetLayoutInherited.data?.monthYear == node.monthYear &&

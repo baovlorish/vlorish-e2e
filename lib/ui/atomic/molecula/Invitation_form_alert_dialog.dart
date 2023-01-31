@@ -24,6 +24,7 @@ class InvitationRequestFormAlertDialog extends AlertDialog {
         onButtonPress,
     bool? canInviteCoach,
     bool? canInvitePartner,
+    bool? isAdvisor,
   }) : super(
           content: _AddInvitationRequestForm(
             context,
@@ -34,6 +35,7 @@ class InvitationRequestFormAlertDialog extends AlertDialog {
             checkEmail: checkEmail,
             canInviteCoach: canInviteCoach,
             canInvitePartner: canInvitePartner,
+            isAdvisor: isAdvisor,
           ),
         );
 
@@ -102,6 +104,7 @@ class _AddInvitationRequestForm extends StatefulWidget {
   final Future<String?> Function(String email) checkEmail;
   final bool? canInviteCoach;
   final bool? canInvitePartner;
+  final bool? isAdvisor;
 
   _AddInvitationRequestForm(
     BuildContext context, {
@@ -113,6 +116,7 @@ class _AddInvitationRequestForm extends StatefulWidget {
     required this.checkEmail,
     this.canInviteCoach,
     this.canInvitePartner,
+    this.isAdvisor,
   }) : super(key: key);
 
   @override
@@ -134,8 +138,28 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
   var showInvitationTypeError = false;
   final formKey = GlobalKey<FormState>();
 
+  bool get isPartnerRole => role == 2;
+
+  bool get isCoachRole => role == 3;
+
+  bool get isReadOnlyAdvisor => isCoachRole && accessType == 1;
+
+  bool get isEditorAdvisor => isCoachRole && accessType == 2;
+
+  String? get partnerRoleTooltipText => isPartnerRole ? AppLocalizations.of(context)!.partnerInvitationHint : null;
+
+  String? get advisorTooltipText {
+    if (isReadOnlyAdvisor) return AppLocalizations.of(context)!.readOnlyAdvisorInvitationHint;
+    if (isEditorAdvisor) return AppLocalizations.of(context)!.editorAdvisorInvitationHint;
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.isInvitation && widget.isAdvisor != null && widget.isAdvisor!) {
+      role = 2;
+      validateInvitationType(2);
+    }
     enableMainButton = validateButton();
     return Form(
       key: formKey,
@@ -193,37 +217,49 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14),
-                child: DropdownItem<int>(
-                  itemKeys: [
-                    2, //partner
-                    3, //coach
-                  ],
-                  callback: (value) {
-                    validateInvitationType(value);
-                    setState(() {
-                      clearEmailValidationError();
-                      role = value;
-                    });
-                  },
-                  labelText:
-                      AppLocalizations.of(context)!.chooseTheInvitationType,
-                  items: [
-                    AppLocalizations.of(context)!.partner,
-                    AppLocalizations.of(context)!.coach,
-                  ],
-                  hintText:
-                      AppLocalizations.of(context)!.chooseTheInvitationType,
-                  errorText: invitationTypeErrorText,
-                ),
+                child: widget.isAdvisor!
+                    ? InputItem(
+                        enabled: false,
+                        enabledTextStyleAnyway: true,
+                        labelText: 'Invitation type',
+                        value: AppLocalizations.of(context)!.partner,
+                        errorText: invitationTypeErrorText,
+                        tooltipText: partnerRoleTooltipText,
+                      )
+                    : DropdownItem<int>(
+                        itemKeys: [
+                          2, //partner
+                          3, //coach
+                        ],
+                        callback: (value) {
+                          validateInvitationType(value);
+                          setState(() {
+                            // to clear hint only when role dropdown is changed
+                            if (role != value) accessType = null;
+                            clearEmailValidationError();
+                            role = value;
+                          });
+                        },
+                        labelText: AppLocalizations.of(context)!
+                            .chooseTheInvitationType,
+                        items: [
+                          AppLocalizations.of(context)!.partner,
+                          AppLocalizations.of(context)!.coach,
+                        ],
+                        hintText: AppLocalizations.of(context)!
+                            .chooseTheInvitationType,
+                        errorText: invitationTypeErrorText,
+                        tooltipText: partnerRoleTooltipText,
+                      ),
               ),
-            if (role == 3)
+            if (isCoachRole)
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14),
                 child: DropdownItem<int>(
                   itemKeys: [
-                    1, //limited
-                    2, //secondary
+                    1, //read only
+                    2, //editor
                   ],
                   callback: (value) {
                     setState(() {
@@ -232,10 +268,11 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
                   },
                   labelText: AppLocalizations.of(context)!.chooseTheAccessType,
                   items: [
-                    AppLocalizations.of(context)!.limited,
-                    AppLocalizations.of(context)!.secondary,
+                    AppLocalizations.of(context)!.readOnly,
+                    AppLocalizations.of(context)!.editor,
                   ],
                   hintText: AppLocalizations.of(context)!.chooseTheAccessType,
+                  tooltipText: advisorTooltipText,
                 ),
               ),
             Padding(
@@ -338,7 +375,7 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
       if (widget.isInvitation) {
         if (role != null) {
           // coach needs access type
-          if (role == 3) {
+          if (isCoachRole) {
             return accessType != null;
           } else {
             // partner
@@ -532,8 +569,8 @@ class _EditInvitationRequestFormState
                 child: DropdownItem<int>(
                   initialValue: widget.itemModel.accessType,
                   itemKeys: [
-                    1, //limited
-                    2, //secondary
+                    1, //read only
+                    2, //editor
                   ],
                   callback: (value) {
                     setState(() {
@@ -543,8 +580,8 @@ class _EditInvitationRequestFormState
                   },
                   labelText: AppLocalizations.of(context)!.chooseTheAccessType,
                   items: [
-                    AppLocalizations.of(context)!.limited,
-                    AppLocalizations.of(context)!.secondary,
+                    AppLocalizations.of(context)!.readOnly,
+                    AppLocalizations.of(context)!.editor,
                   ],
                   hintText: AppLocalizations.of(context)!.chooseTheAccessType,
                 ),
@@ -633,7 +670,7 @@ class _EditInvitationRequestFormState
   }
 
   bool validateButton() {
-    var hasError = emailErrorText!=null || showInvitationTypeError;
+    var hasError = emailErrorText != null || showInvitationTypeError;
     var changed = role != widget.itemModel.role ||
         accessType != widget.itemModel.accessType ||
         note != initialNote;

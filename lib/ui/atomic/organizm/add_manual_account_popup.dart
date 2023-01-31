@@ -11,6 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddManualAccountPopup extends AlertDialog {
+  final bool isStandardSubscription;
+
   AddManualAccountPopup(
     BuildContext context, {
     required Future<String?> Function({
@@ -21,12 +23,14 @@ class AddManualAccountPopup extends AlertDialog {
     })
         addAccountFunction,
     required List<String> businessNameList,
+    required this.isStandardSubscription,
   }) : super(
           content: Container(
             width: 600,
-            height: 470,
+            height: isStandardSubscription ? 400 : 470,
             padding: EdgeInsets.all(16),
             child: _AddManualAccountItem(
+              isStandardSubscription: isStandardSubscription,
               addAccountFunction: addAccountFunction,
               businessNameList: businessNameList,
             ),
@@ -43,12 +47,14 @@ class _AddManualAccountItem extends StatefulWidget {
   }) addAccountFunction;
 
   final List<String> businessNameList;
+  final bool isStandardSubscription;
 
-  const _AddManualAccountItem(
-      {Key? key,
-      required this.addAccountFunction,
-      required this.businessNameList})
-      : super(key: key);
+  const _AddManualAccountItem({
+    Key? key,
+    required this.addAccountFunction,
+    required this.businessNameList,
+    required this.isStandardSubscription,
+  }) : super(key: key);
 
   @override
   __AddManualAccountItemState createState() => __AddManualAccountItemState();
@@ -69,6 +75,13 @@ class __AddManualAccountItemState extends State<_AddManualAccountItem> {
       _createAccountNameValue.isNotEmpty &&
       _usageType != 0 &&
       (businessName != null || _usageType == 1);
+
+  @override
+  void initState() {
+    // added for https://itomych.atlassian.net/browse/BAR-2988
+    if(widget.isStandardSubscription) _usageType = 1;
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -109,7 +122,7 @@ class __AddManualAccountItemState extends State<_AddManualAccountItem> {
           ),
         ),
         SizedBox(height: 24),
-        Row(
+        if (!widget.isStandardSubscription) Row(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

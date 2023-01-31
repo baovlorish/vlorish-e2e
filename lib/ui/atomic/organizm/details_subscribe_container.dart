@@ -4,6 +4,11 @@ import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/price_value_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../atom/custom_indicator_widget.dart';
+import '../atom/custom_tooltip.dart';
+
 
 enum PricePersion { DAY, MONTH }
 
@@ -14,26 +19,29 @@ extension PricePersionExtension on PricePersion {
 }
 
 class DetailsSubscribeContainerModel {
-  String title;
-  String details;
-  String logo;
-  String price;
-  PricePersion pricePersion;
-  String resultButton;
-  List<FeatureSubscriptionItem> featureList;
-  VoidCallback onPressedResultButton;
+  final String title;
+  final String details;
+  final String logo;
+  final String price;
+  final PricePersion pricePersion;
+  final String resultButton;
+  final List<FeatureSubscriptionItem> featureList;
+  final VoidCallback onPressedResultButton;
   final int planType;
+  final String hint;
 
-  DetailsSubscribeContainerModel(
-      {required this.title,
-      required this.planType,
-      required this.details,
-      required this.logo,
-      required this.price,
-      required this.pricePersion,
-      required this.resultButton,
-      required this.onPressedResultButton,
-      required this.featureList});
+  const DetailsSubscribeContainerModel({
+    required this.title,
+    required this.planType,
+    required this.details,
+    required this.logo,
+    required this.price,
+    required this.pricePersion,
+    required this.resultButton,
+    required this.onPressedResultButton,
+    required this.featureList,
+    required this.hint,
+  });
 }
 
 class FeatureSubscriptionItem {
@@ -50,6 +58,12 @@ class DetailsSubscribeContainer extends StatelessWidget {
 
   const DetailsSubscribeContainer(this.model, this.isVertical);
 
+  Color get backgroundColor => model.planType == 1
+      ? CustomColorScheme.mainDarkBackground
+      : model.planType == 2
+      ? CustomColorScheme.negativeTransaction
+      : Colors.white;
+
   @override
   Widget build(BuildContext context) {
     var textColor = model.planType != 0 ? Colors.white : CustomColorScheme.text;
@@ -63,11 +77,7 @@ class DetailsSubscribeContainer extends StatelessWidget {
                   : CustomColorScheme.inputBorder,
         ),
         borderRadius: BorderRadius.circular(20.0),
-        color: model.planType == 1
-            ? CustomColorScheme.mainDarkBackground
-            : model.planType == 2
-            ? CustomColorScheme.negativeTransaction
-            : Colors.white,
+        color: backgroundColor,
         image: DecorationImage(
           image: AssetImage(
             'assets/images/logo_bg.png',
@@ -136,9 +146,29 @@ class DetailsSubscribeContainer extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
+            Row(children: [
+              Label(
+                text: AppLocalizations.of(context)!.learnMore,
+                type: LabelType.GeneralBold,
+                color: CustomColorScheme.clipElementInactive,
+              ),
+              SizedBox(width: 8),
+              CustomTooltip(
+                message: model.hint,
+                color: CustomColorScheme.mainDarkBackground,
+                child: CustomIndicatorWidget(
+                  color: backgroundColor,
+                  child: Center(
+                    child: Icon(
+                      Icons.info,
+                      color: CustomColorScheme.clipElementInactive,
+                    ),
+                  ),
+                ),
+              ),
+            ]),
+            SizedBox(height: 20),
             isVertical ? SizedBox() : Expanded(child: SizedBox()),
             ButtonItem(
               context,

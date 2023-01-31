@@ -43,7 +43,14 @@ class SubscriptionModel {
       creditCardExpirationDate == null ||
       nextPaymentDate == null);
 
+  ///Standard === Personal 0;
+  ///Premium === Business 1;
+  ///Advisor === Advisor 2;
   bool get isPremiumOrHigher => type > 0;
+
+  bool get isStandard => type == 0;
+  bool get isBusiness => type == 1;
+  bool get isAdvisor => type == 2;
 
   @override
   String toString() {

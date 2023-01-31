@@ -25,7 +25,7 @@ class AddInvestmentCubit extends Cubit<AddInvestmentState> {
         routeSettings: RouteSettings(
           arguments: {
             'isRetirement': false,
-            'investmentTab': currentInvestmentGroup.index
+            'investmentTab': InvestmentGroup.getIndexFromInvestGroup(currentInvestmentGroup.index)
           },
         ));
   }
@@ -35,27 +35,23 @@ class AddInvestmentCubit extends Cubit<AddInvestmentState> {
     required String name,
     required DateTime acquisitionDate,
     required double initialCost,
-    String? address,
     int? usageType,
-    int? exchange,
-    required int? brokerage,
+    required int? investmentType,
+    required String? details,
     double? currentCost,
-    int? otherType,
   }) async {
     try {
       emit(AddInvestmentLoading());
       await investmentsRepository.addInvestment(InvestmentModel(
           name: name,
           isManual: true,
-          brokerage: brokerage,
+          details: details,
           initialCost: initialCost,
-          address: address,
           usageType: usageType,
-          exchange: exchange,
           currentCost: currentCost,
           acquisitionDate: acquisitionDate,
-          investmentGroup: currentInvestmentGroup,
-          otherType: otherType));
+          investmentType: investmentType,
+          investmentGroup: currentInvestmentGroup));
       navigationToInvestmentPage(context);
     } catch (e) {
       emit(AddInvestmentError(e.toString()));
@@ -68,11 +64,9 @@ class AddInvestmentCubit extends Cubit<AddInvestmentState> {
       required String name,
       required bool isManual,
       required DateTime acquisitionDate,
-      required int? brokerage,
-      String? address,
+      required String? details,
       int? usageType,
-      int? otherType,
-      int? exchange,
+      required int? investmentType,
       required double initialCost,
       required double currentCost,
       List<InvestmentTransaction>? transactions}) async {
@@ -84,11 +78,9 @@ class AddInvestmentCubit extends Cubit<AddInvestmentState> {
           isManual: isManual,
           initialCost: initialCost,
           currentCost: currentCost,
-          exchange: exchange,
-          brokerage: brokerage,
-          address: address,
+          details: details,
           usageType: usageType,
-          otherType: otherType,
+          investmentType: investmentType,
           acquisitionDate: acquisitionDate,
           investmentGroup: currentInvestmentGroup,
           transactions: transactions));
@@ -101,26 +93,10 @@ class AddInvestmentCubit extends Cubit<AddInvestmentState> {
 
   Future<void> getModelsNameList() async {
     List<InvestmentModel>? list;
-    switch (currentInvestmentGroup) {
-      case InvestmentGroup.Stocks:
-        list = await investmentsRepository.getStocks();
-        break;
-      case InvestmentGroup.IndexFunds:
-        list = await investmentsRepository.getIndexFunds();
-        break;
-      case InvestmentGroup.RealEstate:
-        list = await investmentsRepository.getRealEstate();
-        break;
-      case InvestmentGroup.StartUps:
-        list = await investmentsRepository.getStartUps();
-        break;
-      case InvestmentGroup.Cryptocurrencies:
-        list = await investmentsRepository.getCryptocurrencies();
-        break;
-      case InvestmentGroup.OtherInvestments:
-        list = await investmentsRepository.getOtherInvestments();
-        break;
-    }
+
+    list =
+        await investmentsRepository.getInvestmentType(currentInvestmentGroup);
+
     var listString = <String>[];
     list?.forEach((element) {
       listString.add(element.name!);

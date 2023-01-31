@@ -25,10 +25,12 @@ class _SignupAddCardLayoutState extends State<SignupAddCardLayout> {
 
   UserRole? role;
   late final SignupAddCardCubit signupAddCardCubit;
+  late final HomeScreenCubit homeScreenCubit;
 
   @override
   void initState() {
     signupAddCardCubit = BlocProvider.of<SignupAddCardCubit>(context);
+    homeScreenCubit = BlocProvider.of<HomeScreenCubit>(context);
     connectAccountsButtonNode.requestFocus();
     super.initState();
   }
@@ -117,7 +119,12 @@ class _SignupAddCardLayoutState extends State<SignupAddCardLayout> {
                   buttonType: ButtonType.LargeText,
                   text: AppLocalizations.of(context)!.connectPlaidButton,
                   onPressed: () {
-                    signupAddCardCubit.connectPlaidAccount(context);
+                    signupAddCardCubit.connectPlaidAccount(
+                        context,
+                        homeScreenCubit
+                            .user
+                            .subscription!
+                            .isStandard);
                   },
                 ),
               SizedBox(

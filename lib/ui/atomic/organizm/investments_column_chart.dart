@@ -100,7 +100,7 @@ class _InvestmentsColumnChartState extends State<InvestmentsColumnChart> {
           height: 320,
           child: Stack(
             children: [
-              if (widget.data == null)
+              if (widget.data.items.isEmpty)
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 48.0),
