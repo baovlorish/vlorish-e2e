@@ -125,9 +125,38 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR-T7 User can enter valid password in Password fields and he is redirected on Personal Data page',
+            '',
+            'STARTED');
+        final emailSigup = signInScreen.generateRandomString(10) + '@gmail.com';
+        await signInScreen.clickBtnSignUp(tester, context: context);
+        await signUpScreen.inputEmail(emailSigup, tester, context: context);
+        await signUpScreen.clickButtonNext(tester, context: context);
+        await signUpScreen.inputPassword('Test1234@', tester);
+        await signUpScreen.inputConfirmPassword('Test1234@', tester);
+        await signUpScreen.clickAgreeAndContinueBtn(tester);
+        await signUpScreen.verifySigupMailCodePage(emailSigup, tester);
+
+        await htLogd(
+            tester,
+            'BAR-T7 User can enter valid password in Password fields and he is redirected on Personal Data page',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T7 User can enter valid password in Password fields and he is redirected on Personal Data page',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR-T8 User see error message if Password fields are empty after clicking “Agree & Continue” button',
             '',
             'STARTED');
+        await dashboardScreen.clickLogoText();
+        await signInScreen.clickBtnSignUp(tester);
         await signUpScreen.inputEmail(
             signInScreen.generateRandomString(10) + '@gmail.com', tester,
             context: context);

@@ -35,11 +35,11 @@ class SignInScreenTest {
   }
 
   Future<void> verifyErrorMessage(String msg, WidgetTester tester,
-      {String context = ""}) async {
-    await tester.pumpAndSettle();
+      {String context = '""'}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 6));
     await htExpect(tester, find.text(msg), findsOneWidget,
         reason: ("Verify-" + context + "-" + msg + ' is visible'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
   }
 
   Future<void> verifyPasswordPage(String msg, WidgetTester tester,

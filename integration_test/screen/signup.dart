@@ -129,10 +129,10 @@ class SignUpScreenTest {
 
   Future<void> verifyErrorMessage(String msg, WidgetTester tester,
       {String context = ''}) async {
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 6));
     await htExpect(tester, find.text(msg), findsOneWidget,
         reason: ("Verify-" + context + "-" + msg + ' is visible'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle();
   }
 
   Future<void> verifyPasswordPage(WidgetTester tester,
@@ -194,5 +194,20 @@ class SignUpScreenTest {
         reason: ("Verify-" +
             context +
             '- Text Please enter your email address to create an account is visible'));
+  }
+
+  Future<void> verifySigupMailCodePage(String email, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await htExpect(tester, find.text('Confirm your email'), findsOneWidget,
+        reason: ("Verify-" + context + '- Text Confirm your email is visible'));
+    await htExpect(
+        tester, find.text('We sent an email with a code to '), findsOneWidget,
+        reason: ("Verify-" +
+            context +
+            '- Text We sent an email with a code is visible'));
+    await htExpect(tester, find.text(email), findsOneWidget,
+        reason: ("Verify-" + context + '- Email is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 }

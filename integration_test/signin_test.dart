@@ -11,17 +11,20 @@ import 'screen/dashboard.dart';
 import 'screen/forgotPassword.dart';
 import 'screen/signin.dart';
 import 'screen/signup.dart';
+import 'screen/personalBudget.dart';
 
 const String testDescription = 'SignIn';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
+  PersonalBudgetScreenTest personalBudgetScreen;
   await htTestInit(description: testDescription);
   group('Authentication Test', () {
     testWidgets('SignIn test', (tester, [String? context]) async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
+      personalBudgetScreen = PersonalBudgetScreenTest(tester);
       context = context ?? '';
 
       try {
@@ -260,8 +263,7 @@ void main() async {
         await signInScreen.verifyErrorMessage(
             'The password is incorrect. Please check the password and try again',
             tester,
-            context:
-                context); // status is pending, will check again after enable to connect DB
+            context: context);
         await htLogd(
             tester,
             'BAR_T54 User cannot login with password that does not match with the email',
@@ -304,6 +306,51 @@ void main() async {
         await htLogd(
             tester,
             'Error BAR_T60 User sees error message after entering incorrect password 2 times',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T52 User can login by correct Email and correct password',
+            '',
+            'STARTED');
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmailAndPassword(
+            'farah.ali1021@gmail.com', 'Hello@1234', tester,
+            context: context);
+        await signInScreen.clickLoginButton(tester, context: context);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickLogoutButton(tester);
+        await htLogd(
+            tester,
+            'BAR_T52 User can login by correct Email and correct password',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T52 User can login by correct Email and correct password',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T68 User can login with visible password', '', 'STARTED');
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmailAndPassword(
+            'farah.ali1021@gmail.com', 'Hello@1234', tester,
+            context: context);
+        await signInScreen.clickEyePassword(tester);
+        await signInScreen.clickLoginButton(tester, context: context);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await htLogd(tester, 'BAR_T68 User can login with visible password', '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T68 User can login with visible password',
             '',
             'FINISHED');
       }
