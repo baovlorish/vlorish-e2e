@@ -62,7 +62,7 @@ import 'package:get_it/get_it.dart';
 
 class DiProvider implements AuthContractor, UserContractor {
   Future<void> init() async {
-    GetIt.I.registerSingleton<Environment>(Environment.PROD);
+    GetIt.I.registerSingleton<Environment>(Environment.STAGE);
 
     // async singletons and those other depend on
 
