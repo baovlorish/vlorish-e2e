@@ -1,12 +1,14 @@
 import 'dart:math';
 
 import 'package:burgundy_budgeting_app/core/navigator_manager.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen.dart';
 import 'package:burgundy_budgeting_app/ui/screen/profile_overview/profile_overview_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/profile_overview/profile_overview_state.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -134,6 +136,46 @@ class PersonalBudgetScreenTest {
     final finder = find.byType(Title).last;
     final titleWidget = tester.firstWidget<Title>(finder);
     expect(titleWidget.title, 'Calculate your taxes');
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickInvesTab(WidgetTester tester, {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 20));
+    final debtTab = find.byType(Image).at(6);
+    await tapSomething(
+        tester, debtTab, addContext(context, 'Click on btn clickInvesTab Tab'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyInvestPage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final finder = find.byType(Title).last;
+    final titleWidget = tester.firstWidget<Title>(finder);
+    expect(titleWidget.title, 'Investments');
+    await htExpect(tester, titleWidget.title, 'Investments',
+        reason: ('Verify-' + context + '- Investments title page is visible'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickProfileIcon(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 15));
+    print(find.byType(AvatarWidget).toString());
+    final avatar = find.byType(AvatarWidget).first;
+    await tapSomething(
+        tester, avatar, addContext(context, 'Click on btn avatar'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyProfilePage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final finder = find.byType(Title).last;
+    final titleWidget = tester.firstWidget<Title>(finder);
+    await htExpect(tester, titleWidget.title, 'Profile Overview',
+        reason:
+            ('Verify-' + context + '- Profile Overview title page is visible'));
     await tester.pumpAndSettle();
   }
 }

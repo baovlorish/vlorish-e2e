@@ -113,6 +113,46 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T128 User is redirected on Investments flow page after clicking on “Investments” tab',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickInvesTab(tester);
+        await personalBudgetScreen.verifyInvestPage(tester);
+        await htLogd(
+            tester,
+            'BAR_T128 User is redirected on Investments flow page after clicking on “Investments” tab',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T128 User is redirected on Investments flow page after clicking on “Investments” tab',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await personalBudgetScreen.verifyProfilePage(tester);
+        await htLogd(
+            tester,
+            'BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T124 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',
             '',
             'STARTED');
