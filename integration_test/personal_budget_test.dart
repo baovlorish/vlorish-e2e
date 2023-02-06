@@ -32,7 +32,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickLogoText();
         await signInScreen.inputEmailAndPassword(
-            'farah.ali1021@gmail.com', 'Hello@1234', tester,
+            'baoq+1@vlorish.com', 'Test@1234', tester,
             context: context);
         await signInScreen.clickLoginButton(tester, context: context);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);

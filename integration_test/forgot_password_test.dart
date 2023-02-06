@@ -280,7 +280,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await htLogd(
@@ -305,7 +305,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.clickBtnNext(tester, context: context);
@@ -333,7 +333,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.inputPasswordinConfirmEmailScreen('test123');
@@ -367,7 +367,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.inputPasswordinConfirmEmailScreen('test123');
@@ -399,7 +399,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.inputPasswordinConfirmEmailScreen('test12345');
@@ -431,7 +431,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen
@@ -464,7 +464,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen
@@ -497,7 +497,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen
@@ -530,7 +530,7 @@ void main() async {
         await signInScreen.clickForgotPassword(tester, context: context);
         await forgotPassScreen.verifyForgotPasswordPage(tester,
             context: context);
-        await forgotPassScreen.inputEmail('farah.ali1021@gmail.com');
+        await forgotPassScreen.inputEmail('baoq+1@vlorish.com');
         await forgotPassScreen.clickBtnNext(tester, context: context);
         await forgotPassScreen.verifyConfirmEmailPage(tester, context: context);
         await forgotPassScreen.inputPasswordinConfirmEmailScreen('test123');

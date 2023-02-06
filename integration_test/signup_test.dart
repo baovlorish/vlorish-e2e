@@ -103,7 +103,7 @@ void main() async {
             '',
             'STARTED');
         await signInScreen.clickBtnSignUp(tester, context: context);
-        await signUpScreen.inputEmail('farah.ali1021@gmail.com', tester,
+        await signUpScreen.inputEmail('baoq+1@vlorish.com', tester,
             context: context);
         await signUpScreen.clickButtonNext(tester, context: context);
         await signUpScreen.verifyErrorMessage(

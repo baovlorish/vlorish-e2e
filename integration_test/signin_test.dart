@@ -257,7 +257,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickLogoText();
         await signInScreen.inputEmailAndPassword(
-            'farah.ali1021@gmail.com', 'Hello@123456', tester,
+            'baoq+1@vlorish.com', 'Test@123456', tester,
             context: context);
         await signInScreen.clickLoginButton(tester, context: context);
         await signInScreen.verifyErrorMessage(
@@ -284,7 +284,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickLogoText();
         await signInScreen.inputEmailAndPassword(
-            'farah.ali1021@gmail.com', 'Hello@123456', tester,
+            'baoq+1@vlorish.com', 'Test@123456', tester,
             context: context);
         await signInScreen.clickLoginButton(tester, context: context);
         await signInScreen.verifyErrorMessage(
@@ -317,7 +317,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickLogoText();
         await signInScreen.inputEmailAndPassword(
-            'farah.ali1021@gmail.com', 'Hello@1234', tester,
+            'baoq+1@vlorish.com', 'Test@1234', tester,
             context: context);
         await signInScreen.clickLoginButton(tester, context: context);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
@@ -340,7 +340,7 @@ void main() async {
             'BAR_T68 User can login with visible password', '', 'STARTED');
         await dashboardScreen.clickLogoText();
         await signInScreen.inputEmailAndPassword(
-            'farah.ali1021@gmail.com', 'Hello@1234', tester,
+            'baoq+1@vlorish.com', 'Test@1234', tester,
             context: context);
         await signInScreen.clickEyePassword(tester);
         await signInScreen.clickLoginButton(tester, context: context);
