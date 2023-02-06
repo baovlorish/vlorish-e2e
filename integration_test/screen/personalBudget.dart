@@ -158,6 +158,28 @@ class PersonalBudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
+  Future<void> clickRetirementTab(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 20));
+    final retirementtTab = find.text('Retirement');
+    await tapSomething(tester, retirementtTab,
+        addContext(context, 'Click on btn clickInvesTab Tab'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyRetirementPage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 15));
+    // final finder = find.text('Here, you can link or manually add and keep track of your retirement assets of all types');
+    await htExpect(
+        tester,
+        find.text(
+            'Here, you can link or manually add and keep track of your retirement assets of all types. It\'s important to separate your traditional and Roth assets as it would have important tax considerations.'),
+        findsOneWidget,
+        reason: ('Verify-' + context + '- Text on Retirement page is visible'));
+    await tester.pumpAndSettle();
+  }
+
   Future<void> clickProfileIcon(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));

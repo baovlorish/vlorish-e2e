@@ -133,6 +133,26 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickRetirementTab(tester);
+        await personalBudgetScreen.verifyRetirementPage(tester);
+        await htLogd(
+            tester,
+            'BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
             '',
             'STARTED');
