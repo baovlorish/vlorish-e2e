@@ -338,7 +338,7 @@ void main() async {
 
       try {
         await htLogdDirect(
-            'T62 User is redirected on Sign Up flow after clicking on Sign Up button',
+            'BAR-T62 User is redirected on Sign Up flow after clicking on Sign Up button',
             '',
             'STARTED');
         await dashboardScreen.clickLogoText();
@@ -346,13 +346,13 @@ void main() async {
         await signUpScreen.verifySignUpPage(tester, context: context);
         await htLogd(
             tester,
-            'T62 User is redirected on Sign Up flow after clicking on Sign Up button',
+            'BAR-T62 User is redirected on Sign Up flow after clicking on Sign Up button',
             '',
             'FINISHED');
       } catch (e) {
         await htLogd(
             tester,
-            'Error T62 User is redirected on Sign Up flow after clicking on Sign Up button',
+            'Error BAR-T62 User is redirected on Sign Up flow after clicking on Sign Up button',
             '',
             'FINISHED');
       }

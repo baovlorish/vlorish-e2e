@@ -1,6 +1,7 @@
 import 'dart:io';
 import './lib/test_lib_common.dart';
 import './lib/test_lib_const.dart';
+import './lib/function_common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,9 +34,10 @@ void main() async {
             'BAR_T98 Check that user can update “First Name” and “Last Name” fields',
             '',
             'STARTED');
+        final fName = getRandomString(10);
+        final lName = getRandomString(10);
         await dashboardScreen.clickLogoText();
-        await signInScreen.inputEmailAndPassword(
-            'baoq+1@vlorish.com', 'Test@1234', tester,
+        await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester,
             context: context);
         await signInScreen.clickLoginButton(tester, context: context);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
@@ -43,17 +45,17 @@ void main() async {
         await personalBudgetScreen.verifyProfilePage(tester);
         await profileScreen.clickProfileDetailsButton(tester);
         await profileScreen.verifyProfileDetailtPage(tester);
-        await profileScreen.inputUpdateName(
-            'FName Update', 'LName Update', tester);
+        await profileScreen.inputUpdateName(fName, lName, tester);
         await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.clickContinueButton('Success!', tester);
         await profileScreen.clickBackButton(tester);
         await personalBudgetScreen.clickProfileIcon(tester);
-        await profileScreen.verifyNameUpdate(
-            'FName Update', 'LName Update', tester);
+        await profileScreen.verifyNameUpdate(fName, lName, tester);
         await profileScreen.clickProfileDetailsButton(tester);
         await profileScreen.verifyProfileDetailtPage(tester);
         await profileScreen.inputUpdateName('Bao', 'Test', tester);
         await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.clickContinueButton('Success!', tester);
 
         await htLogd(
             tester,
@@ -70,6 +72,104 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T103 New Password field contains at least 8 characters',
+            '',
+            'STARTED');
+        await dashboardScreen.clickBack();
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await personalBudgetScreen.verifyProfilePage(tester);
+        await profileScreen.inputUpdatePassword(passLogin, 'Test13@', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await signInScreen.verifyErrorMessage(
+            'contains at least 8 characters', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR_T103 New Password field contains at least 8 characters',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T103 New Password field contains at least 8 characters',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T104 User can make password visible after clicking on "eye" button',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.inputUpdatePassword(passLogin, '', tester);
+        await profileScreen.clickEyePassword(0, tester);
+        await profileScreen.verifyPasswordShow(passLogin, tester);
+
+        await htLogd(
+            tester,
+            'BAR_T104 User can make password visible after clicking on "eye" button',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T104 User can make password visible after clicking on "eye" button',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T105 User can make password invisible after clicking on “eye” button if password is visible',
+            '',
+            'STARTED');
+        await profileScreen.clickEyePassword(0, tester);
+        await profileScreen.verifyPasswordHidden(passLogin, tester);
+
+        await htLogd(
+            tester,
+            'BAR_T105 User can make password invisible after clicking on “eye” button if password is visible',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T105 User can make password invisible after clicking on “eye” button if password is visible',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T106 User can enter max 128 characters in Password fields',
+            '',
+            'STARTED');
+        final pass128 =
+            'Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#';
+        final passGreaterThan128 =
+            'Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#Test128#9';
+        await profileScreen.inputUpdatePassword(
+            passLogin, passGreaterThan128, tester);
+        await profileScreen.clickEyePassword(1, tester);
+        await profileScreen.verifyNewPasswordMax128Char(
+            pass128, passGreaterThan128, tester);
+        await dashboardScreen.clickBack();
+        await htLogd(
+            tester,
+            'BAR_T106 User can enter max 128 characters in Password fields',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T106 User can enter max 128 characters in Password fields',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T99 Check that user can update password', '', 'STARTED');
         await dashboardScreen.clickBack();
         await personalBudgetScreen.clickProfileIcon(tester);
@@ -77,6 +177,8 @@ void main() async {
         await profileScreen.inputUpdatePassword(
             'Test@1234', 'Hello@1234', tester);
         await profileScreen.clickUpdatePasswordButton(tester);
+        await profileScreen.clickContinueButton(
+            'Your password has been updated successfully.', tester);
         await personalBudgetScreen.clickLogoutButton(tester);
         await dashboardScreen.clickLogoText();
         await signInScreen.inputEmailAndPassword(
@@ -97,6 +199,8 @@ void main() async {
         await profileScreen.inputUpdatePassword(
             'Hello@1234', 'Test@1234', tester);
         await profileScreen.clickUpdatePasswordButton(tester);
+        await profileScreen.clickContinueButton(
+            'Your password has been updated successfully.', tester);
 
         await htLogd(tester, 'BAR_T99 Check that user can update password', '',
             'FINISHED');

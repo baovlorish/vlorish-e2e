@@ -70,18 +70,8 @@ class ProfileScreenTest {
       {String context = ''}) async {
     await tester.pumpAndSettle();
     final updateButton = find.text('Update');
-    await tapSomething(
-        tester, updateButton, addContext(context, 'Click on btn Update'));
-    await tester.pumpAndSettle(const Duration(seconds: 10));
-    await htExpect(tester, find.text('Success!'), findsOneWidget,
-        reason: ('Verify-' +
-            context +
-            '-' +
-            'Your profile has been updated successfully text is visible'));
-    await tester.pumpAndSettle(const Duration(seconds: 10));
-    final continueBtn = find.text('Continue');
-    await tapSomething(
-        tester, continueBtn, addContext(context, 'Click on btn Update'));
+    await tapSomething(tester, updateButton,
+        addContext(context, 'Click on btn Update Profile Button'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
@@ -102,17 +92,16 @@ class ProfileScreenTest {
       {String context = ''}) async {
     await tester.pumpAndSettle();
     final updateButton = find.text('Update password');
-    await tapSomething(
-        tester, updateButton, addContext(context, 'Click on btn Update'));
+    await tapSomething(tester, updateButton,
+        addContext(context, 'Click on btn Update Password'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> clickContinueButton(String msg, WidgetTester tester,
+      {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 20));
-    await htExpect(
-        tester,
-        find.text('Your password has been updated successfully.'),
-        findsOneWidget,
-        reason: ('Verify-' +
-            context +
-            '-' +
-            'Your password has been updated successfully text is visible'));
+    await htExpect(tester, find.text(msg), findsOneWidget,
+        reason: ('Verify-' + context + '-' + msg + ' text is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 15));
     final continueBtn = find.text('Continue');
     await tapSomething(
@@ -127,5 +116,45 @@ class ProfileScreenTest {
     await tapSomething(
         tester, btnBackIcon, addContext(context, 'Click on btn BackIcon'));
     await tester.pumpAndSettle();
+  }
+
+  Future<void> clickEyePassword(int index, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnNext = find.byType(IconButton).at(index);
+    await tapSomething(tester, btnNext, addContext(context, 'Click on Eye'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifyPasswordShow(String pass, WidgetTester tester,
+      {String context = ''}) async {
+    final finder = find.byType(TextField).first;
+    final input = tester.firstWidget<TextField>(finder);
+    expect(input.obscureText, false);
+    final findtext = find.text(pass);
+    await htExpect(tester, findtext, findsOneWidget,
+        reason: ('Verify-' + context + '- Show Password text is visible'));
+  }
+
+  Future<void> verifyPasswordHidden(String pass, WidgetTester tester,
+      {String context = ''}) async {
+    final finder = find.byType(TextField).first;
+    final input = tester.firstWidget<TextField>(finder);
+    expect(input.obscureText, true);
+    final findtext = find.text(pass);
+    await htExpect(tester, findtext, findsNothing,
+        reason: ('Verify-' + context + '- Password is invisible'));
+  }
+
+  Future<void> verifyNewPasswordMax128Char(
+      String pass128, String pass129, WidgetTester tester,
+      {String context = ''}) async {
+    final findtext128 = find.text(pass128);
+    await htExpect(tester, findtext128, findsOneWidget,
+        reason: ('Verify-' + context + '- Password Max 128 Chars is visible'));
+    final findtext129 = find.text(pass129);
+    await htExpect(tester, findtext129, findsNothing,
+        reason:
+            ('Verify-' + context + '- Password Max 129 Chars is invisible'));
   }
 }
