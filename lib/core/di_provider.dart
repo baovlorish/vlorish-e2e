@@ -95,7 +95,7 @@ class DiProvider implements AuthContractor, UserContractor {
     );
 
     GetIt.I.registerSingletonWithDependencies<UserSupportService>(
-      () => UserSupportService(
+          () => UserSupportService(
         GetIt.instance<HttpManager>(),
       ),
       dependsOn: [HttpManager],

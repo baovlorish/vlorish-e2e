@@ -14,6 +14,8 @@ import 'screen/personalBudget.dart';
 import 'screen/profile.dart';
 
 const String testDescription = 'Profile Page Test';
+var fName = getRandomString(10);
+var lName = getRandomString(10);
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
@@ -34,8 +36,7 @@ void main() async {
             'BAR_T98 Check that user can update “First Name” and “Last Name” fields',
             '',
             'STARTED');
-        final fName = getRandomString(10);
-        final lName = getRandomString(10);
+
         await dashboardScreen.clickLogoText();
         await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester,
             context: context);

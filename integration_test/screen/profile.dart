@@ -92,8 +92,9 @@ class ProfileScreenTest {
       {String context = ''}) async {
     await tester.pumpAndSettle();
     final updateButton = find.text('Update password');
-    await tapSomething(tester, updateButton,
-        addContext(context, 'Click on btn Update Password'));
+    await tester.tap(updateButton);
+    // await tapSomething(tester, updateButton,
+    //     addContext(context, 'Click on btn Update Password'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
@@ -161,8 +162,9 @@ class ProfileScreenTest {
   Future<void> verifyMsgPopup(String msg, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 10));
-    await htExpect(tester, find.text(msg), findsOneWidget,
-        reason: ('Verify-' + context + '-' + msg + ' text is visible'));
+    expect(find.text(msg), findsOneWidget);
+    //await htExpect(tester, find.text(msg), findsOneWidget,
+    //     reason: ('Verify-' + context + '-' + msg + ' text is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 

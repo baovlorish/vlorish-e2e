@@ -53,8 +53,6 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  flutter_gherkin: ^3.0.0-rc.17
-  modular_test: ^2.0.0
   pedantic: ^1.11.1
   build_runner: ^2.1.11
 
