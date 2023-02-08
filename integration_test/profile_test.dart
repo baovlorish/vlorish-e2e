@@ -154,7 +154,6 @@ void main() async {
         await profileScreen.clickEyePassword(1, tester);
         await profileScreen.verifyNewPasswordMax128Char(
             pass128, passGreaterThan128, tester);
-        await dashboardScreen.clickBack();
         await htLogd(
             tester,
             'BAR_T106 User can enter max 128 characters in Password fields',
@@ -164,6 +163,132 @@ void main() async {
         await htLogd(
             tester,
             'Error BAR_T106 User can enter max 128 characters in Password fields',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T107 User sees error message and can not update password if password does not contain 1 special char',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.inputUpdatePassword(passLogin, 'Test1234', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await signInScreen.verifyErrorMessage(
+            'contains at least one number (0-9) and a symbol', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR_T107 User sees error message and can not update password if password does not contain 1 special char',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T107 User sees error message and can not update password if password does not contain 1 special char',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T108 User sees error message and can not update password if password does not contain 1 number',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.inputUpdatePassword(
+            passLogin, 'testPassword@', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await signInScreen.verifyErrorMessage(
+            'contains at least one number (0-9) and a symbol', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR_T108 User sees error message and can not update password if password does not contain 1 number',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T108 User sees error message and can not update password if password does not contain 1 number',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T109 User sees error message and can not update password if password does not contain 1 uppercase',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.inputUpdatePassword(
+            passLogin, 'password@123', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await signInScreen.verifyErrorMessage(
+            'contains both lower (a-z) and upper case letters (A-Z)', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR_T109 User sees error message and can not update password if password does not contain 1 uppercase',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T109 User sees error message and can not update password if password does not contain 1 uppercase',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T110 User sees error message and can not update password if password does not contain 1 lowercase',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.inputUpdatePassword(
+            passLogin, 'TESTPASSWORD', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await signInScreen.verifyErrorMessage(
+            'contains both lower (a-z) and upper case letters (A-Z)', tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR_T110 User sees error message and can not update password if password does not contain 1 lowercase',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T110 User sees error message and can not update password if password does not contain 1 lowercase',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T111 User can not update password if current password is invalid',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.inputUpdatePassword(
+            'Test@123456', 'Pass@123456', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await profileScreen.verifyMsgPopup('Error!', tester);
+        await profileScreen.verifyMsgPopup(
+            'Password does not match with the current password. Please re-enter the password',
+            tester);
+        await profileScreen.clickPopupButton('Try again', tester);
+        await htLogd(
+            tester,
+            'BAR_T111 User can not update password if current password is invalid',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T111 User can not update password if current password is invalid',
             '',
             'FINISHED');
       }

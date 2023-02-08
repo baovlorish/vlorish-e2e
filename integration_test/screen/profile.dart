@@ -157,4 +157,21 @@ class ProfileScreenTest {
         reason:
             ('Verify-' + context + '- Password Max 129 Chars is invisible'));
   }
+
+  Future<void> verifyMsgPopup(String msg, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+    await htExpect(tester, find.text(msg), findsOneWidget,
+        reason: ('Verify-' + context + '-' + msg + ' text is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> clickPopupButton(String btnText, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 15));
+    final updateButton = find.text(btnText);
+    await tapSomething(tester, updateButton,
+        addContext(context, 'Click on btn ' + btnText + ' Button'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
 }
