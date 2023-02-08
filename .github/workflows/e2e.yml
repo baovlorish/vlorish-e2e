@@ -23,6 +23,9 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: '12.x'
+
+      - uses: browser-actions/setup-chrome@v1
+      - run: chrome --version
   
       - run: flutter doctor
       - run: chromedriver --port=4444 & flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome
