@@ -19,6 +19,5 @@ jobs:
           flutter-version: "3.0.0"
           channel: "stable"
       - run: flutter pub get
-      - run: chmod 777 ./integration_test/testout.sh
       - run: chromedriver --port=4444 &
-      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d web-server |./integration_test/testout.sh
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d web-server
