@@ -18,6 +18,7 @@ jobs:
         with:
           flutter-version: "2.10.5"
           channel: "stable"
+      - run: flutter upgrade
       - run: flutter pub get
       - run: chromedriver --port=4444 &
       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d web-server
