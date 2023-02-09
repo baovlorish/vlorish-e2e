@@ -12,6 +12,7 @@ import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/personalBudget.dart';
 import 'screen/profile.dart';
+import 'screen/forgotPassword.dart';
 
 const String testDescription = 'Profile Page Test';
 var fName = getRandomString(10);
@@ -21,6 +22,7 @@ void main() async {
   DashboardScreenTest dashboardScreen;
   PersonalBudgetScreenTest personalBudgetScreen;
   ProfileScreenTest profileScreen;
+  ForgotPasswordScreenTest forgotPasswordScreen;
   await htTestInit(description: testDescription);
   group('Profile Page', () {
     testWidgets('Profile Detail test', (tester, [String? context]) async {
@@ -29,7 +31,13 @@ void main() async {
       dashboardScreen = DashboardScreenTest(tester);
       personalBudgetScreen = PersonalBudgetScreenTest(tester);
       profileScreen = ProfileScreenTest(tester);
+      forgotPasswordScreen = ForgotPasswordScreenTest(tester);
       context = context ?? '';
+      await dashboardScreen.clickLogoText();
+      await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester,
+          context: context);
+      await signInScreen.clickLoginButton(tester, context: context);
+      await personalBudgetScreen.verifyPersonalBudgetPage(tester);
 
       try {
         await htLogdDirect(
@@ -276,8 +284,8 @@ void main() async {
         await profileScreen.inputUpdatePassword(
             'Test@123456', 'Pass@123456', tester);
         await profileScreen.clickUpdatePasswordButton(tester);
-        await profileScreen.verifyMsgPopup('Error!', tester);
-        await profileScreen.verifyMsgPopup(
+        await profileScreen.verifyShowMessage('Error!', tester);
+        await profileScreen.verifyShowMessage(
             'Password does not match with the current password. Please re-enter the password',
             tester);
         await profileScreen.clickPopupButton('Try again', tester);
@@ -290,6 +298,117 @@ void main() async {
         await htLogd(
             tester,
             'Error BAR_T111 User can not update password if current password is invalid',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T112 Check that Unsubscribe pop-up appears after clicking on "Close account" button',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.scrollThePage();
+        await profileScreen.clickButton('Close account', tester);
+        await profileScreen.verifyShowMessage(
+            'Are you sure you want to close your Vlorish account?', tester);
+        await htLogd(
+            tester,
+            'BAR_T112 Check that Unsubscribe pop-up appears after clicking on "Close account" button',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T112 Check that Unsubscribe pop-up appears after clicking on "Close account" button',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T113 Unsubscribe Popup is closed after clicking on "No" button on "Close account" pop up',
+            '',
+            'STARTED');
+        await dashboardScreen.clickLogoText();
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.clickButton('Close account', tester);
+        await profileScreen.verifyShowMessage(
+            'Are you sure you want to close your Vlorish account?', tester);
+        await profileScreen.clickButton('No', tester);
+        await profileScreen.verifyHideMessage(
+            'Are you sure you want to close your Vlorish account?', tester);
+        await profileScreen.clickBackButton(tester);
+        await tester.pumpAndSettle(const Duration(seconds: 200));
+        await htLogd(
+            tester,
+            'BAR_T113 Unsubscribe Popup is closed after clicking on "No" button on "Close account" pop up',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T113 Unsubscribe Popup is closed after clicking on "No" button on "Close account" pop up',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T117 User sees error message if password fields are empty',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.inputUpdatePassword('', '', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await profileScreen.verifyShowMessage(
+            'Please enter your current password', tester);
+        await forgotPasswordScreen.verifyMessageErrorIsVisible(
+            'contains at least 8 characters', tester);
+        await forgotPasswordScreen.verifyMessageErrorIsVisible(
+            'contains both lower (a-z) and upper case letters (A-Z)', tester);
+        await forgotPasswordScreen.verifyMessageErrorIsVisible(
+            'contains at least one number (0-9) and a symbol', tester);
+        await htLogd(
+            tester,
+            'BAR_T117 User sees error message if password fields are empty',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T117 User sees error message if password fields are empty',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T118 User sees error message if one of the password field is empty',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.inputUpdatePassword('', 'Test@12345', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await profileScreen.verifyShowMessage(
+            'Please enter your current password', tester);
+        await profileScreen.inputUpdatePassword(passLogin, '', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await forgotPasswordScreen.verifyMessageErrorIsVisible(
+            'contains at least 8 characters', tester);
+        await forgotPasswordScreen.verifyMessageErrorIsVisible(
+            'contains both lower (a-z) and upper case letters (A-Z)', tester);
+        await forgotPasswordScreen.verifyMessageErrorIsVisible(
+            'contains at least one number (0-9) and a symbol', tester);
+        await htLogd(
+            tester,
+            'BAR_T118 User sees error message if one of the password field is empty',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T118 User sees error message if one of the password field is empty',
             '',
             'FINISHED');
       }

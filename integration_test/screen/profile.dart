@@ -8,6 +8,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen.dart';
 import 'package:burgundy_budgeting_app/ui/screen/profile_overview/profile_overview_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/profile_overview/profile_overview_state.dart';
+import 'package:burgundy_budgeting_app/ui/screen/profile_overview/profile_overview_layout.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/avatar_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/back_button.dart';
 import 'package:flutter/material.dart';
@@ -92,9 +93,9 @@ class ProfileScreenTest {
       {String context = ''}) async {
     await tester.pumpAndSettle();
     final updateButton = find.text('Update password');
-    await tester.tap(updateButton);
-    // await tapSomething(tester, updateButton,
-    //     addContext(context, 'Click on btn Update Password'));
+    // await tester.tap(updateButton);
+    await tapSomething(tester, updateButton,
+        addContext(context, 'Click on btn Update Password'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
@@ -159,12 +160,19 @@ class ProfileScreenTest {
             ('Verify-' + context + '- Password Max 129 Chars is invisible'));
   }
 
-  Future<void> verifyMsgPopup(String msg, WidgetTester tester,
+  Future<void> verifyShowMessage(String msg, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 15));
+    await htExpect(tester, find.text(msg), findsOneWidget,
+        reason: ('Verify-' + context + '-' + msg + ' text is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyHideMessage(String msg, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 10));
-    expect(find.text(msg), findsOneWidget);
-    //await htExpect(tester, find.text(msg), findsOneWidget,
-    //     reason: ('Verify-' + context + '-' + msg + ' text is visible'));
+    await htExpect(tester, find.text(msg), findsNothing,
+        reason: ('Verify-' + context + '-' + msg + ' text is not existing'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
@@ -175,5 +183,21 @@ class ProfileScreenTest {
     await tapSomething(tester, updateButton,
         addContext(context, 'Click on btn ' + btnText + ' Button'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> clickButton(String btn, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final updateButton = find.text(btn);
+    // await tester.tap(updateButton);
+    await tapSomething(
+        tester, updateButton, addContext(context, 'Click on btn ' + btn));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> scrollThePage() async {
+    final listFinder = find.byType(ProfileOverviewLayout);
+    await tester.fling(listFinder, const Offset(0, 1000), 10000);
+    await tester.pumpAndSettle();
   }
 }
