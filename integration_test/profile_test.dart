@@ -332,6 +332,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickLogoText();
         await personalBudgetScreen.clickProfileIcon(tester);
+        await profileScreen.scrollThePage();
         await profileScreen.clickButton('Close account', tester);
         await profileScreen.verifyShowMessage(
             'Are you sure you want to close your Vlorish account?', tester);
@@ -339,7 +340,6 @@ void main() async {
         await profileScreen.verifyHideMessage(
             'Are you sure you want to close your Vlorish account?', tester);
         await profileScreen.clickBackButton(tester);
-        await tester.pumpAndSettle(const Duration(seconds: 200));
         await htLogd(
             tester,
             'BAR_T113 Unsubscribe Popup is closed after clicking on "No" button on "Close account" pop up',

@@ -53,6 +53,51 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T122 Check that the user is redirected on Annual Actual page after clicking on “Actual” button on the top',
+            '',
+            'STARTED');
+        await dashboardScreen.clickLogoText();
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickBudgetTab('Difference', tester);
+        await personalBudgetScreen.clickBudgetTab('Actual', tester);
+        await personalBudgetScreen.verifyShowPage('Actual', tester);
+        await htLogd(
+            tester,
+            'BAR_T122 Check that the user is redirected on Annual Actual page after clicking on “Actual” button on the top',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T122 Check that the user is redirected on Annual Actual page after clicking on “Actual” button on the top',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
+            '',
+            'STARTED');
+        await dashboardScreen.clickLogoText();
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickBudgetTab('Difference', tester);
+        await personalBudgetScreen.verifyShowPage('Difference', tester);
+        await htLogd(
+            tester,
+            'BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T125 User is redirected on Debts flow page after clicking on “Debts” tab',
             '',
             'STARTED');
@@ -167,6 +212,27 @@ void main() async {
         await htLogd(
             tester,
             'Error BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T133 User is redirected on Planned screen after clicking on “Planned” button on the top',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.clickBudgetTab('Planned', tester);
+        await personalBudgetScreen.verifyShowPage('Planned', tester);
+        await htLogd(
+            tester,
+            'BAR_T133 User is redirected on Planned screen after clicking on “Planned” button on the top',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T133 User is redirected on Planned screen after clicking on “Planned” button on the top',
             '',
             'FINISHED');
       }

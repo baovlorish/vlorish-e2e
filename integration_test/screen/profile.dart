@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:burgundy_budgeting_app/core/navigator_manager.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
@@ -114,7 +115,7 @@ class ProfileScreenTest {
   Future<void> clickBackButton(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    final btnBackIcon = find.byType(CustomBackButton);
+    final btnBackIcon = find.byType(CustomMaterialInkWell).first;
     await tapSomething(
         tester, btnBackIcon, addContext(context, 'Click on btn BackIcon'));
     await tester.pumpAndSettle();
@@ -196,8 +197,10 @@ class ProfileScreenTest {
   }
 
   Future<void> scrollThePage() async {
-    final listFinder = find.byType(ProfileOverviewLayout);
-    await tester.fling(listFinder, const Offset(0, 1000), 10000);
-    await tester.pumpAndSettle();
+    await tester.dragUntilVisible(
+      find.text('Close account'), // what you want to find
+      find.byKey(ValueKey('LabelButtonItem')), // widget you want to scroll
+      const Offset(-500, 0), // delta to move
+    );
   }
 }

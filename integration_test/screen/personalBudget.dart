@@ -1,6 +1,7 @@
 import 'dart:math';
-
+import 'package:flutter/material.dart';
 import 'package:burgundy_budgeting_app/core/navigator_manager.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
@@ -9,6 +10,8 @@ import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_scree
 import 'package:burgundy_budgeting_app/ui/screen/profile_overview/profile_overview_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/profile_overview/profile_overview_state.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/avatar_widget.dart';
+import 'package:burgundy_budgeting_app/ui/model/budget_model.dart';
+import 'package:burgundy_budgeting_app/ui/screen/budget/budget_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -199,5 +202,31 @@ class PersonalBudgetScreenTest {
         reason:
             ('Verify-' + context + '- Profile Overview title page is visible'));
     await tester.pumpAndSettle();
+  }
+
+  Future<void> clickPersonalTab(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnBackIcon = find.byType(CustomMaterialInkWell).first;
+    await tapSomething(
+        tester, btnBackIcon, addContext(context, 'Click on btn BackIcon'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickBudgetTab(String str, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnBackIcon = find.text(str);
+    await tapSomething(
+        tester, btnBackIcon, addContext(context, 'Click on ' + str + ' tab'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifyShowPage(String str, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+
+    await htExpect(tester, find.text(str), findsOneWidget,
+        reason: ('Verify-' + context + str + ' page is visible'));
   }
 }
