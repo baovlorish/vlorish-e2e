@@ -6,8 +6,8 @@ on:
         description: "Which branch to checkout and run test"
         required: false
         default: master
-  # schedule:
-  #   - cron: "0 0 * * 1-5"
+  schedule:
+    - cron: "0 0 * * 1-5"
 
 jobs:
   run-e2e:
@@ -21,20 +21,21 @@ jobs:
       - run: flutter pub get
       - run: chromedriver --port=4444 &
 
-        if: always()
       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d web-server --browser-name chrome
-
         if: always()
+
       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signup_test.dart -d web-server --browser-name chrome
+        if: always()
 
-      #   if: always()
-      # - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d web-server --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d web-server --browser-name chrome
+        if: always()
 
-      #   if: always()
-      # - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d web-server --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d web-server --browser-name chrome
+        if: always()
 
-      #   if: always()
-      # - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/forgot_password_test.dart -d web-server --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/forgot_password_test.dart -d web-server --browser-name chrome
+        if: always()
+
 
       - name: Notify Slack 
         uses: craftech-io/slack-action@v1
