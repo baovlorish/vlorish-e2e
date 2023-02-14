@@ -21,40 +21,40 @@ jobs:
       - run: flutter pub get
       - run: chromedriver --port=4444 &
 
-      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t52_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t52_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t54_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t54_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t57_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t57_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t58_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t58_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t59_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t59_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t60_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t60_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t64_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t64_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t65_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t65_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t67_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t67_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t68_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t68_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t69_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t69_test.dart -d web-server --browser-name chrome
         if: always()
 
-        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t80_test.dart -d chrome --browser-name chrome
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t80_test.dart -d web-server --browser-name chrome
         if: always()
 
       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signup_bar_t1_test.dart -d web-server --browser-name chrome
