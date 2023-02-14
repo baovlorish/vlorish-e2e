@@ -19,3 +19,16 @@ const Key testBackKey = Key('backButton');
 
 const String emailLogin = 'baoq+1@vlorish.com';
 const String passLogin = 'Test@1234';
+const String btnPersonal = 'Personal';
+const String btnBusiness = 'Business';
+const String btnDebt = 'Debt';
+const String btnNetWorth = 'Net Worth';
+const String btnGoals = 'Goals';
+const String btnTax = 'Tax';
+const String btnInvestments = 'Investments';
+const String btnPeerScore = 'Peer Score™';
+const String btnAnnual = 'Annual';
+const String btnMonthly = 'Monthly';
+const String btnPlanned = 'Planned';
+const String btnActual = 'Actual';
+const String btnDifference = 'Difference';

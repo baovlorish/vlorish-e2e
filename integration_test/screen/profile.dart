@@ -22,6 +22,17 @@ class ProfileScreenTest {
 
   final WidgetTester tester;
 
+  Future<void> verifyProfilePage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final finder = find.byType(Title).last;
+    final titleWidget = tester.firstWidget<Title>(finder);
+    await htExpect(tester, titleWidget.title, 'Profile Overview',
+        reason:
+            ('Verify-' + context + '- Profile Overview title page is visible'));
+    await tester.pumpAndSettle();
+  }
+
   Future<void> verifyProfileDetailtPage(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));

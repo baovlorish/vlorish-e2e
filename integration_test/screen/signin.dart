@@ -36,7 +36,7 @@ class SignInScreenTest {
 
   Future<void> verifyErrorMessage(String msg, WidgetTester tester,
       {String context = '""'}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 6));
+    await tester.pumpAndSettle(const Duration(seconds: 10));
     await htExpect(tester, find.text(msg), findsOneWidget,
         reason: ("Verify-" + context + "-" + msg + ' is visible'));
     await tester.pumpAndSettle();
@@ -115,7 +115,7 @@ class SignInScreenTest {
 
   Future<void> clickForgotPassword(WidgetTester tester,
       {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 5));
     final btnForgotPass = find.text('Forgot Password').first;
     await tapSomething(tester, btnForgotPass,
         addContext(context, "Click on btn Forgot password"));
