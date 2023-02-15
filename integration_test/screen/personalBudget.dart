@@ -36,15 +36,6 @@ class PersonalBudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> clickLogoutButton(WidgetTester tester,
-      {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final iconText = find.byType(AppBarItem).at(5);
-    await tapSomething(
-        tester, iconText, addContext(context, 'Click on btn Logout'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-  }
-
   Future<void> clickMonthly(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     final btnForgotPass = find.text('Monthly').first;
@@ -66,15 +57,6 @@ class PersonalBudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> clickAandTIconCards(WidgetTester tester,
-      {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final iconText = find.byType(AppBarItem).at(1);
-    await tapSomething(tester, iconText,
-        addContext(context, 'Click on btn Accounts & Transactions'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-  }
-
   Future<void> verifyAccountsTransactionsPage(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 30));
@@ -89,14 +71,6 @@ class PersonalBudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> clickDebtTab(WidgetTester tester, {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final debtTab = find.byType(Image).at(2);
-    await tapSomething(
-        tester, debtTab, addContext(context, 'Click on btn Debt Tab'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-  }
-
   Future<void> verifyDebtsPage(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
@@ -109,14 +83,6 @@ class PersonalBudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> clickGoalsTab(WidgetTester tester, {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final debtTab = find.byType(Image).at(4);
-    await tapSomething(
-        tester, debtTab, addContext(context, 'Click on btn Goals Tab'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-  }
-
   Future<void> verifyGoalsPage(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
@@ -127,28 +93,12 @@ class PersonalBudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> clickTaxTab(WidgetTester tester, {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final debtTab = find.byType(Image).at(5);
-    await tapSomething(
-        tester, debtTab, addContext(context, 'Click on btn Tax Tab'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-  }
-
   Future<void> verifyTaxPage(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
     final finder = find.byType(Title).last;
     final titleWidget = tester.firstWidget<Title>(finder);
     expect(titleWidget.title, 'Calculate your taxes');
     await tester.pumpAndSettle();
-  }
-
-  Future<void> clickInvesTab(WidgetTester tester, {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 20));
-    final debtTab = find.byType(Image).at(6);
-    await tapSomething(
-        tester, debtTab, addContext(context, 'Click on btn clickInvesTab Tab'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
   Future<void> verifyInvestmentsPage(WidgetTester tester,
@@ -180,27 +130,6 @@ class PersonalBudgetScreenTest {
             "Here, you can link or manually add and keep track of your retirement assets of all types. It's important to separate your traditional and Roth assets as it would have important tax considerations."),
         findsOneWidget,
         reason: ('Verify-' + context + '- Text on Retirement page is visible'));
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> clickProfileIcon(WidgetTester tester,
-      {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 15));
-    print(find.byType(AvatarWidget).toString());
-    final avatar = find.byType(AvatarWidget).first;
-    await tapSomething(
-        tester, avatar, addContext(context, 'Click on btn avatar'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-  }
-
-  Future<void> verifyProfilePage(WidgetTester tester,
-      {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    final finder = find.byType(Title).last;
-    final titleWidget = tester.firstWidget<Title>(finder);
-    await htExpect(tester, titleWidget.title, 'Profile Overview',
-        reason:
-            ('Verify-' + context + '- Profile Overview title page is visible'));
     await tester.pumpAndSettle();
   }
 

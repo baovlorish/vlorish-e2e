@@ -34,7 +34,7 @@ void main() async {
       await htLogdDirect(
           'BAR_T99 Check that user can update password', '', 'STARTED');
       await dashboardScreen.clickProfileIcon(tester);
-      await personalBudgetScreen.verifyProfilePage(tester);
+      await profileScreen.verifyProfilePage(tester);
       await profileScreen.inputUpdatePassword(
           'Test@1234', 'Hello@1234', tester);
       await profileScreen.clickUpdatePasswordButton(tester);
@@ -54,7 +54,7 @@ void main() async {
       await signInScreen.clickLoginButton(tester, context: context);
       await personalBudgetScreen.verifyPersonalBudgetPage(tester);
       await dashboardScreen.clickProfileIcon(tester);
-      await personalBudgetScreen.verifyProfilePage(tester);
+      await profileScreen.verifyProfilePage(tester);
       await profileScreen.inputUpdatePassword('Hello@1234', passLogin, tester);
       await profileScreen.clickUpdatePasswordButton(tester);
       await profileScreen.clickContinueButton(
