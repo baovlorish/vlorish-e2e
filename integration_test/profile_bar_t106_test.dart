@@ -6,7 +6,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'screen/dashboard.dart';
 import 'screen/signin.dart';
-import 'screen/personalBudget.dart';
+import 'screen/budget.dart';
 import 'screen/profile.dart';
 
 const String testDescription = 'Profile Page Test';
@@ -14,7 +14,7 @@ const String testDescription = 'Profile Page Test';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
-  PersonalBudgetScreenTest personalBudgetScreen;
+  BudgetScreenTest personalBudgetScreen;
   ProfileScreenTest profileScreen;
   await htTestInit(description: testDescription);
   group('Profile Page', () {
@@ -22,7 +22,7 @@ void main() async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
-      personalBudgetScreen = PersonalBudgetScreenTest(tester);
+      personalBudgetScreen = BudgetScreenTest(tester);
       profileScreen = ProfileScreenTest(tester);
       context = context ?? '';
       await dashboardScreen.clickLogoText();

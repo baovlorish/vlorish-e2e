@@ -27,9 +27,22 @@ class BudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
+  Future<void> verifyBusinessBudgetPage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 45));
+    await htExpect(tester, find.text('Business Budget'), findsOneWidget,
+        reason:
+            ('Verify-' + context + '-' + 'Business Budget Title is visible'));
+    await htExpect(tester, find.text('Annual'), findsOneWidget,
+        reason: ('Verify-' + context + '-' + 'Annual text is visible'));
+    await htExpect(tester, find.text('CATEGORY'), findsOneWidget,
+        reason: ('Verify-' + context + '-' + 'Category text is visible'));
+    await tester.pumpAndSettle();
+  }
+
   Future<void> clickMonthly(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    final btnForgotPass = find.text('Monthly').first;
+    final btnForgotPass = find.text(btnMonthly).first;
     await tapSomething(
         tester, btnForgotPass, addContext(context, 'Click on btn Monthly'));
     await tester.pumpAndSettle();
@@ -38,6 +51,8 @@ class BudgetScreenTest {
   Future<void> verifyBudgetMonthlyPage(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 30));
+    await verifyAnnualMonthlyTabSelector(btnAnnual, false, tester);
+    await verifyAnnualMonthlyTabSelector(btnMonthly, true, tester);
     await htExpect(tester, find.text('TOTAL PLANNED'), findsOneWidget,
         reason: ('Verify-' + context + '- Text Total Planned is visible'));
     await htExpect(tester, find.text('TOTAL SPENT'), findsOneWidget,
@@ -45,6 +60,22 @@ class BudgetScreenTest {
     await htExpect(tester, find.text('TOTAL UNCATEGORIZED'), findsOneWidget,
         reason:
             ('Verify-' + context + '- Text Total Uncategorized is visible'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifyBudgetAnnualPage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 30));
+    await verifyAnnualMonthlyTabSelector(btnAnnual, true, tester);
+    await verifyAnnualMonthlyTabSelector(btnMonthly, false, tester);
+    await htExpect(tester, find.text('TOTAL PLANNED'), findsNothing,
+        reason: ('Verify-' + context + '- Text Total Planned is NOT visible'));
+    await htExpect(tester, find.text('TOTAL SPENT'), findsNothing,
+        reason: ('Verify-' + context + '- Text Total Spent is NOT visible'));
+    await htExpect(tester, find.text('TOTAL UNCATEGORIZED'), findsNothing,
+        reason: ('Verify-' +
+            context +
+            '- Text Total Uncategorized is NOT visible'));
     await tester.pumpAndSettle();
   }
 
@@ -127,9 +158,18 @@ class BudgetScreenTest {
   Future<void> clickPersonalTab(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    final btnBackIcon = find.byType(CustomMaterialInkWell).first;
+    final btnName = find.text(btnPersonal).first;
     await tapSomething(
-        tester, btnBackIcon, addContext(context, 'Click on btn BackIcon'));
+        tester, btnName, addContext(context, 'Click on btn Personal Budget'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickBusinessTab(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnName = find.text(btnBusiness).first;
+    await tapSomething(
+        tester, btnName, addContext(context, 'Click on btn Business Budget'));
     await tester.pumpAndSettle();
   }
 
@@ -170,12 +210,12 @@ class BudgetScreenTest {
   }
 
 //CategoryArrowIcon 11
-  Future<void> clickCategoryArrowIcon(int Index, WidgetTester tester,
+  Future<void> clickCategoryArrowIcon(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle();
-    final imageIcon = find.byType(ImageIcon).at(Index);
+    final imageIcon = find.byType(ImageIcon).at(11);
     await tapSomething(tester, imageIcon,
-        addContext(context, 'Click on btn ' + Index.toString() + ' Tab'));
+        addContext(context, 'Click on Category Arrow Down Icon'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 

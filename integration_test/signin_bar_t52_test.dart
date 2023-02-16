@@ -5,20 +5,20 @@ import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'lib/test_lib_const.dart';
 import 'screen/dashboard.dart';
 import 'screen/signin.dart';
-import 'screen/personalBudget.dart';
+import 'screen/budget.dart';
 
 const String testDescription = 'SignIn';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
-  PersonalBudgetScreenTest personalBudgetScreen;
+  BudgetScreenTest personalBudgetScreen;
   await htTestInit(description: testDescription);
   group('Authentication Test', () {
     testWidgets('SignIn test', (tester, [String? context]) async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
-      personalBudgetScreen = PersonalBudgetScreenTest(tester);
+      personalBudgetScreen = BudgetScreenTest(tester);
       context = context ?? '';
 
       await htLogdDirect(

@@ -29,14 +29,16 @@ void main() async {
       await personalBudgetScreen.verifyPersonalBudgetPage(tester);
 
       await htLogdDirect(
-          'BAR_T121 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+          'BAR_T158 User is redirected on Budget Annual flow page after clicking on “Annual” button',
           '',
           'STARTED');
       await dashboardScreen.clickButton(btnMonthly, tester);
       await personalBudgetScreen.verifyBudgetMonthlyPage(tester);
+      await dashboardScreen.clickButton(btnAnnual, tester);
+      await personalBudgetScreen.verifyBudgetAnnualPage(tester);
       await htLogd(
           tester,
-          'BAR_T121 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+          'BAR_T158 User is redirected on Budget Annual flow page after clicking on “Annual” button',
           '',
           'FINISHED');
     });

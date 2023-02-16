@@ -33,9 +33,9 @@ void main() async {
           '',
           'STARTED');
       await personalBudgetScreen.verifyCollapseCategories(tester);
-      await personalBudgetScreen.clickCategoryArrowIcon(11, tester);
+      await personalBudgetScreen.clickCategoryArrowIcon(tester);
       await personalBudgetScreen.verifyExpandCategories(tester);
-      await personalBudgetScreen.clickCategoryArrowIcon(11, tester);
+      await personalBudgetScreen.clickCategoryArrowIcon(tester);
       await personalBudgetScreen.verifyCollapseCategories(tester);
       await htLogd(
           tester,

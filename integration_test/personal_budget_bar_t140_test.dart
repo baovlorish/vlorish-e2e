@@ -29,7 +29,7 @@ void main() async {
       await personalBudgetScreen.verifyPersonalBudgetPage(tester);
 
       await htLogdDirect('BAR_T140 Check List of Categories', '', 'STARTED');
-      await personalBudgetScreen.clickCategoryArrowIcon(11, tester);
+      await personalBudgetScreen.clickCategoryArrowIcon(tester);
       await personalBudgetScreen.verifyListOfCategories(tester);
       await htLogd(tester, 'BAR_T140 Check List of Categories', '', 'FINISHED');
     });

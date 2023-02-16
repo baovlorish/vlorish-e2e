@@ -12,31 +12,38 @@ const String testDescription = 'Personal Budget';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
-  BudgetScreenTest personalBudgetScreen;
+  BudgetScreenTest businessBudgetScreen;
   await htTestInit(description: testDescription);
   group('Personal Budget', () {
     testWidgets('Personal Budget test', (tester, [String? context]) async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
-      personalBudgetScreen = BudgetScreenTest(tester);
+      businessBudgetScreen = BudgetScreenTest(tester);
       context = context ?? '';
 
       await dashboardScreen.clickLogoText();
       await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester,
           context: context);
       await signInScreen.clickLoginButton(tester, context: context);
-      await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+      await businessBudgetScreen.verifyPersonalBudgetPage(tester);
 
       await htLogdDirect(
-          'BAR_T121 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+          'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
           '',
           'STARTED');
-      await dashboardScreen.clickButton(btnMonthly, tester);
-      await personalBudgetScreen.verifyBudgetMonthlyPage(tester);
+      await businessBudgetScreen.clickBusinessTab(tester);
+      await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+      await businessBudgetScreen.clickBudgetTab(btnDifference, tester);
+      await businessBudgetScreen.verifyAnnualMonthlyTabSelector(
+          btnAnnual, true, tester);
+      await businessBudgetScreen.verifyAnnualMonthlyTabSelector(
+          btnMonthly, false, tester);
+      await businessBudgetScreen.verifyShowDifferencePage(
+          btnDifference, tester);
       await htLogd(
           tester,
-          'BAR_T121 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+          'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
           '',
           'FINISHED');
     });
