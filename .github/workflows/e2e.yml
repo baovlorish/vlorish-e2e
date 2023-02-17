@@ -198,6 +198,15 @@ jobs:
       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_bar_t167_test.dart -d web-server --browser-name chrome
         if: always()
 
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_bar_t169_test.dart -d web-server --browser-name chrome
+        if: always()
+      
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_bar_t170_test.dart -d web-server --browser-name chrome
+        if: always()
+      
+      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_bar_t171_test.dart -d web-server --browser-name chrome
+        if: always()
+      
       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/forgot_password_bar_t66_test.dart -d web-server --browser-name chrome
         if: always()
 

@@ -134,6 +134,21 @@ class BudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
+  Future<void> verifyPeerScorePage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await htExpect(tester, find.text('Your Peer Score™'), findsOneWidget,
+        reason: ('Verify-' + context + 'Your Peer Score™ Title is visible'));
+    await htExpect(
+        tester,
+        find.text(
+            'Peer Score™ is a composite score designed to measure your overall financial situation. It is calculated by mapping your current resources and income generating ability against your obligations and spending habits in the context of your peer group to produce a relative score of your finances'),
+        findsOneWidget,
+        reason:
+            ('Verify-' + context + 'Your Peer Score™ description is visible'));
+    await tester.pumpAndSettle();
+  }
+
   Future<void> clickRetirementTab(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 20));
