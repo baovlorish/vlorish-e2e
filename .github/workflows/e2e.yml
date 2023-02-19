@@ -22,9 +22,11 @@ jobs:
       - uses: browser-actions/setup-chrome@v1
       - run: chrome --version
       - run: chromedriver --port=4444 &
-
-      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t52_test.dart -d chrome
-        if: always()
+      - uses: GabrielBB/xvfb-action@v1
+        with:
+          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t52_test.dart -d chrome
+#       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t52_test.dart -d chrome
+#         if: always()
 
 #       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t54_test.dart -d web-server --browser-name chrome
 #         if: always()
