@@ -24,9 +24,10 @@ jobs:
       - run: chromedriver --port=4444 &
       - uses: GabrielBB/xvfb-action@v1
         with:
-          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t52_test.dart -d chrome
+          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome
+          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome
 #       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t52_test.dart -d chrome
-#         if: always()
+#         if: always()personal_budget_test
 
 #       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t54_test.dart -d web-server --browser-name chrome
 #         if: always()
