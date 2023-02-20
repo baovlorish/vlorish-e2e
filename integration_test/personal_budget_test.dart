@@ -156,6 +156,26 @@ void main() async {
             '',
             'FINISHED');
       }
+
+      // try {
+      //   await htLogdDirect(
+      //       'BAR_T127 User is redirected on Tax flow page after clicking on “Tax” tab',
+      //       '',
+      //       'STARTED');
+      //   await personalBudgetScreen.clickBudgetTab(btnTax, tester);
+      //   await personalBudgetScreen.verifyTaxPage(tester);
+      //   await htLogd(
+      //       tester,
+      //       'BAR_T127 User is redirected on Tax flow page after clicking on “Tax” tab',
+      //       '',
+      //       'FINISHED');
+      // } catch (e) {
+      //   await htLogd(
+      //       tester,
+      //       'Error BAR_T127 User is redirected on Tax flow page after clicking on “Tax” tab',
+      //       '',
+      //       'FINISHED');
+      // }
     });
   });
 }
