@@ -305,6 +305,35 @@ class BudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
+  Future<void> verifyHideBusinessCategories(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    await htExpect(tester, find.text('Business income'), findsNothing,
+        reason: ('Verify-' + context + 'Business income text is NOT visible'));
+    await htExpect(tester, find.text('Other Income'), findsNothing,
+        reason: ('Verify-' + context + 'Other Income text is NOT visible'));
+    await htExpect(tester, find.text('Owner pay'), findsNothing,
+        reason: ('Verify-' + context + 'Owner pay text is NOT visible'));
+    await htExpect(tester, find.text('Financial planning'), findsNothing,
+        reason:
+            ('Verify-' + context + 'Financial planning text is NOT visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyShowBusinessCategories(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    await htExpect(tester, find.text('Business income'), findsOneWidget,
+        reason: ('Verify-' + context + 'Business income text is visible'));
+    await htExpect(tester, find.text('Other Income'), findsOneWidget,
+        reason: ('Verify-' + context + 'Other Income text is visible'));
+    await htExpect(tester, find.text('Owner pay'), findsOneWidget,
+        reason: ('Verify-' + context + 'Owner pay text is visible'));
+    await htExpect(tester, find.text('Financial planning'), findsOneWidget,
+        reason: ('Verify-' + context + 'Financial planning text is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
   Future<void> verifyListOfCategories(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 5));
