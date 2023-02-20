@@ -10,12 +10,14 @@ import 'package:path_provider/path_provider.dart';
 import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/budget.dart';
+import 'screen/profile.dart';
 
 const String testDescription = 'Personal Budget';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
   BudgetScreenTest personalBudgetScreen;
+  ProfileScreenTest profileScreen;
   await htTestInit(description: testDescription);
   group('Personal Budget', () {
     testWidgets('Personal Budget test', (tester, [String? context]) async {
@@ -23,6 +25,7 @@ void main() async {
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
       personalBudgetScreen = BudgetScreenTest(tester);
+      profileScreen = ProfileScreenTest(tester);
       context = context ?? '';
 
       try {
@@ -31,8 +34,7 @@ void main() async {
             '',
             'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.inputEmailAndPassword(
-            'baoq+1@vlorish.com', 'Test@1234', tester,
+        await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester,
             context: context);
         await signInScreen.clickLoginButton(tester, context: context);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
@@ -56,7 +58,7 @@ void main() async {
             'BAR_T122 Check that the user is redirected on Annual Actual page after clicking on “Actual” button on the top',
             '',
             'STARTED');
-        await dashboardScreen.clickLogoText();
+        await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab('Difference', tester);
         await personalBudgetScreen.clickBudgetTab('Actual', tester);
@@ -79,7 +81,7 @@ void main() async {
             'BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
             '',
             'STARTED');
-        await dashboardScreen.clickLogoText();
+        await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab('Difference', tester);
         await personalBudgetScreen.verifyShowDifferencePage(
@@ -153,6 +155,107 @@ void main() async {
         await htLogd(
             tester,
             'Error BAR_T127 User is redirected on Tax flow page after clicking on “Tax” tab',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T128 User is redirected on Investments flow page after clicking on “Investments” tab',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickBudgetTab(btnInvestments, tester);
+        await personalBudgetScreen.verifyInvestmentsPage(tester);
+        await htLogd(
+            tester,
+            'BAR_T128 User is redirected on Investments flow page after clicking on “Investments” tab',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T128 User is redirected on Investments flow page after clicking on “Investments” tab',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickRetirementTab(tester);
+        await personalBudgetScreen.verifyRetirementPage(tester);
+        await htLogd(
+            tester,
+            'BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'STARTED');
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await htLogd(
+            tester,
+            'BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T133 User is redirected on Planned screen after clicking on “Planned” button on the top',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.clickBudgetTab('Planned', tester);
+        await personalBudgetScreen.verifyShowPlannedPage('Planned', tester);
+        await htLogd(
+            tester,
+            'BAR_T133 User is redirected on Planned screen after clicking on “Planned” button on the top',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T133 User is redirected on Planned screen after clicking on “Planned” button on the top',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T124 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',
+            '',
+            'STARTED');
+        await dashboardScreen.clickAccountsTransactionsIconCards(tester);
+        await personalBudgetScreen.verifyAccountsTransactionsPage(tester);
+        await htLogd(
+            tester,
+            'BAR_T124 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR_T14 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',
             '',
             'FINISHED');
       }
