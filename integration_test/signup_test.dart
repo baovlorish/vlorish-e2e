@@ -6,7 +6,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'lib/function_common.dart';
 import 'screen/dashboard.dart';
-import 'screen/forgotPassword.dart';
 import 'screen/signin.dart';
 import 'screen/signup.dart';
 
@@ -158,6 +157,10 @@ void main() async {
         await signUpScreen.inputPassword('', tester, context: context);
         await signUpScreen.inputConfirmPassword('', tester, context: context);
         await signUpScreen.clickAgreeAndContinueBtn(tester, context: context);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter your password', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please confirm your password', tester);
         await htLogd(
             tester,
             'BAR-T8 User see error message if Password fields are empty after clicking “Agree & Continue” button',
@@ -185,7 +188,8 @@ void main() async {
         await signUpScreen.inputPassword('Test124\$', tester, context: context);
         await signUpScreen.inputConfirmPassword('', tester, context: context);
         await signUpScreen.clickAgreeAndContinueBtn(tester, context: context);
-        //await signUpScreen.verifyErrorMessage('Please confirm your password');
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please confirm your password', tester);
         await htLogd(
             tester,
             'BAR-T9 User see error message if Confirm Password fields is empty',

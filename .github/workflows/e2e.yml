@@ -1,13 +1,15 @@
 name:  E2E Test
-on:
-  workflow_dispatch:
-    inputs:
-      testBranch:
-        description: "Which branch to checkout and run test"
-        required: false
-        default: master
-  schedule:
-    - cron: "0 0 * * 1-5"
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       testBranch:
+#         description: "Which branch to checkout and run test"
+#         required: false
+#         default: master
+#   schedule:
+#     - cron: "0 0 * * 1-5"
+
+on: [push]
 
 jobs:
   run-e2e:
@@ -24,8 +26,12 @@ jobs:
       - run: chromedriver --port=4444 &
       - uses: GabrielBB/xvfb-action@v1
         with:
-          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome
-          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome
+        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome
+          if: always()
+          
+        - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome
+          if: always()
+
 #       - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_bar_t52_test.dart -d chrome
 #         if: always()personal_budget_test
 

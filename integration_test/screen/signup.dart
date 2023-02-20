@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../lib/test_lib_common.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:html';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 
 class SignUpScreenTest {
   const SignUpScreenTest(this.tester);
@@ -208,6 +209,16 @@ class SignUpScreenTest {
             '- Text We sent an email with a code is visible'));
     await htExpect(tester, find.text(email), findsOneWidget,
         reason: ("Verify-" + context + '- Email is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyMessageErrorIsVisible(String msg, WidgetTester tester,
+      {String context = ''}) async {
+    final text = tester.widget<Text>(find.text(msg));
+    expect(text.style?.color, CustomColorScheme.inputErrorBorder);
+    await htExpect(
+        tester, text.style?.color, CustomColorScheme.inputErrorBorder,
+        reason: ("Verify-" + context + "-" + msg + ' error is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 }
