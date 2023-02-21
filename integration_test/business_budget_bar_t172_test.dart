@@ -7,42 +7,38 @@ import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/budget.dart';
-import 'screen/profile.dart';
 
-const String testDescription = 'Profile Page Test';
-
+const String testDescription = 'Business Budget';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
-  BudgetScreenTest personalBudgetScreen;
-  ProfileScreenTest profileScreen;
+  BudgetScreenTest businessBudgetScreen;
   await htTestInit(description: testDescription);
-  group('Profile Page', () {
-    testWidgets('Profile Detail test', (tester, [String? context]) async {
+  group('Business Budget', () {
+    testWidgets('Business Budget test', (tester, [String? context]) async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
-      personalBudgetScreen = BudgetScreenTest(tester);
-      profileScreen = ProfileScreenTest(tester);
+      businessBudgetScreen = BudgetScreenTest(tester);
       context = context ?? '';
+
       await dashboardScreen.clickLogoText();
       await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester,
           context: context);
       await signInScreen.clickLoginButton(tester, context: context);
-      await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+      await businessBudgetScreen.verifyPersonalBudgetPage(tester);
 
       await htLogdDirect(
-          'BAR_T112 Check that Unsubscribe pop-up appears after clicking on "Close account" button',
+          'BAR_T172 User is redirected on Investments flow page after clicking on “Investments” tab',
           '',
           'STARTED');
-      await dashboardScreen.clickProfileIcon(tester);
-      await profileScreen.scrollThePage();
-      await profileScreen.clickButton('Close account', tester);
-      await profileScreen.verifyShowMessage(
-          'Are you sure you want to close your Vlorish account?', tester);
+      await businessBudgetScreen.clickBusinessTab(tester);
+      await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+      await businessBudgetScreen.clickBudgetTab(btnInvestments, tester);
+      await businessBudgetScreen.verifyInvestmentsPage(tester);
       await htLogd(
           tester,
-          'BAR_T112 Check that Unsubscribe pop-up appears after clicking on "Close account" button',
+          'BAR_T172 User is redirected on Investments flow page after clicking on “Investments” tab',
           '',
           'FINISHED');
     });

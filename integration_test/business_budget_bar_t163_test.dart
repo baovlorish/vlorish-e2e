@@ -7,19 +7,22 @@ import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/budget.dart';
+import 'screen/budgetCategories.dart';
 
-const String testDescription = 'Personal Budget';
+const String testDescription = 'Business Budget';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
   BudgetScreenTest businessBudgetScreen;
+  BudgetCategoryScreenTest businessBudgetCategoryScreen;
   await htTestInit(description: testDescription);
-  group('Personal Budget', () {
-    testWidgets('Personal Budget test', (tester, [String? context]) async {
+  group('Business Budget', () {
+    testWidgets('Business Budget test', (tester, [String? context]) async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
       businessBudgetScreen = BudgetScreenTest(tester);
+      businessBudgetCategoryScreen = BudgetCategoryScreenTest(tester);
       context = context ?? '';
 
       await dashboardScreen.clickLogoText();
@@ -35,7 +38,7 @@ void main() async {
       await businessBudgetScreen.clickBusinessTab(tester);
       await businessBudgetScreen.verifyBusinessBudgetPage(tester);
       await businessBudgetScreen.clickCategoryArrowIcon(tester);
-      await businessBudgetScreen.verifyListOfCategories(tester);
+      await businessBudgetCategoryScreen.verifyBusinessListOfCategories(tester);
       await htLogd(
           tester,
           'BAR_T163 Check List of Categories on Budget Business Annual page',

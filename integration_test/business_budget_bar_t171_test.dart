@@ -8,14 +8,14 @@ import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/budget.dart';
 
-const String testDescription = 'Personal Budget';
+const String testDescription = 'Business Budget';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
   BudgetScreenTest businessBudgetScreen;
   await htTestInit(description: testDescription);
-  group('Personal Budget', () {
-    testWidgets('Personal Budget test', (tester, [String? context]) async {
+  group('Business Budget', () {
+    testWidgets('Business Budget test', (tester, [String? context]) async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
@@ -29,7 +29,7 @@ void main() async {
       await businessBudgetScreen.verifyPersonalBudgetPage(tester);
 
       await htLogdDirect(
-          'BAR_T11 User is redirected on Tax flow page after clicking on “Tax” tab',
+          'BAR_T171 User is redirected on Tax flow page after clicking on “Tax” tab',
           '',
           'STARTED');
       await businessBudgetScreen.clickBusinessTab(tester);

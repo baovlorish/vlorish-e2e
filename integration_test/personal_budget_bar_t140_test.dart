@@ -7,12 +7,14 @@ import 'package:burgundy_budgeting_app/main.dart' as app;
 import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/budget.dart';
+import 'screen/budgetCategories.dart';
 
 const String testDescription = 'Personal Budget';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
   BudgetScreenTest personalBudgetScreen;
+  BudgetCategoryScreenTest personalBudgetCategoryScreen;
   await htTestInit(description: testDescription);
   group('Personal Budget', () {
     testWidgets('Personal Budget test', (tester, [String? context]) async {
@@ -20,6 +22,7 @@ void main() async {
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
       personalBudgetScreen = BudgetScreenTest(tester);
+      personalBudgetCategoryScreen = BudgetCategoryScreenTest(tester);
       context = context ?? '';
 
       await dashboardScreen.clickLogoText();
@@ -30,7 +33,7 @@ void main() async {
 
       await htLogdDirect('BAR_T140 Check List of Categories', '', 'STARTED');
       await personalBudgetScreen.clickCategoryArrowIcon(tester);
-      await personalBudgetScreen.verifyListOfCategories(tester);
+      await personalBudgetCategoryScreen.verifyPersonalListOfCategories(tester);
       await htLogd(tester, 'BAR_T140 Check List of Categories', '', 'FINISHED');
     });
   });

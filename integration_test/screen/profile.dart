@@ -14,6 +14,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/atom/avatar_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 
 import '../lib/test_lib_common.dart';
 
@@ -157,7 +158,7 @@ class ProfileScreenTest {
     expect(input.obscureText, true);
     final findtext = find.text(pass);
     await htExpect(tester, findtext, findsNothing,
-        reason: ('Verify-' + context + '- Password is invisible'));
+        reason: ('Verify-' + context + '- Password is NOT visible'));
   }
 
   Future<void> verifyNewPasswordMax128Char(
@@ -169,7 +170,7 @@ class ProfileScreenTest {
     final findtext129 = find.text(pass129);
     await htExpect(tester, findtext129, findsNothing,
         reason:
-            ('Verify-' + context + '- Password Max 129 Chars is invisible'));
+            ('Verify-' + context + '- Password Max 129 Chars is NOT visible'));
   }
 
   Future<void> verifyShowMessage(String msg, WidgetTester tester,
@@ -204,6 +205,16 @@ class ProfileScreenTest {
     // await tester.tap(updateButton);
     await tapSomething(
         tester, updateButton, addContext(context, 'Click on btn ' + btn));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyMessageErrorIsVisible(String msg, WidgetTester tester,
+      {String context = ''}) async {
+    final text = tester.widget<Text>(find.text(msg));
+    expect(text.style?.color, CustomColorScheme.inputErrorBorder);
+    await htExpect(
+        tester, text.style?.color, CustomColorScheme.inputErrorBorder,
+        reason: ("Verify-" + context + "-" + msg + ' error is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 

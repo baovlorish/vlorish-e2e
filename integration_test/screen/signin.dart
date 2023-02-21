@@ -72,7 +72,7 @@ class SignInScreenTest {
       {String context = ""}) async {
     final btnSubmit = find.text('Sign-in').first;
     await tapSomething(
-        tester, btnSubmit, addContext(context, "click Btn Submit"));
+        tester, btnSubmit, addContext(context, "Click Btn Submit"));
     await tester.pumpAndSettle();
   }
 
