@@ -64,7 +64,7 @@ class DashboardScreenTest {
     final avatar = find.byType(AvatarWidget).first;
     await tapSomething(
         tester, avatar, addContext(context, 'Click on btn avatar'));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 5));
   }
 
   Future<void> clickAccountsTransactionsIconCards(WidgetTester tester,

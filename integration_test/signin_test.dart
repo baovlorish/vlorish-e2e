@@ -7,12 +7,14 @@ import 'lib/test_lib_const.dart';
 import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/budget.dart';
+import 'screen/forgotPassword.dart';
 
 const String testDescription = 'SignIn';
 void main() async {
   SignInScreenTest signInScreen;
   DashboardScreenTest dashboardScreen;
   BudgetScreenTest personalBudgetScreen;
+  ForgotPasswordScreenTest forgotPassScreen;
   await htTestInit(description: testDescription);
   group('Authentication Test', () {
     testWidgets('SignIn test', (tester, [String? context]) async {
@@ -20,6 +22,7 @@ void main() async {
       signInScreen = SignInScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
       personalBudgetScreen = BudgetScreenTest(tester);
+      forgotPassScreen = ForgotPasswordScreenTest(tester);
       context = context ?? '';
 
       try {
@@ -168,7 +171,7 @@ void main() async {
         await signInScreen.inputEmailAndPassword('', 'Test123', tester,
             context: context);
         await signInScreen.clickEyePassword(tester, context: context);
-        await signInScreen.verifyPasswordShow('Test123');
+        await signInScreen.verifyPasswordShow('Test123', tester);
         await htLogd(
             tester,
             'BAR_T64 User can make password visible after tap on “eye“ button',
@@ -187,12 +190,12 @@ void main() async {
             'BAR_T65 User can make password invisible after tap on “eye” button if password is visible',
             '',
             'STARTED');
-        await signInScreen.inputEmailAndPassword('', 'Test123', tester,
-            context: context);
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmailAndPassword('', 'Test123', tester);
         await signInScreen.clickEyePassword(tester, context: context);
-        await signInScreen.verifyPasswordShow('Test123');
+        await signInScreen.verifyPasswordShow('Test123', tester);
         await signInScreen.clickEyePassword(tester, context: context);
-        await signInScreen.verifyPasswordHidden('Test123');
+        await signInScreen.verifyPasswordHidden('Test123', tester);
         await htLogd(
             tester,
             'BAR_T65 User can make password invisible after tap on “eye” button if password is visible',
@@ -207,15 +210,15 @@ void main() async {
       }
 
       try {
-        final email = getRandomString(12) + '@gmail.com';
+        final email67 = getRandomString(12) + '@gmail.com';
         await htLogdDirect(
             'BAR-T67 User can edit visible password', '', 'STARTED');
-
-        await signInScreen.inputEmailAndPassword(email, 'test123!ABC', tester,
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmailAndPassword(email67, 'test123!ABC', tester,
             context: context);
         await signInScreen.clickEyePassword(tester, context: context);
-        await signInScreen.verifyPasswordShow('test123!ABC');
-        await signInScreen.inputEmailAndPassword(email, '123', tester,
+        await signInScreen.verifyPasswordShow('test123!ABC', tester);
+        await signInScreen.inputEmailAndPassword(email67, '123', tester,
             context: context);
         await signInScreen.clickLoginButton(tester, context: context);
         await signInScreen.verifyErrorMessage(
@@ -236,8 +239,10 @@ void main() async {
         await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester,
             context: context);
         await signInScreen.clickEyePassword(tester);
+        await signInScreen.verifyPasswordShow(passLogin, tester);
         await signInScreen.clickLoginButton(tester, context: context);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await dashboardScreen.clickLogoutButton(tester);
         await htLogd(tester, 'BAR_T68 User can login with visible password', '',
             'FINISHED');
       } catch (e) {
@@ -282,6 +287,8 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickLogoText();
         await signInScreen.clickForgotPassword(tester, context: context);
+        await forgotPassScreen.verifyForgotPasswordPage(tester,
+            context: context);
         await dashboardScreen.clickBack();
         await signInScreen.verifySignInPage(tester, context: context);
         await htLogd(

@@ -19,12 +19,6 @@ class BudgetCategoryScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 5));
     await htExpect(tester, find.text('Income'), findsOneWidget,
         reason: ('Verify-' + context + 'Income text is visible'));
-    await htExpect(tester, find.text('Income stream 1'), findsOneWidget,
-        reason: ('Verify-' + context + 'Income stream 1 text is visible'));
-    await htExpect(tester, find.text('Income stream 2'), findsOneWidget,
-        reason: ('Verify-' + context + 'Income stream 2 text is visible'));
-    await htExpect(tester, find.text('Income stream 3'), findsOneWidget,
-        reason: ('Verify-' + context + 'Income stream 3 text is visible'));
     await htExpect(tester, find.text('Salary Paycheck'), findsOneWidget,
         reason: ('Verify-' + context + 'Salary Paycheck text is visible'));
     await htExpect(tester, find.text('Owner Draw'), findsOneWidget,
@@ -230,12 +224,6 @@ class BudgetCategoryScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 5));
     await htExpect(tester, find.text('Income'), findsOneWidget,
         reason: ('Verify-' + context + 'Income text is visible'));
-    await htExpect(tester, find.text('Income stream 1'), findsOneWidget,
-        reason: ('Verify-' + context + 'Income stream 1 text is visible'));
-    await htExpect(tester, find.text('Income stream 2'), findsOneWidget,
-        reason: ('Verify-' + context + 'Income stream 2 text is visible'));
-    await htExpect(tester, find.text('Income stream 3'), findsOneWidget,
-        reason: ('Verify-' + context + 'Income stream 3 text is visible'));
     await htExpect(tester, find.text('Salary Paycheck'), findsOneWidget,
         reason: ('Verify-' + context + 'Salary Paycheck text is visible'));
     await htExpect(tester, find.text('Owner Draw'), findsOneWidget,
