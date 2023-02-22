@@ -46,3 +46,4 @@ app.*.map.json
 /node_modules/
 /integration_test/output.txt
 /integration_test/output-temp.txt
+/log
