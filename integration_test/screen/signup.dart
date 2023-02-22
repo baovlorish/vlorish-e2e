@@ -104,7 +104,7 @@ class SignUpScreenTest {
     final finder = find.byType(TextField).first;
     final input = tester.firstWidget<TextField>(finder);
     expect(input.obscureText, true);
-    await htExpect(tester, find.text(pass), findsNothing,
+    await htExpect(tester, input.obscureText, true,
         reason:
             ("Verify-" + context + "-" + 'Password show text is NOT visible'));
   }
@@ -124,8 +124,7 @@ class SignUpScreenTest {
     final input = tester.firstWidget<TextField>(finder);
     expect(input.obscureText, false);
     await htExpect(tester, find.text(pass), findsOneWidget,
-        reason:
-            ("Verify-" + context + "-" + 'Password show text is NOT visible'));
+        reason: ("Verify-" + context + "-" + 'Password show text is visible'));
   }
 
   Future<void> verifyConfirmPasswordHidden(String pass, WidgetTester tester,
@@ -133,7 +132,7 @@ class SignUpScreenTest {
     final finder = find.byType(TextField).last;
     final input = tester.firstWidget<TextField>(finder);
     expect(input.obscureText, true);
-    await htExpect(tester, find.text(pass), findsNothing,
+    await htExpect(tester, input.obscureText, true,
         reason:
             ("Verify-" + context + "-" + 'Password show text is NOT visible'));
   }

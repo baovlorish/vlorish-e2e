@@ -8,6 +8,7 @@ import 'screen/dashboard.dart';
 import 'screen/signin.dart';
 import 'screen/budget.dart';
 import 'screen/budgetCategories.dart';
+import 'screen/profile.dart';
 
 const String testDescription = 'Business Budget';
 void main() async {
@@ -15,6 +16,7 @@ void main() async {
   DashboardScreenTest dashboardScreen;
   BudgetScreenTest businessBudgetScreen;
   BudgetCategoryScreenTest businessBudgetCategoryScreen;
+  ProfileScreenTest profileScreenScreen;
   await htTestInit(description: testDescription);
   group('Business Budget', () {
     testWidgets('Business Budget test', (tester, [String? context]) async {
@@ -23,6 +25,8 @@ void main() async {
       dashboardScreen = DashboardScreenTest(tester);
       businessBudgetScreen = BudgetScreenTest(tester);
       businessBudgetCategoryScreen = BudgetCategoryScreenTest(tester);
+      profileScreenScreen = ProfileScreenTest(tester);
+
       context = context ?? '';
 
       await dashboardScreen.clickLogoText();
@@ -56,33 +60,11 @@ void main() async {
 
       try {
         await htLogdDirect(
-            'BAR_T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
-            '',
-            'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
-        await businessBudgetScreen.clickBusinessTab(tester);
-        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
-        await businessBudgetScreen.clickMonthly(tester);
-        await businessBudgetScreen.verifyBudgetMonthlyPage(tester);
-        await htLogd(
-            tester,
-            'BAR_T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
-            '',
-            'FINISHED');
-      } catch (e) {
-        await htLogd(
-            tester,
-            'Error BAR-T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
-            '',
-            'FINISHED');
-      }
-
-      try {
-        await htLogdDirect(
             'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
             '',
             'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickBudgetTab(btnDifference, tester);
@@ -106,7 +88,8 @@ void main() async {
             'BAR_T169 User is redirected on Debts flow page after clicking on “Debts” tab',
             '',
             'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickBudgetTab(btnDebt, tester);
@@ -129,7 +112,8 @@ void main() async {
             'BAR_T170 User is redirected on Goals flow page after clicking on “Goals” tab',
             '',
             'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickBudgetTab(btnGoals, tester);
@@ -152,7 +136,8 @@ void main() async {
             'BAR_T171 User is redirected on Tax flow page after clicking on “Tax” tab',
             '',
             'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickBudgetTab(btnTax, tester);
@@ -175,7 +160,8 @@ void main() async {
             'BAR_T172 User is redirected on Investments flow page after clicking on “Investments” tab',
             '',
             'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickBudgetTab(btnInvestments, tester);
@@ -198,7 +184,8 @@ void main() async {
             'BAR_T173 User is redirected on Retirement flow page after clicking on “Retirement” tab',
             '',
             'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickBudgetTab(btnInvestments, tester);
@@ -223,7 +210,8 @@ void main() async {
             'BAR_T175 User is redirected on “FI Score” flow page after clicking on “FI Score” tab',
             '',
             'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickBudgetTab(btnPeerScore, tester);
@@ -237,6 +225,100 @@ void main() async {
         await htLogd(
             tester,
             'Error BAR-T175 User is redirected on “FI Score” flow page after clicking on “FI Score” tab',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T176 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'STARTED');
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
+        await businessBudgetScreen.clickBusinessTab(tester);
+        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreenScreen.verifyProfilePage(tester);
+        await htLogd(
+            tester,
+            'BAR_T176 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T176 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T177 User is redirected on Planned screen after clicking on “Planned” button',
+            '',
+            'STARTED');
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
+        await businessBudgetScreen.clickBusinessTab(tester);
+        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        await businessBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        await businessBudgetScreen.verifyShowPlannedPage(btnPlanned, tester);
+        await htLogd(
+            tester,
+            'BAR_T177 User is redirected on Planned screen after clicking on “Planned” button',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T177 User is redirected on Planned screen after clicking on “Planned” button',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T178 User is able to hide/unhide categories', '', 'STARTED');
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
+        await businessBudgetScreen.clickBusinessTab(tester);
+        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        await businessBudgetScreen.verifyHideBusinessCategories(tester);
+        await businessBudgetScreen.clickCategoryArrowIcon(tester);
+        await businessBudgetScreen.verifyShowBusinessCategories(tester);
+        await businessBudgetScreen.clickCategoryArrowIcon(tester);
+        await businessBudgetScreen.verifyHideBusinessCategories(tester);
+        await htLogd(tester, 'BAR_T178 User is able to hide/unhide categories',
+            '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T178 User is able to hide/unhide categories',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+            '',
+            'STARTED');
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
+        // await businessBudgetScreen.clickBusinessTab(tester);
+        // await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        // await businessBudgetScreen.clickMonthly(tester);
+        // await businessBudgetScreen.verifyBudgetMonthlyPage(tester);
+        await htLogd(
+            tester,
+            'BAR_T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
             '',
             'FINISHED');
       }

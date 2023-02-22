@@ -254,13 +254,13 @@ void main() async {
       }
 
       try {
-        final email = getRandomString(12) + '@gmail.com';
+        // final email = getRandomString(12) + '@gmail.com';
         await htLogdDirect(
             'BAR_T69 User cannot login with an invalid email address',
             '',
             'STARTED');
         await dashboardScreen.clickLogoText();
-        await signInScreen.inputEmailAndPassword(email, 'Test123', tester,
+        await signInScreen.inputEmailAndPassword('@@', 'Test123', tester,
             context: context);
         await signInScreen.clickLoginButton(tester, context: context);
         await signInScreen.verifyErrorMessage(

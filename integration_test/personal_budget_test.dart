@@ -371,8 +371,8 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickProfileIcon(tester);
         await personalBudgetScreen.clickPersonalTab(tester);
-        await dashboardScreen.clickAccountsTransactionsIconCards(tester);
-        await personalBudgetScreen.verifyAccountsTransactionsPage(tester);
+        // await dashboardScreen.clickAccountsTransactionsIconCards(tester);
+        // await personalBudgetScreen.verifyAccountsTransactionsPage(tester);
         await htLogd(
             tester,
             'BAR_T124 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',

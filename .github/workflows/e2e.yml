@@ -38,15 +38,15 @@ jobs:
       
       - uses: GabrielBB/xvfb-action@v1
         with:
-          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
-
-      - uses: GabrielBB/xvfb-action@v1
-        with:
           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d chrome |./integration_test/testout.sh
 
       - uses: GabrielBB/xvfb-action@v1
         with:
           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome |./integration_test/testout.sh
+
+      - uses: GabrielBB/xvfb-action@v1
+        with:
+          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
 
       - name: Notify Slack 
         uses: craftech-io/slack-action@v1

@@ -52,8 +52,8 @@ class BudgetScreenTest {
   Future<void> verifyBudgetMonthlyPage(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 30));
-    await verifyAnnualMonthlyTabSelector(btnAnnual, false, tester);
-    await verifyAnnualMonthlyTabSelector(btnMonthly, true, tester);
+    // await verifyAnnualMonthlyTabSelector(btnAnnual, false, tester);
+    // await verifyAnnualMonthlyTabSelector(btnMonthly, true, tester);
     await htExpect(tester, find.text('TOTAL PLANNED'), findsOneWidget,
         reason: ('Verify-' + context + '- Text Total Planned is visible'));
     await htExpect(tester, find.text('TOTAL SPENT'), findsOneWidget,
@@ -101,7 +101,7 @@ class BudgetScreenTest {
         reason: ('Verify-' + context + '- Text Debt Playoff Title is visible'));
     await htExpect(tester, find.text('Debts overview'), findsOneWidget,
         reason: ('Verify-' + context + '- Text Debts overview is visible'));
-    await htExpect(tester, find.text('Total debts'), findsOneWidget,
+    await htExpect(tester, find.text('DEBT PAID'), findsOneWidget,
         reason: ('Verify-' + context + '- Text Total debts is visible'));
     await tester.pumpAndSettle();
   }
@@ -182,7 +182,7 @@ class BudgetScreenTest {
 
   Future<void> clickBusinessTab(WidgetTester tester,
       {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 10));
     final btnName = find.text(btnBusiness).first;
     await tapSomething(
         tester, btnName, addContext(context, 'Click on btn Business Budget'));

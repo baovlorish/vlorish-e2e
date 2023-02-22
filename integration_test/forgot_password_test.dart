@@ -1,32 +1,34 @@
 import 'dart:io';
-import 'dart:developer' as developer;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import './lib/test_lib_common.dart';
 import './lib/test_lib_const.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:burgundy_budgeting_app/main.dart' as app;
+import 'package:path_provider/path_provider.dart';
 import 'lib/function_common.dart';
 import 'screen/dashboard.dart';
 import 'screen/forgotPassword.dart';
 import 'screen/signin.dart';
+import 'screen/signup.dart';
 
 const String testDescription = 'Forgot Password';
-
 void main() async {
   SignInScreenTest signInScreen;
+  SignUpScreenTest signUpScreen;
   DashboardScreenTest dashboardScreen;
   ForgotPasswordScreenTest forgotPassScreen;
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   await htTestInit(description: testDescription);
   group('Authentication Test', () {
-    testWidgets('Forgot Password test', (tester, [String? context]) async {
+    testWidgets('Forgot Password Page', (tester, [String? context]) async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
+      signUpScreen = SignUpScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
       forgotPassScreen = ForgotPasswordScreenTest(tester);
       context = context ?? '';
+      String homeURL = Uri.base.toString();
 
       try {
         await htLogdDirect(

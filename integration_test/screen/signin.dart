@@ -110,12 +110,14 @@ class SignInScreenTest {
 
   Future<void> verifyPasswordHidden(String pass, WidgetTester tester,
       {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
     final finder = find.byType(TextField).last;
     final input = tester.firstWidget<TextField>(finder);
     expect(input.obscureText, true);
-    await htExpect(tester, find.text(pass), findsNothing,
+    await htExpect(tester, input.obscureText, true,
         reason:
             ("Verify-" + context + "-" + 'Password show text is NOT visible'));
+    await tester.pumpAndSettle();
   }
 
   Future<void> clickForgotPassword(WidgetTester tester,
