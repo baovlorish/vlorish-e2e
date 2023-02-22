@@ -102,7 +102,7 @@ class BudgetScreenTest {
     await htExpect(tester, find.text('Debts overview'), findsOneWidget,
         reason: ('Verify-' + context + '- Text Debts overview is visible'));
     await htExpect(tester, find.text('DEBT PAID'), findsOneWidget,
-        reason: ('Verify-' + context + '- Text Total debts is visible'));
+        reason: ('Verify-' + context + '- Text DEBT PAID is visible'));
     await tester.pumpAndSettle();
   }
 
