@@ -25,7 +25,10 @@ jobs:
       - run: chromedriver --port=4444 &
       - uses: GabrielBB/xvfb-action@v1
         with:
-          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome & integration_test/testout.sh
+          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome
+      - run: |
+         chmod +x ./integration_test/testout.sh
+        shell: bash
       
       # - uses: GabrielBB/xvfb-action@v1
       #   with:
