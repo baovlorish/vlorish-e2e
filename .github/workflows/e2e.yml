@@ -31,7 +31,7 @@ jobs:
         with:
           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome >> $GITHUB_OUTPUT
         id: run_tests
-      - run: echo "Log run ${{ steps.run_tests.outputs.* }}"
+      - run: echo "Log run ${{join(steps.run_tests.outputs.*, '\n')}}"
 
 #       - uses: GabrielBB/xvfb-action@v1
 #         with:
