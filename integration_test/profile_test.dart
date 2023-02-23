@@ -374,6 +374,33 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T185 User sees error message if current password does not match with the existing password',
+            '',
+            'STARTED');
+        final pass = getRandomString(3) + getRandomNumber(3) + 'aB@';
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.inputUpdatePassword(pass, '', tester);
+        await profileScreen.clickUpdatePasswordButton(tester);
+        await profileScreen.verifyShowMessage(
+            'Password does not match with the current password. Please re-enter the password',
+            tester,
+            context: context);
+        await htLogd(
+            tester,
+            'BAR_T185 User sees error message if current password does not match with the existing password',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T185 User sees error message if current password does not match with the existing password',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T98 Check that user can update “First Name” and “Last Name” fields',
             '',
             'STARTED');

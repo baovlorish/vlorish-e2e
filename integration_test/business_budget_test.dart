@@ -301,6 +301,38 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T181 Check that user is able to decreasing or  increasing years on Budget Business Annual',
+            '',
+            'STARTED');
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
+        await businessBudgetScreen.clickBusinessTab(tester);
+        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        await businessBudgetScreen.verifyYearOnBudgetAnnual(
+            currentYear, tester);
+        await businessBudgetScreen.clickRightArrowBtn(tester);
+        await businessBudgetScreen.verifyYearOnBudgetAnnual(nextYear, tester);
+        await businessBudgetScreen.clickLeftArrowBtn(tester);
+        await businessBudgetScreen.verifyYearOnBudgetAnnual(
+            currentYear, tester);
+        await businessBudgetScreen.clickLeftArrowBtn(tester);
+        await businessBudgetScreen.verifyYearOnBudgetAnnual(
+            previousYear, tester);
+        await htLogd(
+            tester,
+            'BAR_T181 Check that user is able to decreasing or  increasing years on Budget Business Annual',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T181 Check that user is able to decreasing or  increasing years on Budget Business Annual',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
             '',
             'STARTED');

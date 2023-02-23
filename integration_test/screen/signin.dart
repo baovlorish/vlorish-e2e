@@ -68,6 +68,15 @@ class SignInScreenTest {
     await tester.pumpAndSettle();
   }
 
+  Future<void> inputPassword(String passUser, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final password = find.byType(InputItem).last;
+    await writeSomething(
+        tester, password, passUser, addContext(context, 'Input password'));
+    await tester.pumpAndSettle();
+  }
+
   Future<void> clickLoginButton(WidgetTester tester,
       {String context = ""}) async {
     final btnSubmit = find.text('Sign-in').first;

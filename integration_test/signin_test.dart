@@ -164,6 +164,42 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T61 User sees error message after entering incorrect password 5 times',
+            '',
+            'STARTED');
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmailAndPassword(
+            emailLogin, getRandomString(3) + getRandomNumber(3) + 'aB@', tester,
+            context: context);
+        await signInScreen.clickLoginButton(tester, context: context);
+        await signInScreen.verifyErrorMessage(
+            'There is no user with such an email. Please check if the email is correct and try again',
+            tester);
+        for (int i = 0; i < 5; i++) {
+          await signInScreen.inputPassword(
+              getRandomString(3) + getRandomNumber(3) + 'aB@', tester);
+          await signInScreen.clickLoginButton(tester, context: context);
+        }
+
+        await signInScreen.verifyErrorMessage(
+            'The password is incorrect. Unfortunately you have got no more attempts to sign in',
+            tester);
+
+        await htLogd(
+            tester,
+            'BAR_T61 User sees error message after entering incorrect password 5 times',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T61 User sees error message after entering incorrect password 5 times',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T64 User can make password visible after tap on “eye“ button',
             '',
             'STARTED');

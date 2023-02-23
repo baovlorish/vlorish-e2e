@@ -7,6 +7,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/molecula/annual_monthly_button.
 import 'package:burgundy_budgeting_app/ui/atomic/atom/avatar_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../lib/function_common.dart';
 import '../lib/test_lib_common.dart';
 import '../lib/test_lib_const.dart';
 
@@ -349,6 +350,62 @@ class BudgetScreenTest {
     });
     await tapSomething(tester, imageIconFinder,
         addContext(context, 'Click on btn Right Arrow'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickLeftArrowBtn(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final assetImage = AssetImage('assets/images/icons/left.png');
+    final imageIconFinder = find.byWidgetPredicate((widget) {
+      if (widget is ImageIcon) {
+        if (widget.image is AssetImage && widget.image == assetImage) {
+          return true;
+        }
+      }
+      return false;
+    });
+    await tapSomething(tester, imageIconFinder,
+        addContext(context, 'Click on btn Right Arrow'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifyYearOnBudgetAnnual(String year, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final periodSelectorFinder = find.byType(PeriodSelector);
+
+    final periodSelectorWidget =
+        tester.widget<PeriodSelector>(periodSelectorFinder);
+
+    final labelTexts = periodSelectorWidget.labelTexts;
+
+    // final currentDate = DateTime.now();
+    final currentYear = '${getCurrentYear()}';
+    final previousYear = '${getPreviousYear()}';
+    final nextYear = '${getNextYear()}';
+
+    switch (year) {
+      case 'currentYear':
+        final currentYearIndex = labelTexts.indexOf(currentYear);
+        final yearFinder = find.text(labelTexts[currentYearIndex]);
+        await htExpect(tester, yearFinder, findsOneWidget,
+            reason: ('Verify-' + context + '$yearFinder text is visible'));
+        break;
+      case 'previousYear':
+        final previousYearIndex = labelTexts.indexOf(previousYear);
+        final yearFinder = find.text(labelTexts[previousYearIndex]);
+        await htExpect(tester, yearFinder, findsOneWidget,
+            reason: ('Verify-' + context + '$yearFinder text is visible'));
+        break;
+      case 'nextYear':
+        final nextYearIndex = labelTexts.indexOf(nextYear);
+        final yearFinder = find.text(labelTexts[nextYearIndex]);
+        await htExpect(tester, yearFinder, findsOneWidget,
+            reason: ('Verify-' + context + '$yearFinder text is visible'));
+        break;
+    }
+
     await tester.pumpAndSettle();
   }
 }

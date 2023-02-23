@@ -32,3 +32,6 @@ const String btnMonthly = 'Monthly';
 const String btnPlanned = 'Planned';
 const String btnActual = 'Actual';
 const String btnDifference = 'Difference';
+const String currentYear = 'currentYear';
+const String previousYear = 'previousYear';
+const String nextYear = 'nextYear';
