@@ -29,9 +29,9 @@ jobs:
       - run: chromedriver --port=4444 &
       - uses: GabrielBB/xvfb-action@v1
         with:
-          run: echo "flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome=$(flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome)\n" >> $GITHUB_OUTPUT
+          run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome >> $GITHUB_OUTPUT
         id: run_tests
-      - run: echo "Log run ${{join(steps.run_tests.outputs.*, '\n')}}"
+      - run: echo "Log run ${{join(steps.run_tests.*, '\n')}}"
 
 #       - uses: GabrielBB/xvfb-action@v1
 #         with:
