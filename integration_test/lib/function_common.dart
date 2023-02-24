@@ -2,6 +2,22 @@ import 'dart:math';
 
 import 'package:intl/intl.dart';
 
+final monthNames = [
+  '',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+];
+
 String getRandomString(int len) {
   var r = Random();
   const _chars =
@@ -42,4 +58,29 @@ int getNextYear() {
   final now = DateTime.now();
   final nextYear = (now.add(const Duration(days: 365))).year;
   return nextYear;
+}
+
+String getCurentMonthYear(DateTime date) {
+  final monthIndex = date.month;
+  final year = date.year;
+
+  final currentMonthYear = '${monthNames[monthIndex]} $year';
+
+  return '$currentMonthYear';
+}
+
+String getPreviousMonthYear(DateTime date) {
+  final previousMonth = DateTime(date.year, date.month - 1, date.day).month;
+  final previousYear = previousMonth == 12 ? date.year - 1 : date.year;
+  final previousMonthYear = '${monthNames[previousMonth]} $previousYear';
+
+  return '$previousMonthYear';
+}
+
+String getNextMonthYear(DateTime date) {
+  final nextMonth = DateTime(date.year, date.month + 1, date.day).month;
+  final nextYear = nextMonth == 1 ? date.year + 1 : date.year;
+  final nextMonthYear = '${monthNames[nextMonth]} $nextYear';
+
+  return '$nextMonthYear';
 }

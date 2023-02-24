@@ -343,6 +343,39 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T157 Check that user is able to switch months/years on Budget Personal Monthly page',
+            '',
+            'STARTED');
+        await dashboardScreen.clickProfileIcon(tester);
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickMonthly(tester);
+        await personalBudgetScreen.verifyBudgetMonthlyPage(tester);
+        await personalBudgetScreen.verifyYearOnBudgetMonthly(
+            currentYear, tester);
+        await personalBudgetScreen.clickRightArrowBtn(tester);
+        await personalBudgetScreen.verifyYearOnBudgetMonthly(nextYear, tester);
+        await personalBudgetScreen.clickLeftArrowBtn(tester);
+        await personalBudgetScreen.verifyYearOnBudgetMonthly(
+            currentYear, tester);
+        await personalBudgetScreen.clickLeftArrowBtn(tester);
+        await personalBudgetScreen.verifyYearOnBudgetMonthly(
+            previousYear, tester);
+        await htLogd(
+            tester,
+            'BAR_T157 Check that user is able to switch months/years on Budget Personal Monthly page',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T157 Check that user is able to switch months/years on Budget Personal Monthly page',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T158 User is redirected on Budget Annual flow page after clicking on “Annual” button',
             '',
             'STARTED');

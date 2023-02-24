@@ -15,6 +15,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/atom/back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../lib/test_lib_common.dart';
 
@@ -224,5 +225,19 @@ class ProfileScreenTest {
       find.byKey(ValueKey('LabelButtonItem')), // widget you want to scroll
       const Offset(-500, 0), // delta to move
     );
+  }
+
+  Future<void> selectCity(String searchCityName,
+      String selectSuggestionCityName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final typeAheadFinder = find.byType(TypeAheadFormField);
+    await tester.tap(typeAheadFinder);
+    await tester.enterText(typeAheadFinder, searchCityName);
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+
+    final suggestionFinder = find.text(selectSuggestionCityName);
+    await tester.tap(suggestionFinder);
+    await tester.pumpAndSettle(const Duration(seconds: 10));
   }
 }

@@ -35,6 +35,26 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T186 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'STARTED');
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await htLogd(
+            tester,
+            'BAR_T186 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T186 User is redirected on Profile flow page after clicking on Profile icon',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T103 New Password field contains at least 8 characters',
             '',
             'STARTED');
@@ -395,6 +415,41 @@ void main() async {
         await htLogd(
             tester,
             'Error BAR-T185 User sees error message if current password does not match with the existing password',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T188 Check that user can update “City” and “State” fields',
+            '',
+            'STARTED');
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.selectCity('new york', 'New York, NY', tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await dashboardScreen.clickButton('Continue', tester);
+        await profileScreen.clickBackButton(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.verifyShowMessage('New York, NY', tester);
+        await profileScreen.selectCity(
+            'San Francisco', 'San Francisco, CA', tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await dashboardScreen.clickButton('Continue', tester);
+        await htLogd(
+            tester,
+            'BAR_T188 Check that user can update “City” and “State” fields',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T188 Check that user can update “City” and “State” fields',
             '',
             'FINISHED');
       }

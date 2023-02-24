@@ -408,4 +408,45 @@ class BudgetScreenTest {
 
     await tester.pumpAndSettle();
   }
+
+  Future<void> verifyYearOnBudgetMonthly(String year, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final now = DateTime.now();
+
+    final periodSelectorFinder = find.byType(PeriodSelector);
+
+    final periodSelectorWidget =
+        tester.widget<PeriodSelector>(periodSelectorFinder);
+
+    final labelTexts = periodSelectorWidget.labelTexts;
+
+    // final currentDate = DateTime.now();
+    final currentMonthYear = '${getCurentMonthYear(now)}';
+    final previousMonthYear = '${getPreviousMonthYear(now)}';
+    final nextMonthYear = '${getNextMonthYear(now)}';
+
+    switch (year) {
+      case 'currentYear':
+        final currentYearIndex = labelTexts.indexOf(currentMonthYear);
+        final yearFinder = find.text(labelTexts[currentYearIndex]);
+        await htExpect(tester, yearFinder, findsOneWidget,
+            reason: ('Verify-' + context + '$yearFinder text is visible'));
+        break;
+      case 'previousYear':
+        final previousYearIndex = labelTexts.indexOf(previousMonthYear);
+        final yearFinder = find.text(labelTexts[previousYearIndex]);
+        await htExpect(tester, yearFinder, findsOneWidget,
+            reason: ('Verify-' + context + '$yearFinder text is visible'));
+        break;
+      case 'nextYear':
+        final nextYearIndex = labelTexts.indexOf(nextMonthYear);
+        final yearFinder = find.text(labelTexts[nextYearIndex]);
+        await htExpect(tester, yearFinder, findsOneWidget,
+            reason: ('Verify-' + context + '$yearFinder text is visible'));
+        break;
+    }
+
+    await tester.pumpAndSettle();
+  }
 }
