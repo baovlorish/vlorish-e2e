@@ -1,5 +1,4 @@
 #!/bin/bash
-rm output.txt
 cat 1>> ./integration_test/output-temp.txt
 cat ./integration_test/output-temp.txt | tr -d '\000' > ./integration_test/output.txt
 if cat ./integration_test/output.txt | grep -q '^Failure Details:'; then
