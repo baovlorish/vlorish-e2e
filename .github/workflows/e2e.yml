@@ -21,7 +21,7 @@ jobs:
           node-version: 16
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.0.0"
+         # flutter-version: "3.0.0"
           channel: "stable"
       - run: flutter pub get
       - uses: browser-actions/setup-chrome@v1
