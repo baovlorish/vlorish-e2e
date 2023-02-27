@@ -28,9 +28,12 @@ jobs:
       - run: chrome --version
       - run: chromedriver --port=4444 &
       - run: sudo apt-get install -y xvfb pcregrep
-      - run: chmod 777 ./integration_test/testout.sh
+      - run: chmod 777 ./integration_test/
       - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome | ./integration_test/testout.sh
       - run: cat ./integration_test/failTest.txt
+      - run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
+      
+      
 #       - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d chrome | ./integration_test/testout.sh 
 #       - uses: GabrielBB/xvfb-action@v1
 #         with:
@@ -52,19 +55,11 @@ jobs:
 #         with:
 #           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
 
-#       - name: Notify Slack 
-#         uses: craftech-io/slack-action@v1
-#         with:
-#           slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-#           status: ${{ job.status }}
-#         if: always()
-      - name: Send Result data to Slack workflow
-        id: slack
-        uses: slackapi/slack-github-action@v1.23.0
+      - name: Notify Slack 
+        uses: craftech-io/slack-action@v1
         with:
-          payload-file-path: "./integration_test/failTest.txt"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}
         if: always()
       # - uses: actions/upload-artifact@v3
       #   with:
