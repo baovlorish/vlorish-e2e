@@ -28,7 +28,7 @@ jobs:
       - run: chrome --version
       - run: chromedriver --port=4444 &
       - run: sudo apt-get install -y xvfb pcregrep
-      - run: chmod 777 ./integration_test/
+      - run: chmod 777 ./integration_test/{testout.sh,resultChecker.sh}
       - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome | ./integration_test/testout.sh
       - run: cat ./integration_test/failTest.txt
       - run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
