@@ -13,7 +13,7 @@ on:
 
 jobs:
   run-e2e:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -21,15 +21,15 @@ jobs:
           node-version: 16
       - uses: subosito/flutter-action@v2
         with:
-         # flutter-version: "3.0.0"
+          flutter-version: "3.0.0"
           channel: "stable"
       - run: flutter pub get
       - uses: browser-actions/setup-chrome@v1
       - run: chrome --version
       - run: chromedriver --port=4444 &
-     # - run: sudo apt-get install -y xvfb grep
-     # - run: chmod 777 ./integration_test/testout.sh
-      - run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome | ./integration_test/testout.sh
+      - run: sudo apt-get install -y xvfb
+      - run: chmod 777 ./integration_test/testout.sh
+      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome |./integration_test/testout.sh
 
       # - uses: GabrielBB/xvfb-action@v1
       #   with:
