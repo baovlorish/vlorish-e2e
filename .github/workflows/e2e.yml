@@ -1,15 +1,15 @@
 name:  E2E Test
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       testBranch:
-#         description: "Which branch to checkout and run test"
-#         required: false
-#         default: master
+on:
+  workflow_dispatch:
+    inputs:
+      testBranch:
+        description: "Which branch to checkout and run test"
+        required: false
+        default: master
 #   schedule:
 #     - cron: "0 0 * * 1-5"
 
-on: [push]
+    push:
 
 jobs:
   run-e2e:
