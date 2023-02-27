@@ -1,6 +1,5 @@
 #!/bin/bash
 DIR="./integration_test/output.txt"
-cat $DIR
 cat 1> ./integration_test/output-temp.txt
 cat ./integration_test/output-temp.txt | tr -d '\000' > $DIR
 if cat $DIR | grep -q '^Failure Details:'; then
@@ -28,3 +27,6 @@ fi
 if cat $DIR | grep -q -v '^The following StateError was thrown running a test:'; then
 cat $DIR | sed -n -e '/^The following StateError was thrown running a test:/,/^When the exception was thrown, this was the stack:$/ p' | grep -v '^When the exception was thrown, this was the stack:$'
 fi
+echo -e '==========================================================='
+echo -e '= END OF TEST                                             ='
+echo -e '==========================================================='
