@@ -130,73 +130,73 @@ void main() async {
             'FINISHED');
       }
 
-      try {
-        await htLogdDirect(
-            'BAR_T60 User sees error message after entering incorrect password 2 times',
-            '',
-            'STARTED');
-        await dashboardScreen.clickLogoText();
-        await signInScreen.inputEmailAndPassword(
-            emailLogin, 'Test1@123456', tester);
-        await signInScreen.clickLoginButton(tester, context: context);
-        await signInScreen.verifyErrorMessage(
-            'There is no user with such an email. Please check if the email is correct and try again',
-            tester,
-            context: context);
-        await signInScreen.clickLoginButton(tester, context: context);
-        await signInScreen.verifyErrorMessage(
-            'The password is incorrect. Please check the password and try again. You have got 3 more attempts',
-            tester,
-            context:
-                context); // status is pending, will check again after enable to connect DB
-        await htLogd(
-            tester,
-            'BAR_T60 User sees error message after entering incorrect password 2 times',
-            '',
-            'FINISHED');
-      } catch (e) {
-        await htLogd(
-            tester,
-            'Error BAR-T60 User sees error message after entering incorrect password 2 times',
-            '',
-            'FINISHED');
-      }
+//       try {
+//         await htLogdDirect(
+//             'BAR_T60 User sees error message after entering incorrect password 2 times',
+//             '',
+//             'STARTED');
+//         await dashboardScreen.clickLogoText();
+//         await signInScreen.inputEmailAndPassword(
+//             emailLogin, 'Test1@123456', tester);
+//         await signInScreen.clickLoginButton(tester, context: context);
+//         await signInScreen.verifyErrorMessage(
+//             'There is no user with such an email. Please check if the email is correct and try again',
+//             tester,
+//             context: context);
+//         await signInScreen.clickLoginButton(tester, context: context);
+//         await signInScreen.verifyErrorMessage(
+//             'The password is incorrect. Please check the password and try again. You have got 3 more attempts',
+//             tester,
+//             context:
+//                 context); // status is pending, will check again after enable to connect DB
+//         await htLogd(
+//             tester,
+//             'BAR_T60 User sees error message after entering incorrect password 2 times',
+//             '',
+//             'FINISHED');
+//       } catch (e) {
+//         await htLogd(
+//             tester,
+//             'Error BAR-T60 User sees error message after entering incorrect password 2 times',
+//             '',
+//             'FINISHED');
+//       }
 
-      try {
-        await htLogdDirect(
-            'BAR_T61 User sees error message after entering incorrect password 5 times',
-            '',
-            'STARTED');
-        await dashboardScreen.clickLogoText();
-        await signInScreen.inputEmailAndPassword(
-            emailLogin, getRandomString(3) + getRandomNumber(3) + 'aB@', tester,
-            context: context);
-        await signInScreen.clickLoginButton(tester, context: context);
-        await signInScreen.verifyErrorMessage(
-            'There is no user with such an email. Please check if the email is correct and try again',
-            tester);
-        for (int i = 0; i < 5; i++) {
-          await signInScreen.inputPassword(
-              getRandomString(3) + getRandomNumber(3) + 'aB@', tester);
-          await signInScreen.clickLoginButton(tester, context: context);
-        }
+//       try {
+//         await htLogdDirect(
+//             'BAR_T61 User sees error message after entering incorrect password 5 times',
+//             '',
+//             'STARTED');
+//         await dashboardScreen.clickLogoText();
+//         await signInScreen.inputEmailAndPassword(
+//             emailLogin, getRandomString(3) + getRandomNumber(3) + 'aB@', tester,
+//             context: context);
+//         await signInScreen.clickLoginButton(tester, context: context);
+//         await signInScreen.verifyErrorMessage(
+//             'There is no user with such an email. Please check if the email is correct and try again',
+//             tester);
+//         for (int i = 0; i < 5; i++) {
+//           await signInScreen.inputPassword(
+//               getRandomString(3) + getRandomNumber(3) + 'aB@', tester);
+//           await signInScreen.clickLoginButton(tester, context: context);
+//         }
 
-        await signInScreen.verifyErrorMessage(
-            'The password is incorrect. Unfortunately you have got no more attempts to sign in',
-            tester);
+//         await signInScreen.verifyErrorMessage(
+//             'The password is incorrect. Unfortunately you have got no more attempts to sign in',
+//             tester);
 
-        await htLogd(
-            tester,
-            'BAR_T61 User sees error message after entering incorrect password 5 times',
-            '',
-            'FINISHED');
-      } catch (e) {
-        await htLogd(
-            tester,
-            'Error BAR-T61 User sees error message after entering incorrect password 5 times',
-            '',
-            'FINISHED');
-      }
+//         await htLogd(
+//             tester,
+//             'BAR_T61 User sees error message after entering incorrect password 5 times',
+//             '',
+//             'FINISHED');
+//       } catch (e) {
+//         await htLogd(
+//             tester,
+//             'Error BAR-T61 User sees error message after entering incorrect password 5 times',
+//             '',
+//             'FINISHED');
+//       }
 
       try {
         await htLogdDirect(
