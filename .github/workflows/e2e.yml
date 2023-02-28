@@ -23,38 +23,38 @@ jobs:
           channel: "stable"
           
       - name: Setup Enviroments
-      - run: flutter pub get
+        run: flutter pub get
       - run: sudo apt-get install -y xvfb pcregrep
       - run: chmod 777 ./integration_test/{testout.sh,resultChecker.sh}
       
       - name: Setup Chrome
-      - uses: browser-actions/setup-chrome@v1
+        uses: browser-actions/setup-chrome@v1
       
       - run: chrome --version
       
       - name: Start Chrome
-      - run: chromedriver --port=4444 &
+        run: chromedriver --port=4444 &
       
       - name: Run Sign In Testsuite
-      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome | ./integration_test/testout.sh
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome | ./integration_test/testout.sh
       
       - name: Run Sign Up Testsuite
-      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signup_test.dart -d chrome |./integration_test/testout.sh
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signup_test.dart -d chrome |./integration_test/testout.sh
       
       - name: Run Forgot Password Testsuite
-      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/forgot_password_test.dart -d chrome |./integration_test/testout.sh
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/forgot_password_test.dart -d chrome |./integration_test/testout.sh
       
       - name: Run Profile Testsuite
-      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d chrome |./integration_test/testout.sh
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d chrome |./integration_test/testout.sh
       
       - name: Run Personal Budget Testsuite
-      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome |./integration_test/testout.sh
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome |./integration_test/testout.sh
       
       - name: Run Business Budget Testsuite
-      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
       
       - name: Check Test Fail
-      - run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
+        run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
       
       - name: Notify Slack 
         uses: craftech-io/slack-action@v1
