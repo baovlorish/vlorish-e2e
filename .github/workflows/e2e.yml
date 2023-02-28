@@ -9,8 +9,6 @@ on:
 #   schedule:
 #     - cron: "0 0 * * 1-5"
 
-    push:
-
 jobs:
   run-e2e:
     runs-on: ubuntu-latest
@@ -23,46 +21,50 @@ jobs:
         with:
           flutter-version: "3.0.0"
           channel: "stable"
+          
+      - name: Setup Enviroments
       - run: flutter pub get
-      - uses: browser-actions/setup-chrome@v1
-      - run: chrome --version
-      - run: chromedriver --port=4444 &
       - run: sudo apt-get install -y xvfb pcregrep
       - run: chmod 777 ./integration_test/{testout.sh,resultChecker.sh}
+      
+      - name: Setup Chrome
+      - uses: browser-actions/setup-chrome@v1
+      
+      - run: chrome --version
+      
+      - name: Start Chrome
+      - run: chromedriver --port=4444 &
+      
+      - name: Run Sign In Testsuite
       - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome | ./integration_test/testout.sh
-#       - run: cat ./integration_test/failTest.txt
+      
+      - name: Run Sign Up Testsuite
+      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signup_test.dart -d chrome |./integration_test/testout.sh
+      
+      - name: Run Forgot Password Testsuite
+      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/forgot_password_test.dart -d chrome |./integration_test/testout.sh
+      
+      - name: Run Profile Testsuite
+      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d chrome |./integration_test/testout.sh
+      
+      - name: Run Personal Budget Testsuite
+      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome |./integration_test/testout.sh
+      
+      - name: Run Business Budget Testsuite
+      - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
+      
+      - name: Check Test Fail
       - run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
       
-      
-#       - run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d chrome | ./integration_test/testout.sh 
-#       - uses: GabrielBB/xvfb-action@v1
-#         with:
-#           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signup_test.dart -d chrome |./integration_test/testout.sh
-      
-#       - uses: GabrielBB/xvfb-action@v1
-#         with:
-#           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/forgot_password_test.dart -d chrome |./integration_test/testout.sh
-      
-#       - uses: GabrielBB/xvfb-action@v1
-#         with:
-#           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_test.dart -d chrome |./integration_test/testout.sh
-
-#       - uses: GabrielBB/xvfb-action@v1
-#         with:
-#           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome |./integration_test/testout.sh
-
-#       - uses: GabrielBB/xvfb-action@v1
-#         with:
-#           run: flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
-
       - name: Notify Slack 
         uses: craftech-io/slack-action@v1
         with:
           slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
           status: ${{ job.status }}
         if: always()
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: output-log
-      #     path: log
-      #   if: always()
+        
+      - uses: actions/upload-artifact@v3
+        with:
+          name: failTest.txt
+          path: integration_test
+        if: always()
