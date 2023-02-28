@@ -10,11 +10,21 @@ import 'package:logger/logger.dart';
 
 class TaxCubit extends Cubit<TaxState> {
   final Logger logger = getLogger('TaxCubit');
+
+  static const _taxPageStartYear = 2022;
+  final _currentYear = DateTime.now().year;
+
   final TaxRepository taxRepository;
   EstimatedTaxesModel? estimatedTaxesModel;
   int? estimationStage;
-  var cubitFICAIncluded = false;
-  int year = DateTime.now().year;
+  bool cubitFICAIncluded = false;
+
+  late int _selectedYear = _currentYear;
+  int get selectedYear => _selectedYear;
+
+  late final _yearsList = <int>[for (var i = _taxPageStartYear; i <= _currentYear; i++) i];
+
+  List<int> get yearsList => _yearsList;
 
   TaxCubit(this.taxRepository) : super(TaxInitial()) {
     logger.i('Tax Page');
@@ -22,11 +32,18 @@ class TaxCubit extends Cubit<TaxState> {
   }
 
   Future<void> load() async {
+    emit(TaxLoading());
     try {
-      estimationStage = await taxRepository.getEstimationStage(year);
-      estimatedTaxesModel =
-          await getEstimatedTaxes(isFICAIncluded: cubitFICAIncluded);
-      changeEstimationTab(1);
+      estimationStage = await taxRepository.getEstimationStage(selectedYear);
+
+      if (estimationStage == TaxTab.Disclaimer.index) await taxRepository.createTaxDetails(selectedYear);
+      if (estimationStage == TaxTab.Complete.index) estimatedTaxesModel = await getEstimatedTaxes(isFICAIncluded: cubitFICAIncluded);
+
+      emit(TaxLoaded(
+        currentEstimationTab: TaxTab.PersonalInfo,
+        estimatedTaxesModel: estimatedTaxesModel,
+        personalInfoModel: await taxRepository.getPersonalInfo(selectedYear),
+      ));
     } catch (e) {
       emit(TaxError(e.toString()));
       rethrow;
@@ -34,44 +51,32 @@ class TaxCubit extends Cubit<TaxState> {
   }
 
   Future<void> createTaxDetails() async {
-    if (estimationStage == 0) {
-      await taxRepository.createTaxDetails(year);
-      estimationStage = 1;
+    if (estimationStage == TaxTab.Disclaimer.index) {
+      await taxRepository.createTaxDetails(selectedYear);
+      estimationStage = TaxTab.PersonalInfo.index;
     }
   }
 
-  void changeEstimationTab(int tab) async {
-    await createTaxDetails();
-    estimationStage = await taxRepository.getEstimationStage(year);
-    estimatedTaxesModel =
-        await getEstimatedTaxes(isFICAIncluded: cubitFICAIncluded);
-    if (estimationStage! < tab) estimationStage = tab;
+  void changeEstimationTab(TaxTab tab) async {
+    if (estimationStage! < tab.index) estimationStage = tab.index;
     var prevState = state;
     try {
-      if (tab == 1) {
-        var personalInfoModel = await taxRepository.getPersonalInfo(year);
-        emit(TaxLoaded(
-          currentEstimationTab: tab,
-          personalInfoModel: personalInfoModel,
-          estimatedTaxesModel: estimatedTaxesModel,
-        ));
-      } else if (tab == 2) {
-        var incomeDetailsModel = await taxRepository.getIncomeDetails(year);
-        emit(TaxLoaded(
-          currentEstimationTab: tab,
-          incomeDetailsModel: incomeDetailsModel,
-          estimatedTaxesModel: estimatedTaxesModel,
-        ));
-      } else if (tab == 3) {
-        var creditsAndAdjustmentModel =
-            await taxRepository.getCreditsAndAdjustment(year);
-        var personalInfoModel = await taxRepository.getPersonalInfo(year);
+      if (prevState is TaxLoaded) {
+        switch (tab) {
+          case TaxTab.Disclaimer:
+            return await setPersonalInfoTab(prevState, selectedYear);
+          case TaxTab.PersonalInfo:
+            return await setPersonalInfoTab(prevState, selectedYear);
+          case TaxTab.IncomeDetails:
+            return await setIncomeDetailsTab(prevState, selectedYear);
+          case TaxTab.CreditsAndAdjustment:
+            return await setCreditsAndAdjustmentTab(prevState, selectedYear);
+          case TaxTab.Complete:
+            return await setPersonalInfoTab(prevState, selectedYear);
 
-        emit(TaxLoaded(
-            currentEstimationTab: tab,
-            personalInfoModel: personalInfoModel,
-            creditsAndAdjustmentModel: creditsAndAdjustmentModel,
-            estimatedTaxesModel: estimatedTaxesModel));
+          default:
+            return await setPersonalInfoTab(prevState, selectedYear);
+        }
       }
     } catch (e) {
       emit(TaxError(e.toString()));
@@ -80,51 +85,72 @@ class TaxCubit extends Cubit<TaxState> {
     }
   }
 
-  Future<void> updateIncomeDetails(
-      TaxIncomeDetailsModel incomeDetailsModel) async {
+  Future<void> setPersonalInfoTab(TaxLoaded state, int selectedYear) async {
+    var personalInfoModel = await taxRepository.getPersonalInfo(selectedYear);
+    emit(state.copyWith(
+      currentEstimationTab: TaxTab.PersonalInfo,
+      personalInfoModel: personalInfoModel,
+    ));
+  }
+
+  Future<void> setIncomeDetailsTab(TaxLoaded state, int selectedYear) async {
+    var incomeDetailsModel = await taxRepository.getIncomeDetails(selectedYear);
+    emit(state.copyWith(
+      currentEstimationTab: TaxTab.IncomeDetails,
+      incomeDetailsModel: incomeDetailsModel,
+    ));
+  }
+
+  Future<void> setCreditsAndAdjustmentTab(TaxLoaded state, int selectedYear) async {
+    var creditsAndAdjustmentModel = await taxRepository.getCreditsAndAdjustment(selectedYear);
+    emit(state.copyWith(
+      currentEstimationTab: TaxTab.CreditsAndAdjustment,
+      creditsAndAdjustmentModel: creditsAndAdjustmentModel,
+    ));
+  }
+
+  Future<void> updateIncomeDetails(TaxIncomeDetailsModel incomeDetailsModel) async {
     var prevState = state;
     try {
       await taxRepository.setIncomeDetails(incomeDetailsModel);
       if (prevState is TaxLoaded) {
         emit(prevState.copyWith(
-            estimatedTaxesModel:
-                await getEstimatedTaxes(isFICAIncluded: cubitFICAIncluded)));
+            incomeDetailsModel: incomeDetailsModel,
+            estimatedTaxesModel: await getEstimatedTaxes(isFICAIncluded: cubitFICAIncluded)));
       }
     } catch (e) {
       emit(TaxError(e.toString()));
       emit(prevState);
       rethrow;
     }
-    if (estimationStage != 4) changeEstimationTab(3);
+    if (estimationStage != TaxTab.Complete.index) changeEstimationTab(TaxTab.CreditsAndAdjustment);
   }
 
-  Future<void> updatePersonalInfo(
-      TaxPersonalInfoModel personalInfoModel) async {
+  Future<void> updatePersonalInfo(TaxPersonalInfoModel personalInfoModel) async {
     var prevState = state;
     try {
       await taxRepository.setPersonalInfo(personalInfoModel);
       if (prevState is TaxLoaded) {
         emit(prevState.copyWith(
-            estimatedTaxesModel:
-                await getEstimatedTaxes(isFICAIncluded: cubitFICAIncluded)));
+            personalInfoModel: personalInfoModel,
+            estimatedTaxesModel: await getEstimatedTaxes(isFICAIncluded: cubitFICAIncluded)));
       }
     } catch (e) {
       emit(TaxError(e.toString()));
       emit(prevState);
       rethrow;
     }
-    if (estimationStage != 4) changeEstimationTab(2);
+    if (estimationStage != TaxTab.Complete.index) changeEstimationTab(TaxTab.IncomeDetails);
   }
 
-  Future<void> updateCreditsAndAdjustment(
-      TaxCreditsAndAdjustmentModel creditsAndAdjustmentModel) async {
+  Future<void> updateCreditsAndAdjustment(TaxCreditsAndAdjustmentModel creditsAndAdjustmentModel) async {
     var prevState = state;
     try {
       await taxRepository.setCreditsAndAdjustment(creditsAndAdjustmentModel);
       if (prevState is TaxLoaded) {
         emit(prevState.copyWith(
-            estimatedTaxesModel: estimationStage == 4
-                ? await taxRepository.getEstimatedTaxes(year, cubitFICAIncluded)
+            estimatedTaxesModel: estimationStage == TaxTab.Complete.index
+                ? await taxRepository.getEstimatedTaxes(selectedYear, cubitFICAIncluded)
                 : null));
       }
     } catch (e) {
@@ -137,8 +163,7 @@ class TaxCubit extends Cubit<TaxState> {
   Future<int> getStudentInterestPaid(int studentLoanInterestPaid) async {
     var prevState = state;
     try {
-      return await taxRepository.getStudentInterestPaid(
-          studentLoanInterestPaid, year);
+      return await taxRepository.getStudentInterestPaid(studentLoanInterestPaid, selectedYear);
     } catch (e) {
       emit(TaxError(e.toString()));
       emit(prevState);
@@ -153,7 +178,7 @@ class TaxCubit extends Cubit<TaxState> {
     var prevState = state;
     try {
       return await taxRepository.getChildAndDependentCareCredit(
-          incomeAdjustments, totalEligibleChildcareExpenses, year);
+          incomeAdjustments, totalEligibleChildcareExpenses, selectedYear);
     } catch (e) {
       emit(TaxError(e.toString()));
       emit(prevState);
@@ -161,11 +186,10 @@ class TaxCubit extends Cubit<TaxState> {
     }
   }
 
-  Future<EstimatedTaxesModel?> getEstimatedTaxes(
-      {required bool isFICAIncluded}) async {
+  Future<EstimatedTaxesModel?> getEstimatedTaxes({required bool isFICAIncluded}) async {
     cubitFICAIncluded = isFICAIncluded;
-    return estimationStage == 4
-        ? await taxRepository.getEstimatedTaxes(year, cubitFICAIncluded)
+    return estimationStage == TaxTab.Complete.index
+        ? await taxRepository.getEstimatedTaxes(selectedYear, cubitFICAIncluded)
         : null;
   }
 
@@ -173,9 +197,7 @@ class TaxCubit extends Cubit<TaxState> {
     var prevState = state;
     try {
       if (prevState is TaxLoaded) {
-        emit(prevState.copyWith(
-            estimatedTaxesModel:
-                await getEstimatedTaxes(isFICAIncluded: isFICAIncluded)));
+        emit(prevState.copyWith(estimatedTaxesModel: await getEstimatedTaxes(isFICAIncluded: isFICAIncluded)));
       }
     } catch (e) {
       emit(TaxError(e.toString()));
@@ -183,4 +205,17 @@ class TaxCubit extends Cubit<TaxState> {
       rethrow;
     }
   }
+
+  Future<void> selectYear(int year) async {
+    _selectedYear = year;
+    await load();
+  }
+}
+
+enum TaxTab {
+  Disclaimer,
+  PersonalInfo,
+  IncomeDetails,
+  CreditsAndAdjustment,
+  Complete,
 }

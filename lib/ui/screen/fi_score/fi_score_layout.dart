@@ -64,12 +64,13 @@ class _FiScoreLayoutState extends State<FiScoreLayout> {
       if (state is FiScoreError) {
         showDialog(
           context: context,
-          builder: (context) {
-            return ErrorAlertDialog(
-              context,
-              message: state.error,
-            );
-          },
+          barrierDismissible: false,
+          builder: (context) => ErrorAlertDialog(
+            context,
+            message: state.error,
+            onButtonPress: _fiScoreCubit.load,
+            showCloseButton: false,
+          ),
         );
       }
     }, builder: (context, state) {
@@ -310,24 +311,19 @@ class _FiScoreLayoutState extends State<FiScoreLayout> {
                                               child: Align(
                                                 alignment: Alignment.topCenter,
                                                 child: CustomMaterialInkWell(
-                                                    type: InkWellType.White,
-                                                    onTap: () async {
-                                                      await _fiScoreCubit
-                                                          .refresh()
-                                                          .then((value) =>
-                                                              showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (context) {
-                                                                  return SuccessAlertDialog(
-                                                                    context,
-                                                                    title:
-                                                                        'Refreshed',
-                                                                  );
-                                                                },
-                                                              ));
-                                                    },
+                                                      type: InkWellType.White,
+                                                      onTap: () async {
+                                                        final shouldShowAlert = await _fiScoreCubit.refresh();
+                                                        if (shouldShowAlert) {
+                                                          await showDialog(
+                                                            context: context,
+                                                            builder: (_) => SuccessAlertDialog(
+                                                              context,
+                                                              title: 'Refreshed',
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
                                                     child: Icon(
                                                       Icons.refresh_rounded,
                                                       size: 38,

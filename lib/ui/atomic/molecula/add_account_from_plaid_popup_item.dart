@@ -9,6 +9,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
 import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
 import 'package:burgundy_budgeting_app/utils/form_validators.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -22,7 +23,7 @@ class AddAccountFromPlaidPopupItem extends StatefulWidget {
   final AddPlaidAccountError? error;
   final List<String> businessNameList;
 
-  const AddAccountFromPlaidPopupItem({
+  AddAccountFromPlaidPopupItem({
     Key? key,
     required this.bankAccount,
     required this.onValid,
@@ -48,6 +49,7 @@ class _AddAccountFromPlaidPopupItemState
   String? businessName;
   late final List<String> _personalAccountTypes;
   late final List<String> _businessAccountTypes;
+  late AddPlaidAccountError? _error;
 
   final _focusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
@@ -74,10 +76,18 @@ class _AddAccountFromPlaidPopupItemState
   }
 
   bool get isValid {
-    if (_createAccountNameValue.isNotEmpty &&
-        _usageType != 0 &&
-        (businessName != null || _usageType == 1) &&
-        formKey.currentState != null && formKey.currentState!.validate()) {
+    final formIsValid =
+        formKey.currentState != null && formKey.currentState!.validate();
+    final usageTypeSelected = _usageType != 0;
+    final isPersonalSelected = _usageType == 1;
+    if (_error != null) {
+      return false;
+    } else if (isPersonalSelected && _createAccountNameValue.isNotEmpty) {
+      return true;
+    } else if (formIsValid &&
+        _createAccountNameValue.isNotEmpty &&
+        usageTypeSelected &&
+        (businessName != null || isPersonalSelected)) {
       return true;
     }
     return false;
@@ -87,12 +97,11 @@ class _AddAccountFromPlaidPopupItemState
     if (callIsValid) {
       widget.onValid(
         widget.bankAccount.copyWith(
-          usageType: _usageType,
-          type: _chosenAccountType,
-          dataAcquisitionStart: _dataAcquisitionStart,
-          name: _createAccountNameValue,
-          businessName: businessName,
-        ),
+            usageType: _usageType,
+            type: _chosenAccountType,
+            dataAcquisitionStart: _dataAcquisitionStart,
+            name: _createAccountNameValue,
+            businessName: businessName),
       );
     } else {
       widget.onNotValid(widget.bankAccount.copyWith(
@@ -103,13 +112,12 @@ class _AddAccountFromPlaidPopupItemState
         businessName: businessName,
       ));
     }
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   @override
   void initState() {
+    _error = widget.error;
+
     if (widget.bankAccount.externalName != null) {
       _createAccountNameValue = widget.bankAccount.externalName!;
       copyWithActualProperties(callIsValid: isValid);
@@ -119,16 +127,17 @@ class _AddAccountFromPlaidPopupItemState
 
   @override
   Widget build(BuildContext context) {
+    _error = widget.error;
     if (!widget.showUsageType) {
-        _usageType = 1;
-        _chosenAccountType = 0;
-        businessName = null;
-        copyWithActualProperties(callIsValid: isValid);
+      _usageType = 1;
+      _chosenAccountType = 0;
+      businessName = null;
+      copyWithActualProperties(callIsValid: isValid);
     }
 
     isMortgageLoanAccountType = _personalAccountTypes[_chosenAccountType] ==
         AppLocalizations.of(context)!.mortgageLoan;
-    var dropdownErrorText = widget.error?.incorrectType == true
+    var dropdownErrorText = _error?.incorrectType == true
         ? 'Specified Account Type is not appropriate according to External Account Type and Subtype'
         : null;
 
@@ -145,21 +154,11 @@ class _AddAccountFromPlaidPopupItemState
       }
     }
 
-    if (isValid) {
-      widget.onValid(widget.bankAccount.copyWith(
-        usageType: _usageType,
-        type: _chosenAccountType,
-        dataAcquisitionStart: _dataAcquisitionStart,
-        name: _createAccountNameValue,
-        businessName: businessName,
-      ));
-    }
-
     var isInvestment = widget.bankAccount.type != 0;
     return Form(
       key: formKey,
       child: Container(
-        color: (isValid && (widget.error == null) && widget.showValidIndicator)
+        color: (isValid && (_error == null) && widget.showValidIndicator)
             ? Colors.greenAccent.withOpacity(0.05)
             : Colors.transparent,
         child: Column(
@@ -242,6 +241,7 @@ class _AddAccountFromPlaidPopupItemState
                                       _usageType = 1;
                                       _chosenAccountType = 0;
                                       businessName = null;
+                                      _error = null;
                                       copyWithActualProperties(
                                           callIsValid: isValid);
                                     }),
@@ -252,12 +252,18 @@ class _AddAccountFromPlaidPopupItemState
                                         AppLocalizations.of(context)!.business,
                                     value: 2,
                                     groupValue: _usageType,
-                                    onTap: () => setState(() {
-                                      _usageType = 2;
-                                      _chosenAccountType = 0;
-                                      copyWithActualProperties(
-                                          callIsValid: isValid);
-                                    }),
+                                    onTap: () {
+                                      setState(() {
+                                        _usageType = 2;
+                                        _chosenAccountType = 0;
+                                        copyWithActualProperties(
+                                            callIsValid: isValid);
+                                      });
+                                      SchedulerBinding.instance
+                                          .addPostFrameCallback((timeStamp) {
+                                        formKey.currentState?.validate();
+                                      });
+                                    },
                                   ),
                                 ],
                               ),
@@ -278,6 +284,7 @@ class _AddAccountFromPlaidPopupItemState
                                   copyWithActualProperties(
                                       callIsValid: isValid);
                                 },
+                                errorMessageEmpty: 'Field is required',
                                 shouldEraseOnFocus: false,
                                 onSaved: (value) {
                                   businessName = value;
@@ -293,7 +300,8 @@ class _AddAccountFromPlaidPopupItemState
                       ? DropdownItem<int>(
                           key: Key('personal'),
                           enabled: _usageType != 0 && !isInvestment,
-                          labelText: AppLocalizations.of(context)!.chooseCategory,
+                          labelText:
+                              AppLocalizations.of(context)!.chooseCategory,
                           items: _personalAccountTypes,
                           hintText: '',
                           initialValue: isInvestment
@@ -312,7 +320,8 @@ class _AddAccountFromPlaidPopupItemState
                       : DropdownItem<int>(
                           key: Key('business'),
                           enabled: _usageType != 0,
-                          labelText: AppLocalizations.of(context)!.chooseCategory,
+                          labelText:
+                              AppLocalizations.of(context)!.chooseCategory,
                           items: _businessAccountTypes,
                           hintText: '',
                           initialValue: 0,
@@ -349,11 +358,12 @@ class _AddAccountFromPlaidPopupItemState
                   if (!isInvestment) SizedBox(height: 30),
                   InputItem(
                     labelText: AppLocalizations.of(context)!.createAccountName,
-                    errorText: widget.error?.nonUniqueName == true
+                    errorText: _error?.nonUniqueName == true
                         ? AppLocalizations.of(context)!
                             .accountsShouldHaveUniqueNames
                         : null,
-                    value: widget.bankAccount.externalName,
+                    value: _createAccountNameValue,
+                    autovalidateMode: AutovalidateMode.always,
                     validateFunction:
                         FormValidators.accountNameValidateFunction,
                     hintText: AppLocalizations.of(context)!.accountName,
@@ -362,14 +372,15 @@ class _AddAccountFromPlaidPopupItemState
                     focusNode: _focusNode,
                     onChanged: (value) {
                       _createAccountNameValue = value;
-                      copyWithActualProperties(callIsValid: isValid);
+                      _error = null;
+                      copyWithActualProperties(callIsValid: value.isNotEmpty);
                     },
                   ),
-                  if (widget.error?.otherMessages != null)
+                  if (_error?.otherMessages != null)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: Text(
-                        widget.error!.otherMessages!,
+                        _error!.otherMessages!,
                         style: CustomTextStyle.ErrorTextStyle(context),
                       ),
                     ),

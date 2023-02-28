@@ -52,7 +52,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T138 Check that the Budget-Personal-Annual-Actual page appears after Sign In process',
+            'Failed BAR_T138 Check that the Budget-Personal-Annual-Actual page appears after Sign In process',
             '',
             'FINISHED');
       }
@@ -74,7 +74,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T121 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+            'Failed BAR_T121 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
             '',
             'FINISHED');
       }
@@ -97,7 +97,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T122 Check that the user is redirected on Annual Actual page after clicking on “Actual” button on the top',
+            'Failed BAR_T122 Check that the user is redirected on Annual Actual page after clicking on “Actual” button on the top',
             '',
             'FINISHED');
       }
@@ -121,7 +121,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
+            'Failed BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
             '',
             'FINISHED');
       }
@@ -143,7 +143,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T125 User is redirected on Debts flow page after clicking on “Debts” tab',
+            'Failed BAR_T125 User is redirected on Debts flow page after clicking on “Debts” tab',
             '',
             'FINISHED');
       }
@@ -165,7 +165,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T126 User is redirected on Goals flow page after clicking on “Goals” tab',
+            'Failed BAR_T126 User is redirected on Goals flow page after clicking on “Goals” tab',
             '',
             'FINISHED');
       }
@@ -187,7 +187,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T127 User is redirected on Tax flow page after clicking on “Tax” tab',
+            'Failed BAR_T127 User is redirected on Tax flow page after clicking on “Tax” tab',
             '',
             'FINISHED');
       }
@@ -209,7 +209,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T128 User is redirected on Investments flow page after clicking on “Investments” tab',
+            'Failed BAR_T128 User is redirected on Investments flow page after clicking on “Investments” tab',
             '',
             'FINISHED');
       }
@@ -233,7 +233,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
+            'Failed BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
             '',
             'FINISHED');
       }
@@ -255,7 +255,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T131 User is redirected on “FI Score” flow page after clicking on “FI Score” tab',
+            'Failed BAR_T131 User is redirected on “FI Score” flow page after clicking on “FI Score” tab',
             '',
             'FINISHED');
       }
@@ -275,7 +275,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
+            'Failed BAR_T132 User is redirected on Profile flow page after clicking on Profile icon',
             '',
             'FINISHED');
       }
@@ -296,7 +296,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T133 User is redirected on Planned screen after clicking on “Planned” button on the top',
+            'Failed BAR_T133 User is redirected on Planned screen after clicking on “Planned” button on the top',
             '',
             'FINISHED');
       }
@@ -321,7 +321,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T134 Check that the user is able to Collapse and Expand categories',
+            'Failed BAR_T134 Check that the user is able to Collapse and Expand categories',
             '',
             'FINISHED');
       }
@@ -338,7 +338,7 @@ void main() async {
             tester, 'BAR_T140 Check List of Categories', '', 'FINISHED');
       } catch (e) {
         await htLogd(
-            tester, 'Error BAR_T140 Check List of Categories', '', 'FINISHED');
+            tester, 'Failed BAR_T140 Check List of Categories', '', 'FINISHED');
       }
 
       try {
@@ -369,7 +369,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T157 Check that user is able to switch months/years on Budget Personal Monthly page',
+            'Failed BAR-T157 Check that user is able to switch months/years on Budget Personal Monthly page',
             '',
             'FINISHED');
       }
@@ -392,7 +392,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T158 User is redirected on Budget Annual flow page after clicking on “Annual” button',
+            'Failed BAR_T158 User is redirected on Budget Annual flow page after clicking on “Annual” button',
             '',
             'FINISHED');
       }
@@ -414,7 +414,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR_T14 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',
+            'Failed BAR_T14 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',
             '',
             'FINISHED');
       }

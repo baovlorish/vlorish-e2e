@@ -33,3 +33,10 @@ class FiScoreLoaded extends FiScoreState {
   @override
   List<Object> get props => [vlorishScoreModel];
 }
+
+class FiScoreRefreshing extends FiScoreLoaded {
+  FiScoreRefreshing({required super.vlorishScoreModel});
+
+  @override
+  List<Object> get props => [vlorishScoreModel];
+}

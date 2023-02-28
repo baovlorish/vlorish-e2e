@@ -28,6 +28,8 @@ class ProfileOverviewModel {
 
   final int unreadNotificationCount;
 
+  late final bool isInstitutionLoginRequired = loginRequiringInstitutions.isNotEmpty;
+
   bool get isRegistrationCompleted =>
       registrationStep == 8 || (registrationStep == 5 && role.isPartner);
 

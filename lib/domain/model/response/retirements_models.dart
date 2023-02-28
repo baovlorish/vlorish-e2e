@@ -10,7 +10,6 @@ class RetirementModel {
   final double? currentCost;
   final String? custodian;
   final List<InvestmentTransaction>? transactions;
-  final int? investType;
   int? retirementType;
   final bool isManual;
 
@@ -20,7 +19,6 @@ class RetirementModel {
     required this.initialCost,
     required this.acquisitionDate,
     this.currentCost,
-    this.investType,
     this.custodian,
     this.transactions,
     required this.isManual,
@@ -82,7 +80,6 @@ class RetirementModel {
     }
     return RetirementModel(
       id: json['id'],
-      investType: json['investType'],
       retirementType: json['retirementType'] == 0 ? 13 : json['retirementType'],
       isManual: json['isManual'] ?? false,
       name: json['name'],
@@ -98,7 +95,6 @@ class RetirementModel {
     final data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
-    data['investType'] = investType;
     data['cost'] = initialCost;
     data['acquisitionDate'] = acquisitionDate?.toIso8601String();
     if (currentCost != null) data['currentCost'] = currentCost;

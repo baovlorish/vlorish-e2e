@@ -45,7 +45,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T54 User cannot login with password that does not match with the email',
+            'Failed BAR-T54 User cannot login with password that does not match with the email',
             '',
             'FINISHED');
       }
@@ -70,7 +70,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T57 Login Web with empty email and empty password',
+            'Failed BAR-T57 Login Web with empty email and empty password',
             '',
             'FINISHED');
       }
@@ -98,7 +98,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T58 User cannot login with empty one of the fields',
+            'Failed BAR-T58 User cannot login with empty one of the fields',
             '',
             'FINISHED');
       }
@@ -125,78 +125,78 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T59 User cannot login with password that does not match with the email of user',
+            'Failed BAR-T59 User cannot login with password that does not match with the email of user',
             '',
             'FINISHED');
       }
 
-//       try {
-//         await htLogdDirect(
-//             'BAR_T60 User sees error message after entering incorrect password 2 times',
-//             '',
-//             'STARTED');
-//         await dashboardScreen.clickLogoText();
-//         await signInScreen.inputEmailAndPassword(
-//             emailLogin, 'Test1@123456', tester);
-//         await signInScreen.clickLoginButton(tester, context: context);
-//         await signInScreen.verifyErrorMessage(
-//             'There is no user with such an email. Please check if the email is correct and try again',
-//             tester,
-//             context: context);
-//         await signInScreen.clickLoginButton(tester, context: context);
-//         await signInScreen.verifyErrorMessage(
-//             'The password is incorrect. Please check the password and try again. You have got 3 more attempts',
-//             tester,
-//             context:
-//                 context); // status is pending, will check again after enable to connect DB
-//         await htLogd(
-//             tester,
-//             'BAR_T60 User sees error message after entering incorrect password 2 times',
-//             '',
-//             'FINISHED');
-//       } catch (e) {
-//         await htLogd(
-//             tester,
-//             'Error BAR-T60 User sees error message after entering incorrect password 2 times',
-//             '',
-//             'FINISHED');
-//       }
+      try {
+        await htLogdDirect(
+            'BAR_T60 User sees error message after entering incorrect password 2 times',
+            '',
+            'STARTED');
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmailAndPassword(
+            emailLogin, 'Test1@123456', tester);
+        await signInScreen.clickLoginButton(tester, context: context);
+        await signInScreen.verifyErrorMessage(
+            'There is no user with such an email. Please check if the email is correct and try again',
+            tester,
+            context: context);
+        await signInScreen.clickLoginButton(tester, context: context);
+        await signInScreen.verifyErrorMessage(
+            'The password is incorrect. Please check the password and try again. You have got 3 more attempts',
+            tester,
+            context:
+                context); // status is pending, will check again after enable to connect DB
+        await htLogd(
+            tester,
+            'BAR_T60 User sees error message after entering incorrect password 2 times',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T60 User sees error message after entering incorrect password 2 times',
+            '',
+            'FINISHED');
+      }
 
-//       try {
-//         await htLogdDirect(
-//             'BAR_T61 User sees error message after entering incorrect password 5 times',
-//             '',
-//             'STARTED');
-//         await dashboardScreen.clickLogoText();
-//         await signInScreen.inputEmailAndPassword(
-//             emailLogin, getRandomString(3) + getRandomNumber(3) + 'aB@', tester,
-//             context: context);
-//         await signInScreen.clickLoginButton(tester, context: context);
-//         await signInScreen.verifyErrorMessage(
-//             'There is no user with such an email. Please check if the email is correct and try again',
-//             tester);
-//         for (int i = 0; i < 5; i++) {
-//           await signInScreen.inputPassword(
-//               getRandomString(3) + getRandomNumber(3) + 'aB@', tester);
-//           await signInScreen.clickLoginButton(tester, context: context);
-//         }
+      try {
+        await htLogdDirect(
+            'BAR_T61 User sees error message after entering incorrect password 5 times',
+            '',
+            'STARTED');
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmailAndPassword(
+            emailLogin, getRandomString(3) + getRandomNumber(3) + 'aB@', tester,
+            context: context);
+        await signInScreen.clickLoginButton(tester, context: context);
+        await signInScreen.verifyErrorMessage(
+            'There is no user with such an email. Please check if the email is correct and try again',
+            tester);
+        for (int i = 0; i < 5; i++) {
+          await signInScreen.inputPassword(
+              getRandomString(3) + getRandomNumber(3) + 'aB@', tester);
+          await signInScreen.clickLoginButton(tester, context: context);
+        }
 
-//         await signInScreen.verifyErrorMessage(
-//             'The password is incorrect. Unfortunately you have got no more attempts to sign in',
-//             tester);
+        await signInScreen.verifyErrorMessage(
+            'The password is incorrect. Unfortunately you have got no more attempts to sign in',
+            tester);
 
-//         await htLogd(
-//             tester,
-//             'BAR_T61 User sees error message after entering incorrect password 5 times',
-//             '',
-//             'FINISHED');
-//       } catch (e) {
-//         await htLogd(
-//             tester,
-//             'Error BAR-T61 User sees error message after entering incorrect password 5 times',
-//             '',
-//             'FINISHED');
-//       }
+        await htLogd(
+            tester,
+            'BAR_T61 User sees error message after entering incorrect password 5 times',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T61 User sees error message after entering incorrect password 5 times',
+            '',
+            'FINISHED');
+      }
 
       try {
         await htLogdDirect(
@@ -216,7 +216,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T64 User can make password visible after tap on “eye“ button',
+            'Failed BAR-T64 User can make password visible after tap on “eye“ button',
             '',
             'FINISHED');
       }
@@ -240,7 +240,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T65 User can make password invisible after tap on “eye” button if password is visible',
+            'Failed BAR-T65 User can make password invisible after tap on “eye” button if password is visible',
             '',
             'FINISHED');
       }
@@ -264,8 +264,8 @@ void main() async {
         await htLogd(
             tester, 'BAR-T67 User can edit visible password', '', 'FINISHED');
       } catch (e) {
-        await htLogd(tester, 'Error BAR-T67 User can edit visible password', '',
-            'FINISHED');
+        await htLogd(tester, 'Failed BAR-T67 User can edit visible password',
+            '', 'FINISHED');
       }
 
       try {
@@ -284,7 +284,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T68 User can login with visible password',
+            'Failed BAR-T68 User can login with visible password',
             '',
             'FINISHED');
       }
@@ -310,7 +310,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T69 User cannot login with an invalid email address',
+            'Failed BAR-T69 User cannot login with an invalid email address',
             '',
             'FINISHED');
       }
@@ -334,7 +334,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T80 User can leave Forgot Password window by tapping back button',
+            'Failed BAR-T80 User can leave Forgot Password window by tapping back button',
             '',
             'FINISHED');
       }
@@ -357,7 +357,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T52 User can login by correct Email and correct password',
+            'Failed BAR-T52 User can login by correct Email and correct password',
             '',
             'FINISHED');
       }

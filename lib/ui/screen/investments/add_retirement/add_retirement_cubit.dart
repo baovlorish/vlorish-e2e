@@ -35,7 +35,6 @@ class AddRetirementCubit extends Cubit<AddRetirementState> {
     required String name,
     required DateTime acquisitionDate,
     required double initialCost,
-    int? investType,
     double? currentCost,
     String? custodian,
   }) async {
@@ -49,7 +48,6 @@ class AddRetirementCubit extends Cubit<AddRetirementState> {
         acquisitionDate: acquisitionDate,
         custodian: custodian,
         retirementType: retirementType,
-        investType: investType,
       ));
       navigationToInvestmentPage(context);
     } catch (e) {
@@ -63,7 +61,6 @@ class AddRetirementCubit extends Cubit<AddRetirementState> {
       required String name,
       required bool isManual,
       required DateTime acquisitionDate,
-      int? investType,
         String? custodian,
       required double initialCost,
       required double currentCost,
@@ -76,7 +73,6 @@ class AddRetirementCubit extends Cubit<AddRetirementState> {
           isManual: isManual,
           initialCost: initialCost,
           currentCost: currentCost,
-          investType: investType,
           acquisitionDate: acquisitionDate,
           retirementType: retirementType,
           custodian: custodian,

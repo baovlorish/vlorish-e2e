@@ -77,10 +77,21 @@ class _ManageUsersLayoutState extends State<ManageUsersLayout> {
                   );
                 }
               },
-              child: ImageIcon(
-                AssetImage('assets/images/icons/ic_help.png'),
-                color: CustomColorScheme.button,
-                size: 24,
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      color: CustomColorScheme.button,
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Center(
+                    child: Icon(
+                      Icons.question_mark,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

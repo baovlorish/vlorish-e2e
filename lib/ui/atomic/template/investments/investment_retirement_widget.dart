@@ -62,11 +62,13 @@ class _InvestmentsRetirementWidgetState
     'Other',
   ];
 
-  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
-          .currentForeignSession
-          ?.access
-          .isReadOnly ??
-      false;
+  late final isReadOnlyAdvisor =
+      BlocProvider.of<HomeScreenCubit>(context).currentForeignSession?.access.isReadOnly ?? false;
+
+  late final isEditorAdvisor =
+      BlocProvider.of<HomeScreenCubit>(context).currentForeignSession?.access.isEditor ?? false;
+
+  late final showConnectButton = !isReadOnlyAdvisor && !isEditorAdvisor;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +92,9 @@ class _InvestmentsRetirementWidgetState
         }
       },
       builder: (context, state) {
+        if (state is InvestmentsLoading) {
+          return CustomLoadingIndicator();
+        }
         if (state is InvestmentsLoaded) {
           return Expanded(
             child: Padding(
@@ -248,7 +253,8 @@ class _InvestmentsRetirementWidgetState
                                               fontSize: 18,
                                             ),
                                           ),
-                                          SizedBox(
+                                          if (showConnectButton)
+                                            SizedBox(
                                             width: 120,
                                             child: ButtonItem(context,
                                                 text: AppLocalizations.of(
@@ -274,7 +280,7 @@ class _InvestmentsRetirementWidgetState
             ),
           );
         } else {
-          return CustomLoadingIndicator();
+          return SizedBox();
         }
       },
     );

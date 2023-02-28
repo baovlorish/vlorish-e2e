@@ -59,8 +59,8 @@ class _TogglingRowsTableState extends State<TogglingRowsTable> {
         children: List.generate(
           input.cells.length,
           (index) {
-            return index == 0 && input.children.isNotEmpty
-                ? TogglingCell(
+            if (index == 0 && input.children.isNotEmpty) {
+              return TogglingCell(
                     key: Key(
                         input.expanded.toString() + input.cells.first.cellText),
                     text: input.cells[index].cellText,
@@ -85,8 +85,9 @@ class _TogglingRowsTableState extends State<TogglingRowsTable> {
                         },
                       );
                     },
-                  )
-               :  widget.allowEditableCells &&
+                  );
+            } else {
+              return widget.allowEditableCells &&
                         input.cells[index].isEditable
                     ? EditableTableBodyCell(
                         key: input.cells[index].key,
@@ -134,12 +135,12 @@ class _TogglingRowsTableState extends State<TogglingRowsTable> {
                         onEnter: input.cells[index].onEnter,
                         onExit: input.cells[index].onExit,
                         cellTag: input.cells[index].cellTag,
-                        onDoubleTapOrEqual: input.cells[index].onDoubleTap != null
-                            ? () => setState(() {
+                        onEqualSignPressed: input.cells[index].onEqualSignPressed == null
+                            ? null
+                            : () => setState(() {
                                   focusedEditableCellIndex = null;
-                                  input.cells[index].onDoubleTap!.call();
-                                })
-                            : null,
+                                  input.cells[index].onEqualSignPressed!.call();
+                                }),
                       )
                     : TableBodyCell(
                         mainAxisAlignment: input.cells[index].mainAxisAlignment,
@@ -194,6 +195,7 @@ class _TogglingRowsTableState extends State<TogglingRowsTable> {
                         cellTag: input.cells[index].cellTag,
                         isShouldExpand: isShouldExpand,
                       );
+            }
           },
         ),
       ),
@@ -413,6 +415,7 @@ class CellData {
   final bool isFocused;
   final VoidCallback? onTap;
   final VoidCallback? onDoubleTap;
+  final VoidCallback? onEqualSignPressed;
   final bool showManualIndicator;
   final bool showFormulaIndicator;
   final void Function(PointerDownEvent)? onPointerDown;
@@ -448,6 +451,7 @@ class CellData {
     this.showManualIndicator = false,
     this.showFormulaIndicator = false,
     this.onDoubleTap,
+    this.onEqualSignPressed,
     this.onPointerDown,
     this.showMemoNotifier,
     this.onExit,

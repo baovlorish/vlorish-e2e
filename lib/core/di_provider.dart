@@ -95,7 +95,7 @@ class DiProvider implements AuthContractor, UserContractor {
     );
 
     GetIt.I.registerSingletonWithDependencies<UserSupportService>(
-          () => UserSupportService(
+      () => UserSupportService(
         GetIt.instance<HttpManager>(),
       ),
       dependsOn: [HttpManager],
@@ -346,6 +346,9 @@ class DiProvider implements AuthContractor, UserContractor {
   }
 
   @override
+  Environment get environment =>  GetIt.I<Environment>();
+
+  @override
   AuthRepository get authRepository => GetIt.I<AuthRepository>();
 
   @override
@@ -395,6 +398,7 @@ class DiProvider implements AuthContractor, UserContractor {
 
 abstract class AuthContractor {
   AuthRepository get authRepository;
+  Environment get environment;
 }
 
 abstract class UserContractor {

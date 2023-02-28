@@ -123,13 +123,9 @@ class MonthlyBudgetModel extends BaseBudgetModel {
 
     var newTotalFreeCash = isPersonal
         ? MonthlyBudgetCalculatedRow.calculatedPersonalFreeCash(
-            totalFreeCash,
-            netIncome,
-            expensesSeparated,
-            investments)
+            netIncome, expensesSeparated, investments)
         : MonthlyBudgetCalculatedRow.calculatedBusinessFreeCash(
             netIncome, expensesSeparated);
-
     return MonthlyBudgetModel(
         isPersonal: isPersonal,
         monthYear: monthYear,
@@ -256,13 +252,9 @@ class MonthlyBudgetModel extends BaseBudgetModel {
         MonthlyBudgetCalculatedRow.calculatedNetIncome(income, totalExpenses);
     var newTotalFreeCash = isPersonal
         ? MonthlyBudgetCalculatedRow.calculatedPersonalFreeCash(
-            totalFreeCash,
-            netIncome,
-            expensesSeparated,
-            investments)
+            netIncome, expensesSeparated, investments)
         : MonthlyBudgetCalculatedRow.calculatedBusinessFreeCash(
             netIncome, expensesSeparated);
-
     return MonthlyBudgetModel(
         isPersonal: isPersonal,
         monthYear: monthYear,
@@ -622,22 +614,18 @@ class MonthlyBudgetCalculatedRow {
   }
 
   factory MonthlyBudgetCalculatedRow.calculatedPersonalFreeCash(
-    MonthlyBudgetCalculatedRow totalCashReserves,
     MonthlyBudgetCalculatedRow netIncome,
     MonthlyBudgetCategory? expensesSeparated,
     MonthlyBudgetCategory? investments,
   ) {
     return MonthlyBudgetCalculatedRow(
-      plannedAmount: totalCashReserves.plannedAmount +
-          netIncome.plannedAmount -
+      plannedAmount: netIncome.plannedAmount -
           (expensesSeparated?.totalPlannedAmount ?? 0) -
           (investments?.totalPlannedAmount ?? 0),
-      actualAmount: totalCashReserves.actualAmount +
-          netIncome.actualAmount -
+      actualAmount: netIncome.actualAmount -
           (expensesSeparated?.totalActualAmount ?? 0) -
           (investments?.totalActualAmount ?? 0),
-      differenceAmount: totalCashReserves.differenceAmount +
-          netIncome.differenceAmount -
+      differenceAmount: netIncome.differenceAmount -
           (expensesSeparated?.totalDifferenceAmount ?? 0) -
           (investments?.totalDifferenceAmount ?? 0),
     );

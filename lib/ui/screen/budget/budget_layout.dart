@@ -154,9 +154,7 @@ class _BudgetLayoutState extends State<BudgetLayout> {
             isPersonal: widget.isPersonal,
             model: state.model,
             userPeriod: userPeriod,
-            onEditableCellDoubleTap: (AnnualFormulaDataModel model) {
-              openAndFocusCalculationField(model);
-            },
+            onEqualSignPressed: openAndFocusCalculationField,
             isCoach: homeScreenCubit.currentForeignSession != null,
             isReadOnlyAdvisor:
                 homeScreenCubit.currentForeignSession?.access.isReadOnly ??
@@ -171,9 +169,7 @@ class _BudgetLayoutState extends State<BudgetLayout> {
             user: homeScreenCubit.user,
             isPersonal: widget.isPersonal,
             model: state.model,
-            onEditableCellDoubleTap: (MonthlyFormulaDataModel model) {
-              openAndFocusCalculationField(model);
-            },
+            onEqualSignPressed: openAndFocusCalculationField,
             isCoach: homeScreenCubit.currentForeignSession != null,
             isReadOnlyAdvisor:
                 homeScreenCubit.currentForeignSession?.access.isReadOnly ??

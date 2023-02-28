@@ -108,9 +108,18 @@ class _EducationCenterLayoutState extends State<EducationCenterLayout> {
             bodyWidget: Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                child: LayoutBuilder(builder: (context, constraints) {
+                  var isSmallScreen = constraints.maxWidth < 550;
+                  var children = [
+                    isSmallScreen
+                        ? SideMenuWidget(
+                            currentTab: state.tab,
+                            items: sideMenuItems,
+                          )
+                        : SizedBox(),
+                    SizedBox(
+                      width: isSmallScreen ? 16 : 0,
+                    ),
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
@@ -128,14 +137,22 @@ class _EducationCenterLayoutState extends State<EducationCenterLayout> {
                       ),
                     ),
                     SizedBox(
-                      width: 16,
+                      width: isSmallScreen ? 0 : 16,
                     ),
-                    SideMenuWidget(
-                      currentTab: state.tab,
-                      items: sideMenuItems,
-                    ),
-                  ],
-                ),
+                    !isSmallScreen
+                        ? SideMenuWidget(
+                            currentTab: state.tab,
+                            items: sideMenuItems,
+                          )
+                        : SizedBox(),
+                  ];
+
+                  return Flex(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    direction: isSmallScreen ? Axis.vertical : Axis.horizontal,
+                    children: children,
+                  );
+                }),
               ),
             ),
           );

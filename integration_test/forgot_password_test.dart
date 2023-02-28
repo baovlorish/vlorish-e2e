@@ -47,7 +47,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T66 User is redirected to the Forgot Password flow pages',
+            'Failed BAR-T66 User is redirected to the Forgot Password flow pages',
             '',
             'FINISHED');
       }
@@ -75,7 +75,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T72 User see error message if entered Email that does not exist in the app (BD)',
+            'Failed BAR-T72 User see error message if entered Email that does not exist in the app (BD)',
             '',
             'FINISHED');
       }
@@ -104,7 +104,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T74 User see error message and can not send request for password if enters space into the start of the Email field',
+            'Failed BAR-T74 User see error message and can not send request for password if enters space into the start of the Email field',
             '',
             'FINISHED');
       }
@@ -133,7 +133,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T75 User see error message and can not send request for password if enters space into the start of the Email field',
+            'Failed BAR-T75 User see error message and can not send request for password if enters space into the start of the Email field',
             '',
             'FINISHED');
       }
@@ -161,7 +161,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T76 User see error message and can not send request for password if enters Email without domain part',
+            'Failed BAR-T76 User see error message and can not send request for password if enters Email without domain part',
             '',
             'FINISHED');
       }
@@ -189,7 +189,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T77 User see error message and can not send request for password if enters Email without "@" character',
+            'Failed BAR-T77 User see error message and can not send request for password if enters Email without "@" character',
             '',
             'FINISHED');
       }
@@ -217,7 +217,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T78 User see error message and cannot send request for password if enters Email without local part',
+            'Failed BAR-T78 User see error message and cannot send request for password if enters Email without local part',
             '',
             'FINISHED');
       }
@@ -241,7 +241,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T80 User can leave Forgot Password window by tapping back button',
+            'Failed BAR-T80 User can leave Forgot Password window by tapping back button',
             '',
             'FINISHED');
       }
@@ -268,7 +268,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T81 User see error message if click on Next button with empty Email field',
+            'Failed BAR-T81 User see error message if click on Next button with empty Email field',
             '',
             'FINISHED');
       }
@@ -291,7 +291,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T82 User can see a confirmation about an email',
+            'Failed BAR-T82 User can see a confirmation about an email',
             '',
             'FINISHED');
       }
@@ -325,7 +325,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T84 User sees error message after clicking on "Done" button with empty Password field',
+            'Failed BAR-T84 User sees error message after clicking on "Done" button with empty Password field',
             '',
             'FINISHED');
       }
@@ -361,7 +361,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T85 Password fields contain at least 8 characters',
+            'Failed BAR-T85 Password fields contain at least 8 characters',
             '',
             'FINISHED');
       }
@@ -399,7 +399,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T86 User sees error message if Password & Confirm Password fields don’t match',
+            'Failed BAR-T86 User sees error message if Password & Confirm Password fields don’t match',
             '',
             'FINISHED');
       }
@@ -432,7 +432,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T91 User sees error message and can not recover password if password does not contain 1 special char',
+            'Failed BAR-T91 User sees error message and can not recover password if password does not contain 1 special char',
             '',
             'FINISHED');
       }
@@ -465,7 +465,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T92 User sees error message and can not recover password if password does not contain 1 number',
+            'Failed BAR-T92 User sees error message and can not recover password if password does not contain 1 number',
             '',
             'FINISHED');
       }
@@ -499,7 +499,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T93 User sees error message and can not recover password if password does not contain 1 uppercase',
+            'Failed BAR-T93 User sees error message and can not recover password if password does not contain 1 uppercase',
             '',
             'FINISHED');
       }
@@ -533,7 +533,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T94 User sees error message and can not recover password if password does not contain 1 lowercase',
+            'Failed BAR-T94 User sees error message and can not recover password if password does not contain 1 lowercase',
             '',
             'FINISHED');
       }
@@ -566,7 +566,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T95 Password fields can contain min 8 characters',
+            'Failed BAR-T95 Password fields can contain min 8 characters',
             '',
             'FINISHED');
       }

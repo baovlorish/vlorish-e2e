@@ -189,11 +189,11 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> with HydratedMixin {
   }
 
   Stream<BudgetState> updateAnnualModel(UpdateAnnualBudgetEvent event) async* {
-    if (event.oldNode != null &&
-        event.oldNodeCategory != null &&
-        !event.locally) {
+    final oldNodeValid = event.oldNode != null && event.oldNodeCategory != null;
+    final differentAmount = event.oldNode?.amount != event.node.amount;
+    final shouldAddToUndo = oldNodeValid && !event.locally && differentAmount;
+    if (shouldAddToUndo)
       addAnnualNodeToUndo(event.node, event.oldNode!, event.oldNodeCategory!);
-    }
 
     if (state is BudgetAnnualLoadedState) {
       var loadedState = state as BudgetAnnualLoadedState;
@@ -220,10 +220,14 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> with HydratedMixin {
 
   Stream<BudgetState> updateMonthlyModel(
       UpdateMonthlyBudgetEvent event) async* {
-    if (event.oldSubcategory != null && !event.locally) {
+    final hasOldSubcategory = event.oldSubcategory != null;
+    final differentAmount = event.oldSubcategory?.planned.amount !=
+        event.subcategory.planned.amount;
+    final shouldAddNodeToUndo =
+        hasOldSubcategory && !event.locally && differentAmount;
+    if (shouldAddNodeToUndo)
       addMonthlyNodeToUndo(
           event.subcategory, event.oldSubcategory!, event.tableType);
-    }
 
     if (state is BudgetMonthlyLoadedState) {
       var loadedState = state as BudgetMonthlyLoadedState;
@@ -675,23 +679,20 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> with HydratedMixin {
   }
 
   @override
-  BudgetState? fromJson(Map<String, dynamic> json) {
-    if (state is BudgetInitialState) {
-      expandedCategoriesPersonal = json['expandedCategoriesPersonal'];
-
-      expandedCategoriesBusiness = json['expandedCategoriesBusiness'];
-    }
+  BudgetState? fromJson(json) {
+    expandedCategoriesPersonal =
+        Map<String, bool>.from(json['expandedCategoriesPersonal']);
+    expandedCategoriesBusiness =
+        Map<String, bool>.from(json['expandedCategoriesBusiness']);
   }
 
   @override
   Map<String, dynamic>? toJson(BudgetState state) {
-    {
-      if (state is SaveCategoriesState) {
-        return {
-          'expandedCategoriesPersonal': expandedCategoriesPersonal,
-          'expandedCategoriesBusiness': expandedCategoriesBusiness
-        };
-      }
+    if (state is SaveCategoriesState) {
+      return {
+        'expandedCategoriesPersonal': expandedCategoriesPersonal,
+        'expandedCategoriesBusiness': expandedCategoriesBusiness
+      };
     }
   }
 

@@ -27,6 +27,7 @@ class InvestmentsCubit extends Cubit<InvestmentsState> {
       {required bool isRetirement, int? investmentTab, int? retirementTab})
       : super(InvestmentsInitial()) {
     logger.i('isRetirement $isRetirement');
+    emit(InvestmentsLoading());
     if (isRetirement && retirementTab != null) {
       loadRetirements(retirementTab: retirementTab);
     } else {

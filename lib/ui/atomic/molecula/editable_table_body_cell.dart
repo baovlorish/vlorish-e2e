@@ -35,7 +35,8 @@ class EditableTableBodyCell extends StatefulWidget {
   final Function(CellIndex, CellMovement) onRequestMovement;
   final bool showManualIndicator;
   final void Function(PointerDownEvent)? onPointerDown;
-  final void Function()? onDoubleTapOrEqual;
+  final void Function()? onDoubleTap;
+  final void Function()? onEqualSignPressed;
   final ValueNotifier<bool> showMemoNotifier;
   final void Function(PointerEvent)? onExit;
   final void Function(PointerEvent)? onEnter;
@@ -65,7 +66,8 @@ class EditableTableBodyCell extends StatefulWidget {
     this.onExit,
     this.onEnter,
     this.cellTag,
-    this.onDoubleTapOrEqual,
+    this.onDoubleTap,
+    this.onEqualSignPressed,
     this.cellBorderColor,
     required this.showFormulaIndicator,
     required this.onRequestMovement,
@@ -90,10 +92,10 @@ class _EditableTableBodyCellState extends State<EditableTableBodyCell> {
         cursorVisible = true;
         setState(() {});
       }
-      if (widget.onDoubleTapOrEqual != null &&
+      if (widget.onEqualSignPressed != null &&
               evt.isKeyPressed(LogicalKeyboardKey.equal) ||
           evt.isKeyPressed(LogicalKeyboardKey.numpadEqual)) {
-        widget.onDoubleTapOrEqual?.call();
+        widget.onEqualSignPressed!.call();
         return KeyEventResult.handled;
       } else if (evt.isKeyPressed(LogicalKeyboardKey.enter) &&
           showCursorOnEnter) {
@@ -136,7 +138,7 @@ class _EditableTableBodyCellState extends State<EditableTableBodyCell> {
     if (controller.text.isEmpty) {
       //if user erased text and unfocused,
       // it sets to 0 if numeric or to initial otherwise
-      if(widget.isNumeric) {
+      if (widget.isNumeric) {
         controller.text = '0';
         widget.changeValue(0);
       } else {
@@ -172,7 +174,7 @@ class _EditableTableBodyCellState extends State<EditableTableBodyCell> {
           if (widget.isNumeric && controller.text.isNotEmpty) {
             controller.text = NumberFormat('#,###').format(int.parse(
                 controller.text.replaceAll(',', '').replaceAll('\$', '')));
-          } else if(widget.isNumeric && controller.text.isEmpty) {
+          } else if (widget.isNumeric && controller.text.isEmpty) {
             controller.text = '0';
             widget.changeValue(0);
           }
@@ -322,26 +324,22 @@ class _EditableTableBodyCellState extends State<EditableTableBodyCell> {
                                       color: widget.textColor,
                                     ))
                                 : null,
-                            suffix: Padding(
-                              padding: const EdgeInsets.only(right: 6.0),
-                              child: widget.showManualIndicator
-                                  ? CustomIndicatorWidget(
-                                      color:
-                                          CustomColorScheme.errorPopupButton,
-                                      child: Text(
-                                        'M',
-                                        style: CustomTextStyle.LabelTextStyle(
-                                                context)
-                                            .copyWith(
-                                                decoration:
-                                                    TextDecoration.none,
-                                                fontWeight: FontWeight.bold,
-                                                color: CustomColorScheme
-                                                    .tableWhiteText),
-                                      ),
-                                    )
-                                  : null,
-                            ),
+                            suffix: widget.showManualIndicator
+                                ? CustomIndicatorWidget(
+                                    padding: EdgeInsets.zero,
+                                    color: CustomColorScheme.errorPopupButton,
+                                    child: Text(
+                                      'M',
+                                      style: CustomTextStyle.LabelTextStyle(
+                                              context)
+                                          .copyWith(
+                                              decoration: TextDecoration.none,
+                                              fontWeight: FontWeight.bold,
+                                              color: CustomColorScheme
+                                                  .tableWhiteText),
+                                    ),
+                                  )
+                                : null,
                           ),
                         ),
                       ),

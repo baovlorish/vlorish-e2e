@@ -263,7 +263,7 @@ class UserRepositoryImpl implements UserRepository {
     } else {
       var data = await getProfileOverview();
       _userDataService.setUserData(data);
-      if (data.loginRequiringInstitutions.isNotEmpty &&
+      if (data.isInstitutionLoginRequired &&
           _userDataService.checkInstitutionsRequireLogin) {
         _userDataService.checkInstitutionsRequireLogin = false;
         throw CustomException(data.getLoginRequiringInstitutionsAsString(),

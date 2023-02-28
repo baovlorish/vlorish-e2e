@@ -64,6 +64,7 @@ class InstitutionView extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 20.0),
                     child: ButtonItemTransparent(
                       context,
+                      enabled: !user.isInstitutionLoginRequired,
                       text: AppLocalizations.of(context)!.manageInstitution,
                       onPressed: onManageInstitution,
                     ),

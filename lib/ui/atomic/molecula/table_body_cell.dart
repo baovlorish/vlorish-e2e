@@ -182,18 +182,17 @@ class _TableBodyCellState extends State<TableBodyCell> {
                             ),
                           if (widget.showManualIndicator)
                             Padding(
-                              padding: const EdgeInsets.only(right: 6.0),
+                              padding: const EdgeInsets.only(right: 8.0),
                               child: CustomIndicatorWidget(
                                 color: CustomColorScheme.errorPopupButton,
                                 child: Text(
                                   'M',
-                                  style:
-                                      CustomTextStyle.LabelTextStyle(context)
-                                          .copyWith(
-                                              decoration: TextDecoration.none,
-                                              fontWeight: FontWeight.bold,
-                                              color: CustomColorScheme
-                                                  .tableWhiteText),
+                                  style: CustomTextStyle.LabelTextStyle(context)
+                                      .copyWith(
+                                          decoration: TextDecoration.none,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                              CustomColorScheme.tableWhiteText),
                                 ),
                               ),
                             ),

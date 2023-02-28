@@ -15,6 +15,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupLandingLayout extends StatefulWidget {
+  final bool shouldShowDevEmailHint;
+
+  const SignupLandingLayout({super.key, required this.shouldShowDevEmailHint});
+
   @override
   State<SignupLandingLayout> createState() => _SignupLandingLayoutState();
 }
@@ -30,6 +34,8 @@ class _SignupLandingLayoutState extends State<SignupLandingLayout> {
   bool byInvitation = false;
 
   bool confirmedAgreement = false;
+
+  static const _emailDevHint = 'To registrate your email has to be added to SES. Please, contact Backend developer';
 
   late final SignupLandingCubit signupLandingCubit;
   @override
@@ -123,6 +129,12 @@ class _SignupLandingLayoutState extends State<SignupLandingLayout> {
                             validateFunction:
                                 FormValidators.emailValidateFunction,
                             hintText: AppLocalizations.of(context)!.emailHint,
+                          ),
+                        if (widget.shouldShowDevEmailHint)
+                          Label(
+                            type: LabelType.General,
+                            text: _emailDevHint,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         if (byInvitation)
                           Padding(

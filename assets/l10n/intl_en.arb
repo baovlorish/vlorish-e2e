@@ -922,5 +922,17 @@
   "adp": "ADP",
   "partnerInvitationHint": "Full-edit access to your budget. Access is blocked to your profile page, view-only  access to your financial accounts.",
   "readOnlyAdvisorInvitationHint": "View-only access to your budget. Access is blocked to your profile and manage accounts pages.",
-  "editorAdvisorInvitationHint": "Full-edit access to your budget. Access is blocked to your profile and manage accounts pages."
+  "editorAdvisorInvitationHint": "Full-edit access to your budget. Access is blocked to your profile and manage accounts pages.",
+  "copyAndShareYourLink": "Copy and share your link",
+  "copyLink": "Copy link",
+  "linkCopiedToClipboard": "Link copied to clipboard!",
+  "howItWorks": "How it works",
+  "shareYourLinkWithFriendsFamilyColleagues": "Share your link with friends, family, and colleagues",
+  "ifTheySubscribeTheVlorish": "If they subscribe the Vlorish",
+  "benefitsFromReferralDescription": "You will receive 10% cash bonus of the invited user’s first payment after subscription.",
+  "referralHistory": "Referral history",
+  "totalEarned": "Total earned",
+  "unpaidAmount": "Unpaid Amount",
+  "totalPaid": "Total paid",
+  "checkThePortal": "Check the portal"
 }

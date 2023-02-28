@@ -53,7 +53,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T163 Check List of Categories on Budget Business Annual page',
+            'Failed BAR-T163 Check List of Categories on Budget Business Annual page',
             '',
             'FINISHED');
       }
@@ -78,7 +78,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
+            'Failed BAR-T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
             '',
             'FINISHED');
       }
@@ -102,7 +102,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T169 User is redirected on Debts flow page after clicking on “Debts” tab',
+            'Failed BAR-T169 User is redirected on Debts flow page after clicking on “Debts” tab',
             '',
             'FINISHED');
       }
@@ -126,7 +126,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T170 User is redirected on Goals flow page after clicking on “Goals” tab',
+            'Failed BAR-T170 User is redirected on Goals flow page after clicking on “Goals” tab',
             '',
             'FINISHED');
       }
@@ -150,7 +150,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T171 User is redirected on Tax flow page after clicking on “Tax” tab',
+            'Failed BAR-T171 User is redirected on Tax flow page after clicking on “Tax” tab',
             '',
             'FINISHED');
       }
@@ -174,7 +174,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T172 User is redirected on Investments flow page after clicking on “Investments” tab',
+            'Failed BAR-T172 User is redirected on Investments flow page after clicking on “Investments” tab',
             '',
             'FINISHED');
       }
@@ -200,7 +200,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T173 User is redirected on Retirement flow page after clicking on “Retirement” tab',
+            'Failed BAR-T173 User is redirected on Retirement flow page after clicking on “Retirement” tab',
             '',
             'FINISHED');
       }
@@ -224,7 +224,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T175 User is redirected on “FI Score” flow page after clicking on “FI Score” tab',
+            'Failed BAR-T175 User is redirected on “FI Score” flow page after clicking on “FI Score” tab',
             '',
             'FINISHED');
       }
@@ -248,7 +248,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T176 User is redirected on Profile flow page after clicking on Profile icon',
+            'Failed BAR-T176 User is redirected on Profile flow page after clicking on Profile icon',
             '',
             'FINISHED');
       }
@@ -272,7 +272,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T177 User is redirected on Planned screen after clicking on “Planned” button',
+            'Failed BAR-T177 User is redirected on Planned screen after clicking on “Planned” button',
             '',
             'FINISHED');
       }
@@ -294,7 +294,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T178 User is able to hide/unhide categories',
+            'Failed BAR-T178 User is able to hide/unhide categories',
             '',
             'FINISHED');
       }
@@ -326,7 +326,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T181 Check that user is able to decreasing or  increasing years on Budget Business Annual',
+            'Failed BAR-T181 Check that user is able to decreasing or  increasing years on Budget Business Annual',
             '',
             'FINISHED');
       }
@@ -350,7 +350,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+            'Failed BAR-T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
             '',
             'FINISHED');
       }

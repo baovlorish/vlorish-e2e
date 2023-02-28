@@ -51,7 +51,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T2 User sees error message if enter an invalid email',
+            'Failed BAR-T2 User sees error message if enter an invalid email',
             '',
             'FINISHED');
       }
@@ -75,7 +75,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T4 User sees error message if Email field is empty',
+            'Failed BAR-T4 User sees error message if Email field is empty',
             '',
             'FINISHED');
       }
@@ -95,7 +95,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T5 Sign In page is displayed after click on "Sign In" button on the Sign Up page',
+            'Failed BAR-T5 Sign In page is displayed after click on "Sign In" button on the Sign Up page',
             '',
             'FINISHED');
       }
@@ -120,7 +120,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T6 User see error message on SignUp page if email is already exists in database',
+            'Failed BAR-T6 User see error message on SignUp page if email is already exists in database',
             '',
             'FINISHED');
       }
@@ -148,7 +148,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T7 User can enter valid password in Password fields and he is redirected on Personal Data page',
+            'Failed BAR-T7 User can enter valid password in Password fields and he is redirected on Personal Data page',
             '',
             'FINISHED');
       }
@@ -179,7 +179,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T8 User see error message if Password fields are empty after clicking “Agree & Continue” button',
+            'Failed BAR-T8 User see error message if Password fields are empty after clicking “Agree & Continue” button',
             '',
             'FINISHED');
       }
@@ -214,7 +214,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T9 User see error message if Confirm Password fields is empty',
+            'Failed BAR-T9 User see error message if Confirm Password fields is empty',
             '',
             'FINISHED');
       }
@@ -246,7 +246,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T16 User see a notification when passwords in password & confirm password fields donnot match',
+            'Failed BAR-T16 User see a notification when passwords in password & confirm password fields donnot match',
             '',
             'FINISHED');
       }
@@ -284,7 +284,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T17 User can make password visible and invisible after clicking on eye button',
+            'Failed BAR-T17 User can make password visible and invisible after clicking on eye button',
             '',
             'FINISHED');
       }
@@ -321,7 +321,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T21 User can enter max128 characters in Password fields',
+            'Failed BAR-T21 User can enter max128 characters in Password fields',
             '',
             'FINISHED');
       }
@@ -347,7 +347,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T1 User is redirected on Password page after entering correct email',
+            'Failed BAR-T1 User is redirected on Password page after entering correct email',
             '',
             'FINISHED');
       }
@@ -368,7 +368,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T62 User is redirected on Sign Up flow after clicking on Sign Up button',
+            'Failed BAR-T62 User is redirected on Sign Up flow after clicking on Sign Up button',
             '',
             'FINISHED');
       }
@@ -394,7 +394,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T11 User is redirected on Privacy page after clicking on Privacy link',
+            'Failed BAR-T11 User is redirected on Privacy page after clicking on Privacy link',
             '',
             'FINISHED');
       }
@@ -417,7 +417,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T10 User is redirected on Terms&Conditions page after clicking on Terms link',
+            'Failed BAR-T10 User is redirected on Terms&Conditions page after clicking on Terms link',
             '',
             'FINISHED');
       }

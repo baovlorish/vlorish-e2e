@@ -2,6 +2,7 @@ import 'package:burgundy_budgeting_app/ui/model/tax_credits_and_adjustment_model
 import 'package:burgundy_budgeting_app/ui/model/tax_estimated_taxes_model.dart';
 import 'package:burgundy_budgeting_app/ui/model/tax_income_details_model.dart';
 import 'package:burgundy_budgeting_app/ui/model/tax_personal_info_model.dart';
+import 'package:burgundy_budgeting_app/ui/screen/tax/tax_cubit.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class TaxState extends Equatable {
@@ -33,7 +34,7 @@ class TaxError extends TaxState {
 
 class TaxLoaded extends TaxState {
   final EstimatedTaxesModel? estimatedTaxesModel;
-  final int currentEstimationTab;
+  final TaxTab currentEstimationTab;
   final TaxPersonalInfoModel? personalInfoModel;
   final TaxIncomeDetailsModel? incomeDetailsModel;
   final TaxCreditsAndAdjustmentModel? creditsAndAdjustmentModel;
@@ -48,16 +49,16 @@ class TaxLoaded extends TaxState {
 
   @override
   List<Object?> get props => [
-        currentEstimationTab,
-        estimatedTaxesModel,
-        personalInfoModel,
-        incomeDetailsModel,
-        creditsAndAdjustmentModel
-      ];
+    currentEstimationTab,
+    estimatedTaxesModel,
+    personalInfoModel,
+    incomeDetailsModel,
+    creditsAndAdjustmentModel
+  ];
 
   TaxLoaded copyWith({
     EstimatedTaxesModel? estimatedTaxesModel,
-    int? currentEstimationTab,
+    TaxTab? currentEstimationTab,
     TaxPersonalInfoModel? personalInfoModel,
     TaxIncomeDetailsModel? incomeDetailsModel,
     TaxCreditsAndAdjustmentModel? creditsAndAdjustmentModel,
@@ -68,6 +69,6 @@ class TaxLoaded extends TaxState {
         personalInfoModel: personalInfoModel ?? this.personalInfoModel,
         incomeDetailsModel: incomeDetailsModel ?? this.incomeDetailsModel,
         creditsAndAdjustmentModel:
-            creditsAndAdjustmentModel ?? this.creditsAndAdjustmentModel,
+        creditsAndAdjustmentModel ?? this.creditsAndAdjustmentModel,
       );
 }

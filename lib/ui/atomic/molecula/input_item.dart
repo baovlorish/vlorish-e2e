@@ -132,7 +132,9 @@ class _InputItemState extends State<InputItem> {
           obscureText: obscureText,
           controller: _controller,
           validator: (value) {
-            if (widget.validateFunction != null) {
+            if (widget.errorText != null) {
+              return widget.errorText;
+            } else if (widget.validateFunction != null) {
               return widget.validateFunction!(value, context);
             }
           },

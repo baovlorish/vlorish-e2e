@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:burgundy_budgeting_app/domain/model/request/setup_bank_type_request.dart';
 import 'package:burgundy_budgeting_app/domain/repository/accounts_transactions_repository.dart';
 import 'package:burgundy_budgeting_app/domain/repository/networth_repository.dart';
@@ -18,11 +20,10 @@ class AddAccountPopupCubit extends Cubit<AddAccountPopupState> {
     logger.i('Add Account Popup');
   }
 
-  Future<List<AddPlaidAccountError>?> sendPlaidAccountsDataToBacked({
-    required Function() onSuccessCallback, required bool isExistingAccounts
-  }) async {
+  Future<List<AddPlaidAccountError>?> sendPlaidAccountsDataToBacked(
+      {required Function() onSuccessCallback,
+      required bool isExistingAccounts}) async {
     try {
-
       if (isExistingAccounts) {
         for (var item in validAccounts) {
           await netWorthRepository.setBankAccountName(
@@ -72,7 +73,8 @@ class AddAccountPopupCubit extends Cubit<AddAccountPopupState> {
         accountWithNonUniqueNameIds.add(item.id);
       }
     }
-    if (validAccounts.length == _nameSet.length) {
+    if (validAccounts.length == _nameSet.length &&
+        validAccounts.length == list.length) {
       emit(AddAccountPopupValidateState(true));
     } else if (validAccounts.isNotEmpty &&
         validAccounts.length != _nameSet.length) {
@@ -81,6 +83,8 @@ class AddAccountPopupCubit extends Cubit<AddAccountPopupState> {
         errors.add(AddPlaidAccountError.withNonUniqueName(item));
       }
       emit(AddAccountPopupAccountErrorState(errors: errors));
+    } else {
+      emit(AddAccountPopupAccountErrorState(errors: []));
     }
   }
 

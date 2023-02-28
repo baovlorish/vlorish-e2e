@@ -19,10 +19,147 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../lib/test_lib_common.dart';
 
+const String genderBtn = 'Gender';
+const List<String> genderOptions = [
+  'Male',
+  'Female',
+  'Gender Neutral',
+  'Decline to Answer',
+  'Relationship Status',
+];
+
+const String relationshipStatusBtn = 'Relationship Status';
+const List<String> relationshipOptions = [
+  'Single',
+  'Married',
+  'Divorced',
+  'Other',
+];
+
+const String dependentsBtn = 'Dependents';
+const List<String> dependentOptions = [
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  'More than 5 dependents',
+];
+
+const String educationBtn = 'Education';
+const List<String> educationOptions = [
+  'High School',
+  'College',
+  'Bachelor’s Degree',
+  'Master’s Degree',
+  'PhD',
+];
+const String employmentBtn = 'Employment';
+const List<String> employOptions = [
+  'Employee',
+  'Employee with side gig',
+  'Freelancer',
+  'Independent contractor',
+  'Small business owner with employees',
+  'Small business owner w/no employees',
+  'Rideshare and delivery apps drivers',
+  'Unemployed',
+  'Retired',
+  'Student',
+];
+
+const String occupationBtn = 'Occupation';
+const List<String> occupationOptions = [
+  'Youtube and social media professionals',
+  'Copywriting and content creators',
+  'E-commerce professionals',
+  'Photography, graphic design, and other creatives',
+  'Other digital economy entrepreneurs',
+  'Education and teaching',
+  'Childcare and related services',
+  'Healthcare professionals',
+  'Finance professionals',
+  'Venture capital and angel investors',
+  'Management consulting',
+  'Sales and marketing jobs',
+  'Admin and support jobs',
+  'Legal professionals',
+  'Software developers',
+  'Computer science jobs',
+  'Data science and analytics',
+  'IT and network administration',
+  'Other technology careers',
+  'Rideshare and delivery apps drivers',
+  'Truckers and long-haul drivers',
+  'Architecture and engineering',
+  'Real estate and housing',
+  'Manufacturing, assembly, and distribution',
+  'Retail and food service employees',
+  'TV, media, and publishing careers',
+  'Skilled trade jobs',
+  'Coaching and personal development',
+  'Personal care services',
+  'Independent product distributors',
+  'Sports and leisure jobs',
+  'Construction jobs',
+  'Community and social services',
+  'Other government and not-profit jobs',
+  'Other',
+];
+
 class ProfileScreenTest {
   const ProfileScreenTest(this.tester);
 
   final WidgetTester tester;
+
+  Future<void> clickDropdownButton(String dropdownName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final assetImage = AssetImage('assets/images/icons/dropdown.png');
+    final imageIconFinder = find.byWidgetPredicate((widget) {
+      if (widget is ImageIcon) {
+        if (widget.image is AssetImage && widget.image == assetImage) {
+          return true;
+        }
+      }
+      return false;
+    });
+    switch (dropdownName) {
+      case genderBtn:
+        await tapSomething(tester, imageIconFinder.at(0),
+            addContext(context, 'Click on dropdow btn $dropdownName'));
+        break;
+      case relationshipStatusBtn:
+        await tapSomething(tester, imageIconFinder.at(1),
+            addContext(context, 'Click on dropdow btn $dropdownName'));
+        break;
+      case dependentsBtn:
+        await tapSomething(tester, imageIconFinder.at(2),
+            addContext(context, 'Click on dropdow btn $dropdownName'));
+        break;
+      case educationBtn:
+        await tapSomething(tester, imageIconFinder.at(4),
+            addContext(context, 'Click on dropdow btn $dropdownName'));
+        break;
+      case employmentBtn:
+        await tapSomething(tester, imageIconFinder.at(5),
+            addContext(context, 'Click on dropdow btn $dropdownName'));
+        break;
+      case occupationBtn:
+        await tapSomething(tester, imageIconFinder.at(6),
+            addContext(context, 'Click on dropdow btn $dropdownName'));
+        break;
+    }
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifySelectDropdown(
+      String dropdownName, String valueSelect, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    await tapSomething(tester, find.text(valueSelect).last,
+        addContext(context, 'Click on value $valueSelect of $dropdownName'));
+  }
 
   Future<void> verifyProfilePage(WidgetTester tester,
       {String context = ''}) async {
@@ -128,7 +265,7 @@ class ProfileScreenTest {
   Future<void> clickBackButton(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    final btnBackIcon = find.byType(CustomMaterialInkWell).first;
+    final btnBackIcon = find.byIcon(Icons.arrow_back_rounded);
     await tapSomething(
         tester, btnBackIcon, addContext(context, 'Click on btn BackIcon'));
     await tester.pumpAndSettle();

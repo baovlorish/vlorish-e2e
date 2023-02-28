@@ -29,7 +29,7 @@ class BudgetMonthlyView extends StatefulWidget {
   final bool isPersonal;
   final bool isReadOnlyAdvisor;
   final MonthlyBudgetModel model;
-  final void Function(MonthlyFormulaDataModel model) onEditableCellDoubleTap;
+  final void Function(MonthlyFormulaDataModel model) onEqualSignPressed;
   final double? initialHorizontalScrollOffset;
   final double? initialVerticalScrollOffset;
   final double? Function(double?) onHorizontalScrollOffset;
@@ -45,7 +45,7 @@ class BudgetMonthlyView extends StatefulWidget {
     this.initialVerticalScrollOffset,
     required this.model,
     required this.isPersonal,
-    required this.onEditableCellDoubleTap,
+    required this.onEqualSignPressed,
     required this.isReadOnlyAdvisor,
     required this.user,
     required this.isCoach,
@@ -377,9 +377,10 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                           _budgetLayoutInherited.data?.id == subcategory.id &&
                           _budgetLayoutInherited.data?.selectedType ==
                               TableType.Budgeted,
-                      showFormulaIndicator:
-                          subcategory.nodes[0].expression != null,
-                      changeValue: (int value) {
+                      showFormulaIndicator: subcategory
+                            .nodes[0].expression?.expression.isNotEmpty ??
+                        false,
+                    changeValue: (int value) {
                         var oldSubcategory =
                             MonthlyBudgetSubcategory.from(subcategory);
                         updateTable(
@@ -432,17 +433,18 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                               notifier: notifiers[0]);
                         }
                       },
-                      onDoubleTap: !widget.isReadOnlyAdvisor
-                          ? () {
-                              widget.onEditableCellDoubleTap(
-                                  MonthlyFormulaDataModel(
-                                      initialNode: subcategory.nodes[0],
-                                      tableType: TableType.Budgeted,
-                                      isGoal: isGoal,
-                                      category: subcategory,
-                                      budgetModel: widget.model));
-                            }
-                          : null),
+                    onEqualSignPressed: widget.isReadOnlyAdvisor
+                        ? null
+                        : () => widget.onEqualSignPressed(
+                              MonthlyFormulaDataModel(
+                                initialNode: subcategory.nodes[0],
+                                tableType: TableType.Budgeted,
+                                isGoal: isGoal,
+                                category: subcategory,
+                                budgetModel: widget.model,
+                              ),
+                            ),
+                  ),
                   CellData(
                     isOwnerDraw
                         ? subcategory.nodes[1].amount
@@ -457,8 +459,9 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                         _budgetLayoutInherited.data?.id == subcategory.id &&
                         _budgetLayoutInherited.data?.selectedType ==
                             TableType.Actual,
-                    showFormulaIndicator:
-                        subcategory.nodes[1].expression != null,
+                    showFormulaIndicator: subcategory
+                            .nodes[1].expression?.expression.isNotEmpty ??
+                        false,
                     changeValue: (int value) {
                       var oldSubcategory =
                           MonthlyBudgetSubcategory.from(subcategory);
@@ -510,26 +513,24 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
                             notifier: notifiers[1]);
                       }
                     },
+                    onEqualSignPressed: !isGoal || widget.isReadOnlyAdvisor
+                        ? null
+                        : () => widget.onEqualSignPressed(
+                              MonthlyFormulaDataModel(
+                                  initialNode: subcategory.nodes[1],
+                                  tableType: TableType.Actual,
+                                  isGoal: isGoal,
+                                  category: subcategory,
+                                  budgetModel: widget.model),
+                            ),
                     onDoubleTap: hasDoubleTap
-                        ? () {
-                            _budgetBloc.goToTransactionsForSelectedPeriod(
+                        ? null
+                        : () => _budgetBloc.goToTransactionsForSelectedPeriod(
                               context,
                               widget.model.monthYear,
                               parentCategoryId: categoryGroup.parentCategoryId,
                               childCategoryId: categories[index].id,
-                            );
-                          }
-                        : isGoal && !widget.isReadOnlyAdvisor
-                            ? () {
-                                widget.onEditableCellDoubleTap(
-                                    MonthlyFormulaDataModel(
-                                        initialNode: subcategory.nodes[1],
-                                        tableType: TableType.Actual,
-                                        isGoal: isGoal,
-                                        category: subcategory,
-                                        budgetModel: widget.model));
-                              }
-                            : null,
+                            ),
                     showMemoNotifier: notifiers[1],
                   ),
                   CellData(

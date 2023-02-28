@@ -26,12 +26,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class InvestmentsLayoutWidget extends StatefulWidget {
   final Function(List<BankAccount> bankAccounts) onSuccessCallback;
 
-  const InvestmentsLayoutWidget({Key? key, required this.onSuccessCallback})
-      : super(key: key);
+  const InvestmentsLayoutWidget({Key? key, required this.onSuccessCallback}) : super(key: key);
 
   @override
-  _InvestmentsLayoutWidgetState createState() =>
-      _InvestmentsLayoutWidgetState();
+  _InvestmentsLayoutWidgetState createState() => _InvestmentsLayoutWidgetState();
 }
 
 class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
@@ -72,11 +70,13 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
     'Other':
         'All other investments that are not covered in other asset types above',
   };
-  late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
-          .currentForeignSession
-          ?.access
-          .isReadOnly ??
-      false;
+  late final isReadOnlyAdvisor =
+      BlocProvider.of<HomeScreenCubit>(context).currentForeignSession?.access.isReadOnly ?? false;
+
+  late final isEditorAdvisor =
+      BlocProvider.of<HomeScreenCubit>(context).currentForeignSession?.access.isEditor ?? false;
+
+  late final showConnectButton = !isReadOnlyAdvisor && !isEditorAdvisor;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +95,9 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
         }
       },
       builder: (context, state) {
+        if (state is InvestmentsLoading) {
+          return CustomLoadingIndicator();
+        }
         if (state is InvestmentsLoaded) {
           return Expanded(
             child: Padding(
@@ -298,28 +301,19 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
                                             fontSize: 18,
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 120,
-                                          child: ButtonItem(context,
-                                              text:
-                                                  AppLocalizations.of(context)!
-                                                      .connect,
-                                              enabled: !isReadOnlyAdvisor,
-                                              onPressed: !isReadOnlyAdvisor
-                                                  ? () {
-                                                      var invest =
-                                                          tabToInvestTransform(
-                                                              (investmentsCubit
-                                                                          .state
-                                                                      as InvestmentsLoaded)
-                                                                  .investmentsTab);
-                                                      if (invest != null) {
-                                                        showAddInvestPopUp(
-                                                            invest);
-                                                      }
-                                                    }
-                                                  : () {}),
-                                        ),
+                                        if (showConnectButton)
+                                          SizedBox(
+                                            width: 120,
+                                            child: ButtonItem(
+                                              context,
+                                              text: AppLocalizations.of(context)!.connect,
+                                              onPressed: () {
+                                                final invest = tabToInvestTransform(
+                                                    (investmentsCubit.state as InvestmentsLoaded).investmentsTab);
+                                                if (invest != null) showAddInvestPopUp(invest);
+                                              },
+                                            ),
+                                          ),
                                       ],
                                     ),
                                   ),
@@ -333,7 +327,7 @@ class _InvestmentsLayoutWidgetState extends State<InvestmentsLayoutWidget> {
             ),
           );
         } else {
-          return CustomLoadingIndicator();
+          return SizedBox();
         }
       },
     );

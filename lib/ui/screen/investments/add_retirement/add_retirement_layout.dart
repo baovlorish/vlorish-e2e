@@ -57,12 +57,10 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
   DateTime? _acquisitionDate;
   final _acquisitionDateNode = FocusNode();
   String? _custodian;
-  final _investTypeNode = FocusNode();
   final _custodianNode = FocusNode();
   double? _currentCost;
   final _currentCostNode = FocusNode();
   final shortWidth = 250.0;
-  int? _investType;
   int? _transactionType;
   final _costTypeNode = FocusNode();
   double? _newCost;
@@ -88,7 +86,6 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
       _currentCost = widget.editRetirement!.currentCost;
       _custodian = widget.editRetirement!.custodian;
       _acquisitionDate = widget.editRetirement!.acquisitionDate;
-      _investType = widget.editRetirement!.investType;
     }
     super.initState();
   }
@@ -157,7 +154,6 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                     acquisitionDate: _acquisitionDate!,
                                     initialCost: _initialCost!,
                                     currentCost: _currentCost ?? _initialCost,
-                                    investType: _investType,
                                     custodian: _custodian,
                                   ),
                                 }
@@ -169,11 +165,9 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                       acquisitionDate: _acquisitionDate!,
                                       initialCost: _initialCost!,
                                       currentCost: _currentCost!,
-                                      investType: _investType,
                                       custodian: _custodian,
                                       transactions: [
                                         if (_newCost != null &&
-                                            _investType != null &&
                                             showExtraFieldInEditMode)
                                           InvestmentTransaction(
                                               amount: _newCost,
@@ -243,7 +237,7 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                               setState(() {});
                                             },
                                             onEditingComplete: () =>
-                                                _investTypeNode.requestFocus(),
+                                                _custodianNode.requestFocus(),
                                             hintText: 'Vlorish',
                                             labelText: 'Name*',
                                           ),
@@ -252,31 +246,6 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                           width: isSmall ? 0 : 16,
                                           height: isSmall ? 16 : 0,
                                         ),
-                                        SizedBox(
-                                          width: shortWidth,
-                                          child: DropdownItem<int>(
-                                            initialValue: _investType,
-                                            focusNode: _investTypeNode,
-                                            itemKeys: [
-                                              1, //Stock
-                                              2, //Index Fund
-                                              0 //Other
-                                            ],
-                                            callback: (value) {
-                                              _investType = value;
-                                              setState(() {});
-
-                                              _custodianNode.requestFocus();
-                                            },
-                                            labelText: 'Invest type*',
-                                            items: [
-                                              'Stock',
-                                              'Index Fund',
-                                              'Other',
-                                            ],
-                                            hintText: 'Invest type',
-                                          ),
-                                        )
                                       ],
                                     ),
                                     SizedBox(height: 16),
@@ -616,8 +585,7 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
           _name!.isNotEmpty &&
           _initialCost != null &&
           _acquisitionDate != null &&
-          _custodian != null &&
-          _investType != null;
+          _custodian != null;
     }
     if (showExtraFieldInEditMode) {
       return _name != null &&
@@ -626,8 +594,6 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
           _acquisitionDate != null &&
           _custodian != null &&
           _newCost != null &&
-          _investType != null &&
-          _investType != null &&
           _currentCost != null;
     } else {
       return _name != null &&
@@ -635,7 +601,6 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
           _initialCost != null &&
           _acquisitionDate != null &&
           _custodian != null &&
-          _investType != null &&
           _currentCost != null;
     }
   }

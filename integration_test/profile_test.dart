@@ -48,7 +48,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T186 User is redirected on Profile flow page after clicking on Profile icon',
+            'Failed BAR-T186 User is redirected on Profile flow page after clicking on Profile icon',
             '',
             'FINISHED');
       }
@@ -73,7 +73,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T103 New Password field contains at least 8 characters',
+            'Failed BAR-T103 New Password field contains at least 8 characters',
             '',
             'FINISHED');
       }
@@ -97,7 +97,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T104 User can make password visible after clicking on "eye" button',
+            'Failed BAR-T104 User can make password visible after clicking on "eye" button',
             '',
             'FINISHED');
       }
@@ -123,7 +123,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T105 User can make password invisible after clicking on “eye” button if password is visible',
+            'Failed BAR-T105 User can make password invisible after clicking on “eye” button if password is visible',
             '',
             'FINISHED');
       }
@@ -152,7 +152,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T106 User can enter max 128 characters in Password fields',
+            'Failed BAR-T106 User can enter max 128 characters in Password fields',
             '',
             'FINISHED');
       }
@@ -176,7 +176,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T107 User sees error message and can not update password if password does not contain 1 special char',
+            'Failed BAR-T107 User sees error message and can not update password if password does not contain 1 special char',
             '',
             'FINISHED');
       }
@@ -201,7 +201,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T108 User sees error message and can not update password if password does not contain 1 number',
+            'Failed BAR-T108 User sees error message and can not update password if password does not contain 1 number',
             '',
             'FINISHED');
       }
@@ -226,7 +226,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T109 User sees error message and can not update password if password does not contain 1 uppercase',
+            'Failed BAR-T109 User sees error message and can not update password if password does not contain 1 uppercase',
             '',
             'FINISHED');
       }
@@ -251,7 +251,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T110 User sees error message and can not update password if password does not contain 1 lowercase',
+            'Failed BAR-T110 User sees error message and can not update password if password does not contain 1 lowercase',
             '',
             'FINISHED');
       }
@@ -278,7 +278,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T111 User can not update password if current password is invalid',
+            'Failed BAR-T111 User can not update password if current password is invalid',
             '',
             'FINISHED');
       }
@@ -301,7 +301,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T112 Check that Unsubscribe pop-up appears after clicking on "Close account" button',
+            'Failed BAR-T112 Check that Unsubscribe pop-up appears after clicking on "Close account" button',
             '',
             'FINISHED');
       }
@@ -327,7 +327,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T113 Unsubscribe Popup is closed after clicking on "No" button on "Close account" pop up',
+            'Failed BAR-T113 Unsubscribe Popup is closed after clicking on "No" button on "Close account" pop up',
             '',
             'FINISHED');
       }
@@ -356,7 +356,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T117 User sees error message if password fields are empty',
+            'Failed BAR-T117 User sees error message if password fields are empty',
             '',
             'FINISHED');
       }
@@ -387,7 +387,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T118 User sees error message if one of the password field is empty',
+            'Failed BAR-T118 User sees error message if one of the password field is empty',
             '',
             'FINISHED');
       }
@@ -414,7 +414,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T185 User sees error message if current password does not match with the existing password',
+            'Failed BAR-T185 User sees error message if current password does not match with the existing password',
             '',
             'FINISHED');
       }
@@ -449,7 +449,161 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T188 Check that user can update “City” and “State” fields',
+            'Failed BAR-T188 Check that user can update “City” and “State” fields',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T189 Check that user can select Gender', '', 'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final genderOption = genderOptions;
+        for (int i = 0; i < genderOption.length; i++) {
+          await profileScreen.clickDropdownButton(genderBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              genderBtn, genderOption[i], tester);
+        }
+
+        await htLogd(tester, 'BAR_T189 Check that user can select Gender', '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T189 Check that user can select Gender',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T190 Check that user can select Relationship Status',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final relationshipOption = relationshipOptions;
+        for (int i = 0; i < relationshipOption.length; i++) {
+          await profileScreen.clickDropdownButton(
+              relationshipStatusBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              relationshipStatusBtn, relationshipOption[i], tester);
+        }
+
+        await htLogd(
+            tester,
+            'BAR_T190 Check that user can select Relationship Status',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T190 Check that user can select Relationship Status',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T191 Check that user can select Education', '', 'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final educationOption = educationOptions;
+        for (int i = 0; i < educationOption.length; i++) {
+          await profileScreen.clickDropdownButton(educationBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              educationBtn, educationOption[i], tester);
+        }
+
+        await htLogd(tester, 'BAR_T191 Check that user can select Education',
+            '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T191 Check that user can select Education',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T192 Check that user can select Employment', '', 'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final employOption = employOptions;
+        for (int i = 0; i < employOption.length; i++) {
+          await profileScreen.clickDropdownButton(employmentBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              employmentBtn, employOption[i], tester);
+        }
+
+        await htLogd(tester, 'BAR_T192 Check that user can select Employment',
+            '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T192 Check that user can select Employment',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T193 Check that user can select Occupation', '', 'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final occupationOption = occupationOptions;
+        for (int i = 0; i < occupationOption.length; i++) {
+          await profileScreen.clickDropdownButton(occupationBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              occupationBtn, occupationOption[i], tester);
+        }
+        await htLogd(tester, 'BAR_T193 Check that user can select Occupation',
+            '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T193 Check that user can select Occupation',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T195 Check that user can select Dependents', '', 'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final dependentOption = dependentOptions;
+        for (int i = 0; i < dependentOption.length; i++) {
+          await profileScreen.clickDropdownButton(dependentsBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              dependentsBtn, dependentOption[i], tester);
+        }
+        await htLogd(tester, 'BAR_T195 Check that user can select Dependents',
+            '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T195 Check that user can select Dependents',
             '',
             'FINISHED');
       }
@@ -464,17 +618,20 @@ void main() async {
         await profileScreen.verifyProfilePage(tester);
         await profileScreen.clickProfileDetailsButton(tester);
         await profileScreen.verifyProfileDetailtPage(tester);
-        await profileScreen.inputUpdateName(fName, lName, tester);
+        await profileScreen.inputUpdateName(
+            'fNameUpdate', 'lNameUpdate', tester);
         await profileScreen.clickUpdateProfileButton(tester);
         await profileScreen.verifyShowMessage('Success!', tester);
-        await dashboardScreen.clickLogoText();
+        await profileScreen.clickButton('Continue', tester);
         await profileScreen.clickBackButton(tester);
-        await profileScreen.verifyNameUpdate(fName, lName, tester);
+        await profileScreen.verifyNameUpdate(
+            'fNameUpdate', 'lNameUpdate', tester);
         await profileScreen.clickProfileDetailsButton(tester);
         await profileScreen.verifyProfileDetailtPage(tester);
         await profileScreen.inputUpdateName('Bao', 'Test', tester);
         await profileScreen.clickUpdateProfileButton(tester);
-        await dashboardScreen.clickLogoText();
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await profileScreen.clickButton('Continue', tester);
         await profileScreen.clickBackButton(tester);
         await profileScreen.verifyNameUpdate('Bao', 'Test', tester);
 
@@ -486,7 +643,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T98 Check that user can update “First Name” and “Last Name” fields',
+            'Failed BAR-T98 Check that user can update “First Name” and “Last Name” fields',
             '',
             'FINISHED');
       }
@@ -528,7 +685,7 @@ void main() async {
       } catch (e) {
         await htLogd(
             tester,
-            'Error BAR-T99 Check that user can update password',
+            'Failed BAR-T99 Check that user can update password',
             '',
             'FINISHED');
       }

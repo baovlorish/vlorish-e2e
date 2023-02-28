@@ -28,7 +28,7 @@ class ReferralLayout extends StatefulWidget {
 class _ReferralLayoutState extends State<ReferralLayout> {
   var isScreenSmall = false;
   late final ReferralCubit _referralCubit;
-
+  late final referralLink;
   @override
   void initState() {
     _referralCubit = BlocProvider.of<ReferralCubit>(context);
@@ -58,6 +58,7 @@ class _ReferralLayoutState extends State<ReferralLayout> {
           if (state is ReferralInitial) {
             return CustomLoadingIndicator();
           } else if (state is ReferralLoaded) {
+            referralLink = state.referralResponse.links.isNotEmpty ? state.referralResponse.links.first : '';
             return Expanded(
               child: LayoutBuilder(builder: (context, constraints) {
                 isScreenSmall = constraints.maxWidth < 1000;
@@ -87,7 +88,7 @@ class _ReferralLayoutState extends State<ReferralLayout> {
                                 Column(
                                   children: [
                                     Label(
-                                        text: 'Copy and share your link',
+                                        text: AppLocalizations.of(context)!.copyAndShareYourLink,
                                         type: LabelType.Header3),
                                     SizedBox(height: 8),
                                     Wrap(
@@ -117,10 +118,7 @@ class _ReferralLayoutState extends State<ReferralLayout> {
                                                           .tableBorder)),
                                               child: Row(
                                                 children: [
-                                                  SelectableText(state
-                                                      .referralResponse
-                                                      .links
-                                                      .first),
+                                                  SelectableText(referralLink),
                                                 ],
                                               ),
                                             ),
@@ -134,14 +132,11 @@ class _ReferralLayoutState extends State<ReferralLayout> {
                                                 vertical: 8.0),
                                             child: ButtonItem(
                                               context,
-                                              text: 'Copy link',
+                                              text: AppLocalizations.of(context)!.copyLink,
                                               onPressed: () async {
                                                 await Clipboard.setData(
                                                     ClipboardData(
-                                                        text: state
-                                                            .referralResponse
-                                                            .links
-                                                            .first));
+                                                        text: referralLink));
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(SnackBar(
                                                   backgroundColor:
@@ -149,7 +144,7 @@ class _ReferralLayoutState extends State<ReferralLayout> {
                                                           .clipElementInactive,
                                                   content: Label(
                                                     text:
-                                                        'Link copied to clipboard!',
+                                                    AppLocalizations.of(context)!.linkCopiedToClipboard,
                                                     type: LabelType.General,
                                                   ),
                                                 ));
@@ -176,7 +171,7 @@ class _ReferralLayoutState extends State<ReferralLayout> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Label(
-                                            text: 'Copy and share your link',
+                                            text: AppLocalizations.of(context)!.copyAndShareYourLink,
                                             type: LabelType.Header3),
                                         SizedBox(height: 8),
                                         Wrap(
@@ -209,10 +204,7 @@ class _ReferralLayoutState extends State<ReferralLayout> {
                                                                   .tableBorder)),
                                                   child: Row(
                                                     children: [
-                                                      SelectableText(state
-                                                          .referralResponse
-                                                          .links
-                                                          .first),
+                                                      SelectableText(referralLink),
                                                     ],
                                                   ),
                                                 ),
@@ -227,14 +219,11 @@ class _ReferralLayoutState extends State<ReferralLayout> {
                                                         vertical: 8.0),
                                                 child: ButtonItem(
                                                   context,
-                                                  text: 'Copy link',
+                                                  text: AppLocalizations.of(context)!.copyLink,
                                                   onPressed: () async {
                                                     await Clipboard.setData(
                                                         ClipboardData(
-                                                            text: state
-                                                                .referralResponse
-                                                                .links
-                                                                .first));
+                                                            text: referralLink));
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(
@@ -244,7 +233,7 @@ class _ReferralLayoutState extends State<ReferralLayout> {
                                                                 .clipElementInactive,
                                                         content: Label(
                                                           text:
-                                                              'Link copied to clipboard!',
+                                                          AppLocalizations.of(context)!.linkCopiedToClipboard,
                                                           type:
                                                               LabelType.General,
                                                         ),
@@ -298,7 +287,7 @@ class HowItWorksWidget extends StatelessWidget {
         children: [
           SizedBox(height: 36),
           Label(
-            text: 'How it works',
+            text: AppLocalizations.of(context)!.howItWorks,
             type: LabelType.Header3,
           ),
           SizedBox(height: 16),
@@ -319,7 +308,7 @@ class HowItWorksWidget extends StatelessWidget {
                       children: [
                         TextSpan(
                             text:
-                                'Share your link with friends, family, and colleagues',
+                            AppLocalizations.of(context)!.shareYourLinkWithFriendsFamilyColleagues,
                             style: CustomTextStyle.LabelTextStyle(context))
                       ]),
                 ),
@@ -343,7 +332,7 @@ class HowItWorksWidget extends StatelessWidget {
                       style: CustomTextStyle.LabelBoldTextStyle(context),
                       children: [
                         TextSpan(
-                            text: 'If they subscribe the Vlorish',
+                            text:  AppLocalizations.of(context)!.ifTheySubscribeTheVlorish,
                             style: CustomTextStyle.LabelTextStyle(context))
                       ]),
                 ),
@@ -368,7 +357,7 @@ class HowItWorksWidget extends StatelessWidget {
                       children: [
                         TextSpan(
                             text:
-                                'You will receive 10% cash bonus of the invited user’s first payment after subscription.',
+                            AppLocalizations.of(context)!.benefitsFromReferralDescription,
                             style: CustomTextStyle.LabelTextStyle(context))
                       ]),
                 ),
@@ -405,7 +394,7 @@ class _ReferralHistoryWidgetState extends State<ReferralHistoryWidget> {
         Align(
           alignment: Alignment.topLeft,
           child: Label(
-            text: 'Referral history',
+            text: AppLocalizations.of(context)!.referralHistory,
             type: LabelType.Header3,
           ),
         ),
@@ -435,7 +424,7 @@ class _ReferralHistoryWidgetState extends State<ReferralHistoryWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Label(
-                        text: 'Total earned: ',
+                        text: AppLocalizations.of(context)!.totalEarned+': ',
                         type: LabelType.General,
                         fontWeight: FontWeight.w600,
                       ),
@@ -449,7 +438,7 @@ class _ReferralHistoryWidgetState extends State<ReferralHistoryWidget> {
                   Row(
                     children: [
                       Label(
-                        text: 'Unpaid amount: ',
+                        text: AppLocalizations.of(context)!.unpaidAmount+': ',
                         type: LabelType.General,
                         fontWeight: FontWeight.w600,
                       ),
@@ -465,7 +454,7 @@ class _ReferralHistoryWidgetState extends State<ReferralHistoryWidget> {
                   Row(
                     children: [
                       Label(
-                        text: 'Total paid: ',
+                        text: AppLocalizations.of(context)!.totalPaid+': ',
                         type: LabelType.General,
                         fontWeight: FontWeight.w600,
                       ),
@@ -477,7 +466,7 @@ class _ReferralHistoryWidgetState extends State<ReferralHistoryWidget> {
                   SizedBox(height: 32),
                   ButtonItem(
                     context,
-                    text: 'Check the portal',
+                    text: AppLocalizations.of(context)!.checkThePortal,
                     onPressed: () async {
                       var referralSSO =
                           await widget.referralCubit.getReferralSSo();
@@ -492,7 +481,7 @@ class _ReferralHistoryWidgetState extends State<ReferralHistoryWidget> {
         SizedBox(height: 8),
         LabelButtonItem(
           label: Label(
-            text: 'Terms & Conditions',
+            text: AppLocalizations.of(context)!.termsHeadline,
             type: LabelType.Link,
           ),
           onPressed: () {

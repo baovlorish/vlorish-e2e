@@ -3,6 +3,7 @@ import 'dart:html' as html;
 import 'package:burgundy_budgeting_app/core/application.dart';
 import 'package:burgundy_budgeting_app/core/di_provider.dart';
 import 'package:burgundy_budgeting_app/domain/network/api_client.dart';
+import 'package:burgundy_budgeting_app/simple_bloc_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -11,6 +12,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 Future<void> main() async {
   await DiProvider().init();
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = SimpleBlocObserver();
   html.document.onContextMenu.listen((event) => event.preventDefault());
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: HydratedStorage.webStorageDirectory,

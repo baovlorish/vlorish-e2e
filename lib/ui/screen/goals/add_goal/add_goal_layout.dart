@@ -36,6 +36,7 @@ class AddGoalLayout extends StatefulWidget {
 
 class _AddGoalLayoutState extends State<AddGoalLayout> {
   var isSmall = false;
+  var isEvenSmaller = false;
 
   final _defaultGoalImage = 'assets/images/goal_ph.png';
   final longWidth = 514.0;
@@ -54,9 +55,9 @@ class _AddGoalLayoutState extends State<AddGoalLayout> {
   final _totalNode = FocusNode();
   final _fundedNode = FocusNode();
 
-  late final _now;
-  var _startDate = DateTime.utc(1970);
-  var _targetDate = DateTime.now();
+  final _now = DateTime.now();
+  late DateTime _startDate;
+  late DateTime _targetDate;
 
   String? _icon;
 
@@ -67,7 +68,7 @@ class _AddGoalLayoutState extends State<AddGoalLayout> {
   late final AddGoalCubit _addGoalCubit;
   @override
   void initState() {
-    _now = DateTime.now();
+    _startDate = DateTime(_now.year, _now.month, _now.day);
     _targetDate = DateTime(_now.year, _now.month, _now.day + 1);
     _addGoalCubit = BlocProvider.of<AddGoalCubit>(context);
 
@@ -127,52 +128,56 @@ class _AddGoalLayoutState extends State<AddGoalLayout> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  width: shortWidth,
-                  child: InputItem(
-                    value: _total.numericFormattedString(),
-                    focusNode: _totalNode,
-                    onEditingComplete: () => _fundedNode.requestFocus(),
-                    labelText: AppLocalizations.of(context)!.totalAmount,
-                    validateFunction: (value, context) {
-                      var error = FormValidators.totalAmountValidateFunction(
-                          value?.replaceAll(',', ''), context);
-                      if (error != null) {
-                        return error;
-                      } else if (_total < _funded) {
-                        return AppLocalizations.of(context)!
-                            .totalShouldBeGreater;
-                      }
-                    },
-                    onChanged: (value) {
-                      _total = int.parse(value.replaceAll(',', ''));
-                    },
-                    prefix: '\$ ',
-                    textInputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      NumericTextFormatter(),
-                      LengthLimitingTextInputFormatter(17),
-                    ],
+                Flexible(
+                  child: SizedBox(
+                    width: shortWidth,
+                    child: InputItem(
+                      value: _total.numericFormattedString(),
+                      focusNode: _totalNode,
+                      onEditingComplete: () => _fundedNode.requestFocus(),
+                      labelText: AppLocalizations.of(context)!.totalAmount,
+                      validateFunction: (value, context) {
+                        var error = FormValidators.totalAmountValidateFunction(
+                            value?.replaceAll(',', ''), context);
+                        if (error != null) {
+                          return error;
+                        } else if (_total < _funded) {
+                          return AppLocalizations.of(context)!
+                              .totalShouldBeGreater;
+                        }
+                      },
+                      onChanged: (value) {
+                        _total = int.parse(value.replaceAll(',', ''));
+                      },
+                      prefix: '\$ ',
+                      textInputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        NumericTextFormatter(),
+                        LengthLimitingTextInputFormatter(17),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(width: 16),
-                SizedBox(
-                  width: shortWidth,
-                  child: InputItem(
-                    value: _funded.numericFormattedString(),
-                    focusNode: _fundedNode,
-                    onEditingComplete: () => startDateNode.requestFocus(),
-                    labelText: AppLocalizations.of(context)!.fundedAmount,
-                    validateFunction: (value, context) => null,
-                    prefix: '\$ ',
-                    onChanged: (value) {
-                      _funded = int.parse(value.replaceAll(',', ''));
-                    },
-                    textInputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      NumericTextFormatter(),
-                      LengthLimitingTextInputFormatter(17),
-                    ],
+                Flexible(
+                  child: SizedBox(
+                    width: shortWidth,
+                    child: InputItem(
+                      value: _funded.numericFormattedString(),
+                      focusNode: _fundedNode,
+                      onEditingComplete: () => startDateNode.requestFocus(),
+                      labelText: AppLocalizations.of(context)!.fundedAmount,
+                      validateFunction: (value, context) => null,
+                      prefix: '\$ ',
+                      onChanged: (value) {
+                        _funded = int.parse(value.replaceAll(',', ''));
+                      },
+                      textInputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        NumericTextFormatter(),
+                        LengthLimitingTextInputFormatter(17),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -182,55 +187,61 @@ class _AddGoalLayoutState extends State<AddGoalLayout> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(
-                  width: shortWidth,
-                  child: DatePicker(
-                    context,
-                    focusNode: startDateNode,
-                    value: widget.editedGoal != null
-                        ? _startDate.toString()
-                        : null,
-                    onChanged: (value) {
-                      _startDate = DateTime.tryParse(value)!;
-                      endDateNode.requestFocus();
-                    },
-                    title: AppLocalizations.of(context)!.startDate,
-                    dateFormat: CustomDateFormats.defaultDateFormat,
-                    validateFunction: (value, context) {},
+                Flexible(
+                  flex: 1,
+                  child: SizedBox(
+                    width: shortWidth,
+                    child: DatePicker(
+                      context,
+                      focusNode: startDateNode,
+                      value: widget.editedGoal != null
+                          ? _startDate.toString()
+                          : null,
+                      onChanged: (value) {
+                        _startDate = DateTime.tryParse(value)!;
+                        endDateNode.requestFocus();
+                      },
+                      title: AppLocalizations.of(context)!.startDate,
+                      dateFormat: CustomDateFormats.defaultDateFormat,
+                      validateFunction: (value, context) {},
+                    ),
                   ),
                 ),
                 SizedBox(width: 17),
-                SizedBox(
-                  width: shortWidth,
-                  child: DatePicker(
-                    context,
-                    focusNode: endDateNode,
-                    value: widget.editedGoal != null
-                        ? _targetDate.toString()
-                        : null,
-                    onChanged: (value) {
-                      _targetDate = DateTime.tryParse(value)!;
-                      _noteNode.requestFocus();
-                    },
-                    initialDate: (_startDate.isAfter(_now))
-                        ? _startDate
-                        : DateTime(_now.year, _now.month, _now.day + 1),
-                    firstDate: (_startDate.isAfter(_now))
-                        ? _startDate
-                        : DateTime(_now.year, _now.month, _now.day + 1),
-                    lastDate: DateTime(2100),
-                    title: AppLocalizations.of(context)!.targetDate,
-                    dateFormat: CustomDateFormats.defaultDateFormat,
-                    validateFunction: (value, context) {
-                      var error = FormValidators.targetDateValidateFunction(
-                          value, context);
-                      if (error != null) {
-                        return error;
-                      } else if (_startDate.isAfter(_targetDate)) {
-                        return AppLocalizations.of(context)!
-                            .targetShouldBeGreater;
-                      }
-                    },
+                Flexible(
+                  flex: 1,
+                  child: SizedBox(
+                    width: shortWidth,
+                    child: DatePicker(
+                      context,
+                      focusNode: endDateNode,
+                      value: widget.editedGoal != null
+                          ? _targetDate.toString()
+                          : null,
+                      onChanged: (value) {
+                        _targetDate = DateTime.tryParse(value)!;
+                        _noteNode.requestFocus();
+                      },
+                      initialDate: (_startDate.isAfter(_now))
+                          ? _startDate
+                          : DateTime(_now.year, _now.month, _now.day + 1),
+                      firstDate: (_startDate.isAfter(_now))
+                          ? _startDate
+                          : DateTime(_now.year, _now.month, _now.day + 1),
+                      lastDate: DateTime(2100),
+                      title: AppLocalizations.of(context)!.targetDate,
+                      dateFormat: CustomDateFormats.defaultDateFormat,
+                      validateFunction: (value, context) {
+                        var error = FormValidators.targetDateValidateFunction(
+                            value, context);
+                        if (error != null) {
+                          return error;
+                        } else if (_startDate.isAfter(_targetDate)) {
+                          return AppLocalizations.of(context)!
+                              .targetShouldBeGreater;
+                        }
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -259,6 +270,7 @@ class _AddGoalLayoutState extends State<AddGoalLayout> {
   @override
   Widget build(BuildContext context) {
     isSmall = MediaQuery.of(context).size.width < 1070;
+    isEvenSmaller = MediaQuery.of(context).size.width < 800;
 
     return BlocConsumer<AddGoalCubit, AddGoalState>(
       listener: (BuildContext context, state) {
@@ -352,16 +364,11 @@ class _AddGoalLayoutState extends State<AddGoalLayout> {
                                             image: _icon,
                                             assetImage: _defaultGoalImage,
                                             onImageSet: (pickedFile) async {
-                                              _icon = base64Encode(
-                                                  await pickedFile
-                                                      .readAsBytes());
+                                              _icon = base64Encode(await pickedFile.readAsBytes());
                                             },
                                             onImageValidationError: () {
                                               _addGoalCubit.emit(
-                                                AddGoalError(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .invalidImageError),
+                                                AddGoalError(AppLocalizations.of(context)!.invalidImageError),
                                               );
                                               _addGoalCubit.emit(
                                                 AddGoalInitial(),
@@ -470,59 +477,60 @@ class _AddGoalLayoutState extends State<AddGoalLayout> {
                 },
               ),
               SizedBox(width: 20),
-              ButtonItemTransparent(
-                context,
-                icon: ImageIcon(
-                  AssetImage('assets/images/icons/archive_ic.png'),
-                  color: CustomColorScheme.button,
-                  size: 24,
-                ),
-                text: AppLocalizations.of(context)!.archiveGoal,
-                onPressed: () {
-                  _addGoalCubit.archiveGoal(
-                    context,
-                    widget.editedGoal!.id,
-                  );
-                },
-                buttonType: TransparentButtonType.LargeText,
-              ),
-              SizedBox(width: 20),
-              ButtonItemTransparent(
-                context,
-                color: CustomColorScheme.inputErrorBorder,
-                icon: ImageIcon(
-                  AssetImage('assets/images/icons/delete.png'),
-                  color: CustomColorScheme.inputErrorBorder,
-                  size: 24,
-                ),
-                text: AppLocalizations.of(context)!.deleteGoal,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (_context) {
-                      return TwoButtonsDialog(
-                        context,
-                        title: AppLocalizations.of(context)!
-                                .areYouSureToDeleteYour +
-                            ' ${widget.editedGoal!.goalName} ' +
-                            AppLocalizations.of(context)!.goal.toLowerCase() +
-                            '?',
-                        message:
-                            AppLocalizations.of(context)!.yourDataWillBeDeleted,
-                        dismissButtonText:
-                            AppLocalizations.of(context)!.yesDeleteIt,
-                        onDismissButtonPressed: () {
-                          _addGoalCubit.deleteGoal(
-                              context, widget.editedGoal!.id);
+              Wrap(
+                  direction: isEvenSmaller ? Axis.vertical : Axis.horizontal,
+                  spacing:20,
+                  runSpacing:20,
+                  children: [
+                    ButtonItemTransparent(
+                      context,
+                      icon: ImageIcon(
+                      AssetImage('assets/images/icons/archive_ic.png'),
+                        color: CustomColorScheme.button,
+                        size: 24,
+                      ),
+                      text: AppLocalizations.of(context)!.archiveGoal,
+                      onPressed: () {
+                        _addGoalCubit.archiveGoal(
+                          context,
+                          widget.editedGoal!.id,
+                        );
                         },
-                        mainButtonText: AppLocalizations.of(context)!.no,
-                        onMainButtonPressed: () {},
-                      );
-                    },
-                  );
-                },
-                buttonType: TransparentButtonType.LargeText,
-              ),
+                      buttonType: TransparentButtonType.LargeText,
+                    ),
+                    ButtonItemTransparent(
+                      context,
+                      color: CustomColorScheme.inputErrorBorder,
+                      icon: ImageIcon(
+                        AssetImage('assets/images/icons/delete.png'),
+                        color: CustomColorScheme.inputErrorBorder,
+                        size: 24,
+                      ),
+                      text: AppLocalizations.of(context)!.deleteGoal,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_context) {
+                            return TwoButtonsDialog(
+                              context,
+                              title: AppLocalizations.of(context)!.areYouSureToDeleteYour +
+                                  ' ${widget.editedGoal!.goalName} ' +
+                                  AppLocalizations.of(context)!.goal.toLowerCase() +
+                                  '?',
+                              message: AppLocalizations.of(context)!.yourDataWillBeDeleted,
+                              dismissButtonText: AppLocalizations.of(context)!.yesDeleteIt,
+                              onDismissButtonPressed: () {
+                                _addGoalCubit.deleteGoal(context, widget.editedGoal!.id);
+                                },
+                              mainButtonText: AppLocalizations.of(context)!.no,
+                              onMainButtonPressed: () {},
+                            );
+                            },
+                        );
+                        },
+                      buttonType: TransparentButtonType.LargeText,
+                    ),
+                  ]),
             ],
           ),
         ],

@@ -34,7 +34,7 @@ class BudgetAnnualView extends StatefulWidget {
   final double? Function(double?) onVerticalScrollOffset;
   final Period userPeriod;
   final AnnualBudgetModel model;
-  final Function(AnnualFormulaDataModel model) onEditableCellDoubleTap;
+  final Function(AnnualFormulaDataModel model) onEqualSignPressed;
   final ProfileOverviewModel user;
 
   final bool isCoach;
@@ -48,7 +48,7 @@ class BudgetAnnualView extends StatefulWidget {
     this.initialHorizontalScrollOffset,
     this.initialVerticalScrollOffset,
     required this.userPeriod,
-    required this.onEditableCellDoubleTap,
+    required this.onEqualSignPressed,
     required this.user,
     required this.isCoach,
   });
@@ -375,7 +375,8 @@ class _BudgetAnnualViewState extends State<BudgetAnnualView> {
                       ? cellValue.formattedWithDecorativeElementsString()
                       : cellValue.numericFormattedString(),
                   hasRightBorder: true,
-                  showFormulaIndicator: node.expression != null,
+                  showFormulaIndicator:
+                      node.expression?.expression.isNotEmpty ?? false,
                   isEditable: isEditable,
                   isHighlighted: isHighlighted,
                   hasError: node.expression?.isValid == false,
@@ -387,26 +388,24 @@ class _BudgetAnnualViewState extends State<BudgetAnnualView> {
                       oldNode: oldNode,
                     );
                   },
-                  onDoubleTap: !isDebt && hasDoubleTap
-                      ? () {
-                          _budgetBloc.goToTransactionsForSelectedPeriod(
+                  onEqualSignPressed: !isEditable
+                      ? null
+                      : () => widget.onEqualSignPressed(
+                            AnnualFormulaDataModel(
+                              initialNode: node,
+                              isGoal: isGoal,
+                              category: category,
+                              budgetModel: model,
+                            ),
+                          ),
+                  onDoubleTap: isDebt || !hasDoubleTap
+                      ? null
+                      : () => _budgetBloc.goToTransactionsForSelectedPeriod(
                             context,
                             node.monthYear,
                             parentCategoryId: categoryGroup.parentCategoryId,
                             childCategoryId: category.id,
-                          );
-                        }
-                      : isEditable
-                          ? () {
-                              widget.onEditableCellDoubleTap(
-                                  AnnualFormulaDataModel(
-                                initialNode: node,
-                                isGoal: isGoal,
-                                category: category,
-                                budgetModel: model,
-                              ));
-                            }
-                          : null,
+                          ),
                   showMemoNotifier: notifier,
                   key: Key(tag + cellValue.toString()),
                   cellTag: tag,

@@ -134,7 +134,7 @@ class BankAccount extends Account {
     }
 
     return {
-      'name': name,
+      'name': name.trim(),
       'id': id,
       'type': mappedType,
       'usageType': usageType,
@@ -143,7 +143,7 @@ class BankAccount extends Account {
           : (dataAcquisitionStart == 1)
               ? 2
               : 0,
-      'businessName': businessName,
+      'businessName': businessName?.trim(),
     };
   }
 

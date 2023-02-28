@@ -102,12 +102,16 @@ class _TransactionsTableFiltersState extends State<TransactionsTableFilters> {
         availablePeriodStartDate = state.filterParametersModel.periodStart;
         availablePeriodEndDate = state.filterParametersModel.periodEnd;
 
-        if (startDate != null &&
-            startDate!.isAfter(availablePeriodStartDate!)) {
-          availablePeriodStartDate = startDate;
+        if (startDate != null) {
+          if (availablePeriodStartDate == null || startDate!.isAfter(availablePeriodStartDate!)) {
+            availablePeriodStartDate = startDate;
+          }
         }
-        if (endDate != null && endDate!.isBefore(availablePeriodEndDate!)) {
-          availablePeriodEndDate = endDate;
+
+        if (endDate != null) {
+          if (availablePeriodEndDate == null || endDate!.isBefore(availablePeriodEndDate!)) {
+            availablePeriodEndDate = endDate;
+          }
         }
 
         if (state.transactionFiltersModel.sortingBy == 1 &&

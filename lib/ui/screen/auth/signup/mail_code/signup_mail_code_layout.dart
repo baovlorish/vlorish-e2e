@@ -38,12 +38,11 @@ class _SignupMailCodeLayoutState extends State<SignupMailCodeLayout> {
   late final SignupMailCodeCubit? signupMailCodeCubit;
   int? availableIndex;
 
-
   @override
   void initState() {
     super.initState();
     role = widget.role;
-        if (!widget.isSuccessLayout) {
+    if (!widget.isSuccessLayout) {
       signupMailCodeCubit = BlocProvider.of<SignupMailCodeCubit>(context);
       availableIndex = signupMailCodeCubit!.availableIndex;
       if (signupMailCodeCubit!.state is SignupMailCodeInitial) {
@@ -126,12 +125,8 @@ class _SignupMailCodeLayoutState extends State<SignupMailCodeLayout> {
                         type: LabelType.General,
                       ),
                       Label(
-                        text: email,
+                        text: "$email ",
                         type: LabelType.GeneralBold,
-                      ),
-                      Label(
-                        text: '. ',
-                        type: LabelType.General,
                       ),
                       Label(
                         text: AppLocalizations.of(context)!.enterCode,

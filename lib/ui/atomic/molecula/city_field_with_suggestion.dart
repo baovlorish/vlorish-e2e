@@ -169,7 +169,8 @@ class _TextFieldWithSuggestionState<T> extends State<TextFieldWithSuggestion> {
             controller.text = selectedModel.toString();
           },
           validator: (value) {
-            if (value!.isEmpty) {
+            value = value?.trim();
+            if (value?.isEmpty ?? true) {
               return widget.errorMessageEmpty;
             } else if (selectedModel == null) {
               return widget.errorMessageInvalid;

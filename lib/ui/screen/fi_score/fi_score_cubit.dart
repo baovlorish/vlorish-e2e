@@ -17,20 +17,27 @@ class FiScoreCubit extends Cubit<FiScoreState> {
     load();
   }
 
-  Future<void> load() async {
+  Future<bool> load() async {
     try {
       var scoreData = await vlorishScoreRepository.getLast();
       emit(FiScoreLoaded(vlorishScoreModel: scoreData));
+      return true;
     } catch (e) {
       emit(FiScoreError(error: e.toString()));
       rethrow;
     }
   }
 
-  Future<void> refresh() async {
+  Future<bool> refresh() async {
     try {
+      if (state is FiScoreRefreshing) return false;
+      if (state is FiScoreLoaded) {
+        final model = (state as FiScoreLoaded).vlorishScoreModel;
+        emit(FiScoreRefreshing(vlorishScoreModel: model));
+      }
       await vlorishScoreRepository.refresh();
-      await load();
+      final result = await load();
+      return result;
     } catch (e) {
       emit(FiScoreError(error: e.toString()));
       rethrow;

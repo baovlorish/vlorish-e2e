@@ -129,7 +129,7 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
 
   int? accessType;
   String? email;
-  late int? role = !widget.isInvitation ? 3 : null;
+  late int? role = !widget.isInvitation ? _RoleAndAdvisorHelper.advisorRole : null;
   String? note;
 
   String? emailErrorText;
@@ -138,27 +138,11 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
   var showInvitationTypeError = false;
   final formKey = GlobalKey<FormState>();
 
-  bool get isPartnerRole => role == 2;
-
-  bool get isCoachRole => role == 3;
-
-  bool get isReadOnlyAdvisor => isCoachRole && accessType == 1;
-
-  bool get isEditorAdvisor => isCoachRole && accessType == 2;
-
-  String? get partnerRoleTooltipText => isPartnerRole ? AppLocalizations.of(context)!.partnerInvitationHint : null;
-
-  String? get advisorTooltipText {
-    if (isReadOnlyAdvisor) return AppLocalizations.of(context)!.readOnlyAdvisorInvitationHint;
-    if (isEditorAdvisor) return AppLocalizations.of(context)!.editorAdvisorInvitationHint;
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     if (widget.isInvitation && widget.isAdvisor != null && widget.isAdvisor!) {
-      role = 2;
-      validateInvitationType(2);
+      role = _RoleAndAdvisorHelper.partnerRole;
+      validateInvitationType(role!);
     }
     enableMainButton = validateButton();
     return Form(
@@ -224,12 +208,12 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
                         labelText: 'Invitation type',
                         value: AppLocalizations.of(context)!.partner,
                         errorText: invitationTypeErrorText,
-                        tooltipText: partnerRoleTooltipText,
+                        tooltipText: _RoleAndAdvisorHelper.partnerRoleTooltipText(role, context),
                       )
                     : DropdownItem<int>(
                         itemKeys: [
-                          2, //partner
-                          3, //coach
+                          _RoleAndAdvisorHelper.partnerRole,
+                          _RoleAndAdvisorHelper.advisorRole,
                         ],
                         callback: (value) {
                           validateInvitationType(value);
@@ -249,17 +233,17 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
                         hintText: AppLocalizations.of(context)!
                             .chooseTheInvitationType,
                         errorText: invitationTypeErrorText,
-                        tooltipText: partnerRoleTooltipText,
+                        tooltipText: _RoleAndAdvisorHelper.partnerRoleTooltipText(role, context),
                       ),
               ),
-            if (isCoachRole)
+            if (_RoleAndAdvisorHelper.isAdvisorRole(role))
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14),
                 child: DropdownItem<int>(
                   itemKeys: [
-                    1, //read only
-                    2, //editor
+                    _RoleAndAdvisorHelper.readOnlyAccessType,
+                    _RoleAndAdvisorHelper.editorAccessType,
                   ],
                   callback: (value) {
                     setState(() {
@@ -272,7 +256,7 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
                     AppLocalizations.of(context)!.editor,
                   ],
                   hintText: AppLocalizations.of(context)!.chooseTheAccessType,
-                  tooltipText: advisorTooltipText,
+                  tooltipText: _RoleAndAdvisorHelper.advisorTooltipText(role, accessType, context),
                 ),
               ),
             Padding(
@@ -375,7 +359,7 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
       if (widget.isInvitation) {
         if (role != null) {
           // coach needs access type
-          if (isCoachRole) {
+          if (_RoleAndAdvisorHelper.isAdvisorRole(role)) {
             return accessType != null;
           } else {
             // partner
@@ -392,12 +376,12 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
   }
 
   void validateInvitationType(int invitationType) {
-    if (invitationType == 3 && !(widget.canInviteCoach == true)) {
+    if (_RoleAndAdvisorHelper.isAdvisorRole(invitationType) && !(widget.canInviteCoach == true)) {
       // if invitation type is coach and can't invite coach
       showInvitationTypeError = true;
       invitationTypeErrorText = AppLocalizations.of(context)!
           .youReachedTheMaximumAmountOfCoachInvitations;
-    } else if (invitationType == 2 && !(widget.canInvitePartner == true)) {
+    } else if (_RoleAndAdvisorHelper.isPartnerRole(invitationType) && !(widget.canInvitePartner == true)) {
       // if invitation type is partner and can invite partner
       showInvitationTypeError = true;
       invitationTypeErrorText = AppLocalizations.of(context)!
@@ -409,7 +393,7 @@ class _AddInvitationRequestFormState extends State<_AddInvitationRequestForm> {
   }
 
   Future<bool> checkInvitation() async {
-    if (role == 2) {
+    if (_RoleAndAdvisorHelper.isPartnerRole(role)) {
       emailErrorText = await widget.checkEmail(email!);
       if (emailErrorText == null) {
         return true;
@@ -541,8 +525,8 @@ class _EditInvitationRequestFormState
                   initialValue: widget.itemModel.role,
                   enabled: roleIsEnabled,
                   itemKeys: [
-                    2, //partner
-                    3, //coach
+                    _RoleAndAdvisorHelper.partnerRole,
+                    _RoleAndAdvisorHelper.advisorRole,
                   ],
                   callback: (value) {
                     validateInvitationTypeForEditItem(value);
@@ -560,17 +544,18 @@ class _EditInvitationRequestFormState
                   hintText:
                       AppLocalizations.of(context)!.chooseTheInvitationType,
                   errorText: invitationTypeErrorText,
+                  tooltipText: _RoleAndAdvisorHelper.partnerRoleTooltipText(role, context),
                 ),
               ),
-            if (role == 3)
+            if (_RoleAndAdvisorHelper.isAdvisorRole(role))
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14),
                 child: DropdownItem<int>(
                   initialValue: widget.itemModel.accessType,
                   itemKeys: [
-                    1, //read only
-                    2, //editor
+                    _RoleAndAdvisorHelper.readOnlyAccessType,
+                    _RoleAndAdvisorHelper.editorAccessType,
                   ],
                   callback: (value) {
                     setState(() {
@@ -584,6 +569,7 @@ class _EditInvitationRequestFormState
                     AppLocalizations.of(context)!.editor,
                   ],
                   hintText: AppLocalizations.of(context)!.chooseTheAccessType,
+                  tooltipText: _RoleAndAdvisorHelper.advisorTooltipText(role, accessType, context),
                 ),
               ),
             Padding(
@@ -679,11 +665,11 @@ class _EditInvitationRequestFormState
 
   void validateInvitationTypeForEditItem(int newRole) {
     if (newRole != widget.itemModel.role) {
-      if (newRole == 3 && !(widget.canInviteCoach == true)) {
+      if (_RoleAndAdvisorHelper.isAdvisorRole(newRole) && !(widget.canInviteCoach == true)) {
         showInvitationTypeError = true;
         invitationTypeErrorText = AppLocalizations.of(context)!
             .youReachedTheMaximumAmountOfCoachInvitations;
-      } else if (newRole == 2 && !(widget.canInvitePartner == true)) {
+      } else if (_RoleAndAdvisorHelper.isPartnerRole(newRole) && !(widget.canInvitePartner == true)) {
         showInvitationTypeError = true;
         invitationTypeErrorText = AppLocalizations.of(context)!
             .youReachedTheMaximumAmountOfPartnerInvitations;
@@ -695,7 +681,7 @@ class _EditInvitationRequestFormState
   }
 
   Future<bool> checkForEdit() async {
-    if (widget.isInvitation && role == 2) {
+    if (widget.isInvitation && _RoleAndAdvisorHelper.isPartnerRole(role)) {
       emailErrorText = await widget.checkEmail(email);
       showEmailError = true;
       setState(() {});
@@ -708,5 +694,30 @@ class _EditInvitationRequestFormState
   void clearEmailValidationError() {
     showEmailError = false;
     emailErrorText = null;
+  }
+}
+
+class _RoleAndAdvisorHelper {
+  static const partnerRole = 2;
+  static const advisorRole = 3;
+
+  static const readOnlyAccessType = 1;
+  static const editorAccessType = 2;
+
+  static bool isPartnerRole(int? role) => role == partnerRole;
+
+  static bool isAdvisorRole(int? role) => role == advisorRole;
+
+  static bool isReadOnlyAdvisor(int? role, int? accessType) => isAdvisorRole(role) && accessType == readOnlyAccessType;
+
+  static bool isEditorAdvisor(int? role, int? accessType) => isAdvisorRole(role) && accessType == editorAccessType;
+
+  static String? partnerRoleTooltipText(int? role, BuildContext context) =>
+      isPartnerRole(role) ? AppLocalizations.of(context)!.partnerInvitationHint : null;
+
+  static String? advisorTooltipText(int? role, int? accessType, BuildContext context) {
+    if (isReadOnlyAdvisor(role, accessType)) return AppLocalizations.of(context)!.readOnlyAdvisorInvitationHint;
+    if (isEditorAdvisor(role, accessType)) return AppLocalizations.of(context)!.editorAdvisorInvitationHint;
+    return null;
   }
 }
