@@ -25,10 +25,23 @@ String getRandomString(int len) {
   return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
 }
 
+String getRandomCharacter(int len) {
+  var r = Random();
+  const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+  return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
+}
+
 String getRandomNumber(int len) {
   var r = Random();
   const _chars = '1234567890';
   return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
+}
+
+String getRandomSymbolString(int length) {
+  final random = Random();
+  const symbols = r'!@#\$%^&*(),.?":{}|<>';
+  return String.fromCharCodes(Iterable.generate(
+      length, (_) => symbols.codeUnitAt(random.nextInt(symbols.length))));
 }
 
 int getDateNow() {

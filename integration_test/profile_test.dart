@@ -610,6 +610,248 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T198 Check that error message disappears after entering min 1 character in First name field',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.inputFirstName('', tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage(
+            'Please enter your first name', tester);
+        await profileScreen.inputFirstName(getRandomCharacter(1), tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await profileScreen.clickButton('Continue', tester);
+        await profileScreen.verifyHideMessage(
+            'Please enter your first name', tester);
+
+        await htLogd(
+            tester,
+            'BAR_T198 Check that error message disappears after entering min 1 character in First name field',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T198 Check that error message disappears after entering min 1 character in First name field',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T199 Check that user can enter max 50 characters in First name field',
+            '',
+            'STARTED');
+
+        final fName50Char =
+            'NameNameNameNameNameNameNameNameNameNameNameName50';
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.inputFirstName(fName50Char, tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage(
+            'First name should be up to 32 characters', tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await htLogd(
+            tester,
+            'BAR_T199 Check that user can enter max 50 characters in First name field',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T199 Check that user can enter max 50 characters in First name field',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T200 Check that error message disappears after entering min 1 character in Last name field',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.inputLastName('', tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage(
+            'Please enter your last name', tester);
+        await profileScreen.inputLastName(getRandomCharacter(1), tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await profileScreen.clickButton('Continue', tester);
+        await profileScreen.verifyHideMessage(
+            'Please enter your last name', tester);
+
+        await htLogd(
+            tester,
+            'BAR_T200 Check that error message disappears after entering min 1 character in Last name field',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T200 Check that error message disappears after entering min 1 character in Last name field',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T201 Check that user can enter max 50 characters in Last name field',
+            '',
+            'STARTED');
+
+        final lName50Char =
+            'NameNameNameNameNameNameNameNameNameNameNameName50';
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.inputLastName(lName50Char, tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage(
+            'First name should be up to 32 characters', tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await htLogd(tester, 'BAR_T201 ', '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T201 Check that user can enter max 50 characters in Last name field',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T202 Check that user can enter any symbols in First name field',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.inputFirstName(getRandomSymbolString(10), tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await profileScreen.clickButton('Continue', tester);
+
+        await htLogd(
+            tester,
+            'BAR_T202 Check that user can enter any symbols in First name field',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T202 Check that user can enter any symbols in First name field',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T203 Check that user can enter any symbols in Last name field',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.inputLastName(getRandomSymbolString(10), tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await profileScreen.clickButton('Continue', tester);
+
+        await htLogd(
+            tester,
+            'BAR_T203 Check that user can enter any symbols in Last name field',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T203 Check that user can enter any symbols in Last name field',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T2024 Check that user sees error message if enter digits in  First name field',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.inputFirstName(getRandomNumber(5), tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await profileScreen.clickButton('Continue', tester);
+        await profileScreen.verifyShowMessage(
+            "The goal's name should include at least 1 character. Please re-enter the goal's name",
+            tester);
+
+        await htLogd(
+            tester,
+            'BAR_T204 Check that user sees error message if enter digits in  First name field',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T204 Check that user sees error message if enter digits in  First name field',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T2025 Check that user sees error message if enter digits in Last name field',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        await profileScreen.inputLastName(getRandomNumber(5), tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.verifyShowMessage('Success!', tester);
+        await profileScreen.clickButton('Continue', tester);
+        await profileScreen.verifyShowMessage(
+            "The goal's name should include at least 1 character. Please re-enter the goal's name",
+            tester);
+
+        await htLogd(
+            tester,
+            'BAR_T205 Check that user sees error message if enter digits in Last name field',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Error BAR-T205 Check that user sees error message if enter digits in Last name field',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T98 Check that user can update “First Name” and “Last Name” fields',
             '',
             'STARTED');

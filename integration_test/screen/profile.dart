@@ -218,6 +218,24 @@ class ProfileScreenTest {
     await tester.pumpAndSettle();
   }
 
+  Future<void> inputFirstName(String firstName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final first = find.byType(InputItem).at(0);
+    await writeSomething(
+        tester, first, firstName, addContext(context, 'Input First Name'));
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+  }
+
+  Future<void> inputLastName(String lastName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final last = find.byType(InputItem).at(1);
+    await writeSomething(
+        tester, last, lastName, addContext(context, 'Input Last Name'));
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+  }
+
   Future<void> clickUpdateProfileButton(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle();
