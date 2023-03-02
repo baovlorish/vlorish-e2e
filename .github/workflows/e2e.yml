@@ -66,7 +66,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: ${ steps.read_file.outputs.contents }
+          SLACK_MESSAGE: ${{ steps.read_file.outputs.content }}
           SLACK_TITLE: Result Test
           SLACK_USERNAME: rtCamp
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
