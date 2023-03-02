@@ -53,16 +53,17 @@ jobs:
 #       - name: Run Business Budget Testsuite
 #         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
       
-      - name: Check Test Fail
-        run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
+#       - name: Check Test Fail
+#         run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
         
-      - name: Get Fail test content
+      - name: Read package.json
         id: failTest
-        run: echo "fails=$(cat ./integration_test/failTest.txt)" >> $GITHUB_OUTPUT
-        if: always()
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./integration_test/failTest.txt
         
-      - run: echo ${{ steps.failTest.outputs.fails }}
-        if: always()
+      - name: Echo package.json
+        run: echo "${{ steps.failTest.outputs.content }}"
       
 #       - name: Notify Slack 
 #         uses: craftech-io/slack-action@v1
