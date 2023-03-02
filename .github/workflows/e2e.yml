@@ -52,19 +52,26 @@ jobs:
       
 #       - name: Run Business Budget Testsuite
 #         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
-      
-#       - name: Check Test Fail
-#         run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
         
       - name: Read file contents
         id: read_file
-        uses: andstor/file-reader-action@v1
+        uses: juliangruber/read-file-action@v1
         with:
-          path: "./integration_test/failTest.txt"
+         path: ./integration_test/failTest.txt
+        
+      - name: Check Test Fail
+        run: ./integration_test/resultChecker.sh ./integration_test/failTest.txt
+        
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_MESSAGE: ${ steps.read_file.outputs.contents }
+          SLACK_TITLE: Result Test
+          SLACK_USERNAME: rtCamp
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
 
-      - name: File contents
-        run: echo "${ steps.read_file.outputs.contents }"
-      
 #       - name: Notify Slack 
 #         uses: craftech-io/slack-action@v1
 #         with:
