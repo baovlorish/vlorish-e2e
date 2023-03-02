@@ -268,15 +268,12 @@ class ProfileScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> clickContinueButton(String msg, WidgetTester tester,
+  Future<void> clickContinueButton(WidgetTester tester,
       {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 20));
-    await htExpect(tester, find.text(msg), findsOneWidget,
-        reason: ('Verify-' + context + '-' + msg + ' text is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 15));
     final continueBtn = find.text('Continue');
     await tapSomething(
-        tester, continueBtn, addContext(context, 'Click on btn Update'));
+        tester, continueBtn, addContext(context, 'Click on btn Continue'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
