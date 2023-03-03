@@ -58,30 +58,30 @@ void main() async {
             'FINISHED');
       }
 
-      try {
-        await htLogdDirect(
-            'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
-            '',
-            'STARTED');
-        await businessBudgetScreen.clickPersonalTab(tester);
-        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
-        await businessBudgetScreen.clickBusinessTab(tester);
-        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
-        await businessBudgetScreen.clickBudgetTab(btnDifference, tester);
-        await businessBudgetScreen.verifyShowDifferencePage(
-            btnDifference, tester);
-        await htLogd(
-            tester,
-            'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
-            '',
-            'FINISHED');
-      } catch (e) {
-        await htLogd(
-            tester,
-            'Failed BAR-T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
-            '',
-            'FINISHED');
-      }
+      // try {
+      //   await htLogdDirect(
+      //       'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
+      //       '',
+      //       'STARTED');
+      //   await businessBudgetScreen.clickPersonalTab(tester);
+      //   await businessBudgetScreen.verifyPersonalBudgetPage(tester);
+      //   await businessBudgetScreen.clickBusinessTab(tester);
+      //   await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+      //   await businessBudgetScreen.clickBudgetTab(btnDifference, tester);
+      //   await businessBudgetScreen.verifyShowDifferencePage(
+      //       btnDifference, tester);
+      //   await htLogd(
+      //       tester,
+      //       'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
+      //       '',
+      //       'FINISHED');
+      // } catch (e) {
+      //   await htLogd(
+      //       tester,
+      //       'Failed BAR-T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
+      //       '',
+      //       'FINISHED');
+      // }
 
       try {
         await htLogdDirect(

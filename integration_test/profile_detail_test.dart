@@ -583,6 +583,62 @@ void main() async {
       }
 
       try {
+        await htLogdDirect('BAR_T212 ', '', 'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final occupationOption = occupationOptions;
+        await profileScreen.verifyShowMessage(occupationOption[0], tester);
+        for (int i = 1; i < occupationOption.length; i++) {
+          await profileScreen.clickDropdownButton(occupationBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              occupationBtn, occupationOption[i], tester);
+          await profileScreen.clickUpdateProfileButton(tester);
+          await profileScreen.clickContinueButton(tester);
+          await profileScreen.verifyShowMessage(occupationOption[i], tester);
+        }
+        await profileScreen.clickDropdownButton(occupationBtn, tester);
+        await profileScreen.verifySelectDropdown(
+            occupationBtn, occupationOption[0], tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.clickContinueButton(tester);
+
+        await htLogd(tester, 'BAR_T212 ', '', 'FINISHED');
+      } catch (e) {
+        await htLogd(tester, 'Failed BAR-T212 ', '', 'FINISHED');
+      }
+
+      try {
+        await htLogdDirect('BAR_T213 ', '', 'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final genderOption = genderOptions;
+        await profileScreen.verifyShowMessage(genderOption[0], tester);
+        for (int i = 1; i < genderOption.length; i++) {
+          await profileScreen.clickDropdownButton(genderBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              genderBtn, genderOption[i], tester);
+          await profileScreen.clickUpdateProfileButton(tester);
+          await profileScreen.clickContinueButton(tester);
+          await profileScreen.verifyShowMessage(genderOption[i], tester);
+        }
+        await profileScreen.clickDropdownButton(genderBtn, tester);
+        await profileScreen.verifySelectDropdown(
+            genderBtn, genderOption[0], tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.clickContinueButton(tester);
+
+        await htLogd(tester, 'BAR_T213 ', '', 'FINISHED');
+      } catch (e) {
+        await htLogd(tester, 'Failed BAR-T213 ', '', 'FINISHED');
+      }
+
+      try {
         await htLogdDirect(
             'BAR_T98 Check that user can update “First Name” and “Last Name” fields',
             '',

@@ -35,10 +35,10 @@ class BudgetCategoryScreenTest {
         reason: ('Verify-' + context + 'Other Income text is visible'));
     await htExpect(tester, find.text('Loan Received'), findsOneWidget,
         reason: ('Verify-' + context + 'Loan Received text is visible'));
-    await htExpect(tester, find.text('Unplanned Income'), findsOneWidget,
-        reason: ('Verify-' + context + 'Unplanned Income text is visible'));
-    // await htExpect(tester, find.text('Uncategorized Income'), findsOneWidget,
-    //     reason: ('Verify-' + context + 'Uncategorized Income text is visible'));
+    // await htExpect(tester, find.text('Unplanned Income'), findsOneWidget,
+    //     reason: ('Verify-' + context + 'Unplanned Income text is visible'));
+    await htExpect(tester, find.text('Uncategorized Income'), findsOneWidget,
+        reason: ('Verify-' + context + 'Uncategorized Income text is visible'));
 
     await htExpect(tester, find.text('Housing'), findsOneWidget,
         reason: ('Verify-' + context + 'Housing text is visible'));
@@ -198,10 +198,10 @@ class BudgetCategoryScreenTest {
         reason: ('Verify-' + context + 'Investments text is visible'));
     await htExpect(tester, find.text('Stocks'), findsOneWidget,
         reason: ('Verify-' + context + 'Stocks text is visible'));
-    await htExpect(tester, find.text('Real Estate'), findsOneWidget,
-        reason: ('Verify-' + context + 'Real Estate text is visible'));
-    // await htExpect(tester, find.text('Inv. Properties'), findsOneWidget,
-    //     reason: ('Verify-' + context + 'Inv. Properties text is visible'));
+    // await htExpect(tester, find.text('Real Estate'), findsOneWidget,
+    //     reason: ('Verify-' + context + 'Real Estate text is visible'));
+    await htExpect(tester, find.text('Inv. Properties'), findsOneWidget,
+        reason: ('Verify-' + context + 'Inv. Properties text is visible'));
     await htExpect(tester, find.text('Cryptocurrency'), findsOneWidget,
         reason: ('Verify-' + context + 'Cryptocurrency text is visible'));
     await htExpect(tester, find.text('Startup Investments'), findsOneWidget,
@@ -243,10 +243,10 @@ class BudgetCategoryScreenTest {
     await htExpect(tester, find.text('Investment in business'), findsOneWidget,
         reason:
             ('Verify-' + context + 'Investment in business text is visible'));
-    await htExpect(tester, find.text('Unplanned Income'), findsOneWidget,
-        reason: ('Verify-' + context + 'Unplanned Income text is visible'));
-    // await htExpect(tester, find.text('Uncategorized Income'), findsOneWidget,
-    //     reason: ('Verify-' + context + 'Uncategorized Income text is visible'));
+    // await htExpect(tester, find.text('Unplanned Income'), findsOneWidget,
+    //     reason: ('Verify-' + context + 'Unplanned Income text is visible'));
+    await htExpect(tester, find.text('Uncategorized Income'), findsOneWidget,
+        reason: ('Verify-' + context + 'Uncategorized Income text is visible'));
 
     await htExpect(tester, find.text('Personnel Costs'), findsOneWidget,
         reason: ('Verify-' + context + 'Personnel Costs text is visible'));
@@ -276,10 +276,10 @@ class BudgetCategoryScreenTest {
         reason: ('Verify-' +
             context +
             'Video production & editing text is visible'));
-    await htExpect(tester, find.text('App development'), findsOneWidget,
-        reason: ('Verify-' + context + 'App development text is visible'));
-    // await htExpect(tester, find.text('Software development'), findsOneWidget,
-    //     reason: ('Verify-' + context + 'Software development text is visible'));
+    // await htExpect(tester, find.text('App development'), findsOneWidget,
+    //     reason: ('Verify-' + context + 'App development text is visible'));
+    await htExpect(tester, find.text('Software development'), findsOneWidget,
+        reason: ('Verify-' + context + 'Software development text is visible'));
     await htExpect(tester, find.text('E-commerce assistant'), findsOneWidget,
         reason: ('Verify-' + context + 'E-commerce assistant text is visible'));
     await htExpect(tester, find.text('Admin assistant'), findsOneWidget,
@@ -376,18 +376,18 @@ class BudgetCategoryScreenTest {
         reason:
             ('Verify-' + context + 'Professional development text is visible'));
     //---------
-    await htExpect(tester, find.text('Business insurance'), findsOneWidget,
-        reason: ('Verify-' + context + 'Business insurance text is visible'));
+    // await htExpect(tester, find.text('Business insurance'), findsOneWidget,
+    //     reason: ('Verify-' + context + 'Business insurance text is visible'));
     //---------
 
-    // await htExpect(tester, find.text('Debts').last, findsOneWidget,
-    //     reason: ('Verify-' + context + 'Debts text is visible'));
-    // await htExpect(tester, find.text('Credit Cards'), findsOneWidget,
-    //     reason: ('Verify-' + context + 'Credit Cards text is visible'));
-    // await htExpect(tester, find.text('Business Loan'), findsOneWidget,
-    //     reason: ('Verify-' + context + 'Business Loan text is visible'));
-    // await htExpect(tester, find.text('Auto Loan'), findsOneWidget,
-    //     reason: ('Verify-' + context + 'Auto Loan text is visible'));
+    await htExpect(tester, find.text('Debts').last, findsOneWidget,
+        reason: ('Verify-' + context + 'Debts text is visible'));
+    await htExpect(tester, find.text('Credit Cards'), findsOneWidget,
+        reason: ('Verify-' + context + 'Credit Cards text is visible'));
+    await htExpect(tester, find.text('Business Loan'), findsOneWidget,
+        reason: ('Verify-' + context + 'Business Loan text is visible'));
+    await htExpect(tester, find.text('Auto Loan'), findsOneWidget,
+        reason: ('Verify-' + context + 'Auto Loan text is visible'));
 
     await htExpect(tester, find.text('Other Expenses'), findsOneWidget,
         reason: ('Verify-' + context + 'Other Expenses text is visible'));

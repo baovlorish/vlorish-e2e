@@ -65,7 +65,8 @@ void main() async {
         await signInScreen.clickBtnSignUp(tester, context: context);
         await signUpScreen.inputEmail('', tester, context: context);
         await signUpScreen.clickButtonNext(tester, context: context);
-        await signUpScreen.verifyErrorMessage('Please enter your email', tester,
+        await signUpScreen.verifyErrorMessage(
+            'Please, enter your email', tester,
             context: context); // Actually show Please, enter your email
         await htLogd(
             tester,
