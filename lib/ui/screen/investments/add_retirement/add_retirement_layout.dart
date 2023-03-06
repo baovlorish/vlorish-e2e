@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:burgundy_budgeting_app/utils/extensions.dart';
 
 class AddRetirementLayout extends StatefulWidget {
   final RetirementModel? editRetirement;
@@ -73,8 +74,10 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
 
   late bool isAddScreen;
 
-  String categoryHeader() {
-    return isAddScreen ? 'Add Retirement' : 'Edit Retirement';
+  String categoryHeader(BuildContext context) {
+    return isAddScreen
+        ? AppLocalizations.of(context)!.addRetirement
+        : AppLocalizations.of(context)!.editRetirement;
   }
 
   @override
@@ -127,7 +130,7 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                       _addRetirementCubit.navigationToInvestmentPage(context);
                     }),
                     Text(
-                      categoryHeader(),
+                      categoryHeader(context),
                       style:
                           CustomTextStyle.HeaderBoldTextStyle(context).copyWith(
                         fontSize: 36.0,
@@ -239,7 +242,8 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                             onEditingComplete: () =>
                                                 _custodianNode.requestFocus(),
                                             hintText: 'Vlorish',
-                                            labelText: 'Name*',
+                                            labelText:
+                                                '${AppLocalizations.of(context)!.name.capitalize()}*',
                                           ),
                                         ),
                                         SizedBox(
@@ -335,7 +339,8 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                                 ? _initialCost!.toString()
                                                 : '',
                                             focusNode: _costNode,
-                                            labelText: 'Initial Value*',
+                                            labelText:
+                                                '${AppLocalizations.of(context)!.initialValue}*',
                                             prefix: '\$ ',
                                             onEditingComplete: () =>
                                                 setState(() {
@@ -409,8 +414,9 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                                   ),
                                                   SizedBox(width: 4),
                                                   Label(
-                                                    text:
-                                                        'Add changes to the Initial Value',
+                                                    text: AppLocalizations.of(
+                                                            context)!
+                                                        .addChangesToInitialValue,
                                                     type: LabelType.Button,
                                                     color: CustomColorScheme
                                                         .menuBackgroundActive,
@@ -475,7 +481,8 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                                   ? _newCost!.toString()
                                                   : '',
                                               focusNode: _newCostNode,
-                                              labelText: 'New Initial value*',
+                                              labelText:
+                                                  '${AppLocalizations.of(context)!.newInitialValue}*',
                                               prefix: '\$ ',
                                               textInputFormatters: [
                                                 FilteringTextInputFormatter
@@ -506,7 +513,7 @@ class _AddRetirementLayoutState extends State<AddRetirementLayout> {
                                             : '',
                                         focusNode: _currentCostNode,
                                         labelText:
-                                            'Current value${widget.editRetirement != null ? '*' : ''}',
+                                            '${AppLocalizations.of(context)!.currentValue}${widget.editRetirement != null ? '*' : ''}',
                                         prefix: '\$ ',
                                         textInputFormatters: [
                                           FilteringTextInputFormatter.allow(

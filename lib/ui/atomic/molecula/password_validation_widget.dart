@@ -163,7 +163,7 @@ class _PasswordValidationWidgetState extends State<PasswordValidationWidget> {
             child: isError
                 ? CustomTooltip(
                     color: CustomColorScheme.inputErrorBorder,
-                    message: 'That\'s  an invalid password',
+                    message: AppLocalizations.of(context)!.invalidPasswordError,
                     child: Icon(
                       Icons.info,
                       color: CustomColorScheme.inputErrorBorder,

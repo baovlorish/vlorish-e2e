@@ -147,11 +147,13 @@ class TaxCubit extends Cubit<TaxState> {
     var prevState = state;
     try {
       await taxRepository.setCreditsAndAdjustment(creditsAndAdjustmentModel);
+      var estimatedTaxes = await taxRepository.getEstimatedTaxes(selectedYear, cubitFICAIncluded);
       if (prevState is TaxLoaded) {
         emit(prevState.copyWith(
             estimatedTaxesModel: estimationStage == TaxTab.Complete.index
-                ? await taxRepository.getEstimatedTaxes(selectedYear, cubitFICAIncluded)
-                : null));
+                ? estimatedTaxes
+                : null,
+            creditsAndAdjustmentModel: creditsAndAdjustmentModel));
       }
     } catch (e) {
       emit(TaxError(e.toString()));
@@ -171,7 +173,7 @@ class TaxCubit extends Cubit<TaxState> {
     }
   }
 
-  Future<int> getChildAndDependentCareCredit(
+  Future<double> getChildAndDependentCareCredit(
     IncomeAdjustments incomeAdjustments,
     int totalEligibleChildcareExpenses,
   ) async {

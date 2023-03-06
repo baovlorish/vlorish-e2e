@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:burgundy_budgeting_app/ui/atomic/atom/dashboard_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:burgundy_budgeting_app/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -21,31 +22,27 @@ class MonthDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     var dashboardItems = [
       DashboardItem(
-        text: 'TOTAL PLANNED',
+        text: AppLocalizations.of(context)!.totalPlanned.capitalize(),
         iconUrl: 'assets/images/icons/active.png',
-        sumString: data.totalBudgeted
-            .formattedWithDecorativeElementsString(),
+        sumString: data.totalBudgeted.formattedWithDecorativeElementsString(),
         textSize: data.textSize,
       ),
       DashboardItem(
-        text: 'TOTAL SPENT',
+        text: AppLocalizations.of(context)!.totalSpent.capitalize(),
         iconUrl: 'assets/images/icons/categories_total_expenses.png',
-        sumString: data.totalSpent
-            .formattedWithDecorativeElementsString(),
+        sumString: data.totalSpent.formattedWithDecorativeElementsString(),
         textSize: data.textSize,
       ),
       DashboardItem(
-        text: 'DIFFERENCE',
+        text: AppLocalizations.of(context)!.difference.capitalize(),
         iconUrl: 'assets/images/icons/categories_free_cash.png',
-        sumString: data.difference
-            .formattedWithDecorativeElementsString(),
+        sumString: data.difference.formattedWithDecorativeElementsString(),
         textSize: data.textSize,
       ),
       DashboardItem(
-        text: 'TOTAL UNCATEGORIZED',
+        text: AppLocalizations.of(context)!.totalUncategorized.capitalize(),
         iconUrl: 'assets/images/icons/categories_other_expenses.png',
-        sumString: data.totalUnbudgeted
-            .formattedWithDecorativeElementsString(),
+        sumString: data.totalUnbudgeted.formattedWithDecorativeElementsString(),
         textSize: data.textSize,
         onTap: onUnbudgeted,
       ),

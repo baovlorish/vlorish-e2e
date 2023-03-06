@@ -69,7 +69,7 @@ class _InvestmentsColumnChartState extends State<InvestmentsColumnChart> {
               padding: const EdgeInsets.all(16.0),
               child: Label(
                 type: LabelType.Header3,
-                text: 'Investments growth',
+                text: AppLocalizations.of(context)!.investmentGrowth,
                 fontSize: 18,
               ),
             ),

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class TaxCreditsAndAdjustmentModel extends Equatable {
-  TaxCreditsAndAdjustmentModel({
+ const TaxCreditsAndAdjustmentModel({
     required this.incomeAdjustments,
     required this.itemizedDeductions,
     required this.qualifiedBusinessIncomeDeduction,
@@ -55,6 +55,27 @@ class TaxCreditsAndAdjustmentModel extends Equatable {
   }
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      super == other &&
+          other is TaxCreditsAndAdjustmentModel &&
+          runtimeType == other.runtimeType &&
+          incomeAdjustments == other.incomeAdjustments &&
+          itemizedDeductions == other.itemizedDeductions &&
+          qualifiedBusinessIncomeDeduction == other.qualifiedBusinessIncomeDeduction &&
+          taxCredits == other.taxCredits &&
+          year == other.year;
+
+  @override
+  int get hashCode =>
+      super.hashCode ^
+      incomeAdjustments.hashCode ^
+      itemizedDeductions.hashCode ^
+      qualifiedBusinessIncomeDeduction.hashCode ^
+      taxCredits.hashCode ^
+      year.hashCode;
+
+  @override
   String toString() {
     return 'CreditsAndAdjustmentModel :{ \n${incomeAdjustments.toString()},\n${itemizedDeductions.toString()},\nqualifiedBusinessIncomeDeduction: $qualifiedBusinessIncomeDeduction,\n${taxCredits.toString()},\nyear: $year}';
   }
@@ -70,7 +91,7 @@ class TaxCreditsAndAdjustmentModel extends Equatable {
 }
 
 class IncomeAdjustments {
-  IncomeAdjustments({
+  const IncomeAdjustments({
     required this.selfEmployedHealthInsurance,
     required this.hsaContribution,
     required this.retirementContributionsNotDeductedFromPaycheck,
@@ -80,13 +101,13 @@ class IncomeAdjustments {
     required this.other,
   });
 
-  int selfEmployedHealthInsurance;
-  int hsaContribution;
-  int retirementContributionsNotDeductedFromPaycheck;
-  int studentInterestPaidDuringTheYear;
-  int studentLoanInterestPaid;
-  double halfOfSelfEmploymentTaxesPaid;
-  int other;
+  final int selfEmployedHealthInsurance;
+  final int hsaContribution;
+  final int retirementContributionsNotDeductedFromPaycheck;
+  final int studentInterestPaidDuringTheYear;
+  final int studentLoanInterestPaid;
+  final double halfOfSelfEmploymentTaxesPaid;
+  final int other;
 
   Map<String, dynamic> toJson() {
     return {
@@ -121,6 +142,8 @@ class IncomeAdjustments {
     int? studentLoanInterestPaid,
     int? other,
     int? retirementContributionsNotDeductedFromPaycheck,
+    int? studentInterestPaidDuringTheYear,
+    double? halfOfSelfEmploymentTaxesPaid,
   }) {
     return IncomeAdjustments(
       selfEmployedHealthInsurance:
@@ -132,12 +155,33 @@ class IncomeAdjustments {
       retirementContributionsNotDeductedFromPaycheck:
           retirementContributionsNotDeductedFromPaycheck ??
               this.retirementContributionsNotDeductedFromPaycheck,
-
-      ///not editable fields
-      halfOfSelfEmploymentTaxesPaid: halfOfSelfEmploymentTaxesPaid,
-      studentInterestPaidDuringTheYear: studentInterestPaidDuringTheYear,
+      halfOfSelfEmploymentTaxesPaid: halfOfSelfEmploymentTaxesPaid ?? this.halfOfSelfEmploymentTaxesPaid,
+      studentInterestPaidDuringTheYear: studentInterestPaidDuringTheYear?? this.studentInterestPaidDuringTheYear,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IncomeAdjustments &&
+          runtimeType == other.runtimeType &&
+          selfEmployedHealthInsurance == other.selfEmployedHealthInsurance &&
+          hsaContribution == other.hsaContribution &&
+          retirementContributionsNotDeductedFromPaycheck == other.retirementContributionsNotDeductedFromPaycheck &&
+          studentInterestPaidDuringTheYear == other.studentInterestPaidDuringTheYear &&
+          studentLoanInterestPaid == other.studentLoanInterestPaid &&
+          halfOfSelfEmploymentTaxesPaid == other.halfOfSelfEmploymentTaxesPaid &&
+          this.other == other.other;
+
+  @override
+  int get hashCode =>
+      selfEmployedHealthInsurance.hashCode ^
+      hsaContribution.hashCode ^
+      retirementContributionsNotDeductedFromPaycheck.hashCode ^
+      studentInterestPaidDuringTheYear.hashCode ^
+      studentLoanInterestPaid.hashCode ^
+      halfOfSelfEmploymentTaxesPaid.hashCode ^
+      other.hashCode;
 
   @override
   String toString() {
@@ -156,7 +200,7 @@ class IncomeAdjustments {
 }
 
 class ItemizedDeductions extends Equatable {
-  ItemizedDeductions({
+ const ItemizedDeductions({
     required this.mortgageInterestPaid,
     required this.propertyTaxPayments,
     required this.charitableContributions,
@@ -164,11 +208,11 @@ class ItemizedDeductions extends Equatable {
     required this.compareToStandardDeduction,
   });
 
-  int mortgageInterestPaid;
-  int propertyTaxPayments;
-  int charitableContributions;
-  int otherItemizedDeduction;
-  int compareToStandardDeduction;
+  final int mortgageInterestPaid;
+  final int propertyTaxPayments;
+  final int charitableContributions;
+  final int otherItemizedDeduction;
+  final int compareToStandardDeduction;
 
   Map<String, dynamic> toJson() {
     return {
@@ -194,6 +238,7 @@ class ItemizedDeductions extends Equatable {
     int? propertyTaxPayments,
     int? charitableContributions,
     int? otherItemizedDeduction,
+    int? compareToStandardDeduction,
   }) {
     return ItemizedDeductions(
       mortgageInterestPaid: mortgageInterestPaid ?? this.mortgageInterestPaid,
@@ -202,11 +247,30 @@ class ItemizedDeductions extends Equatable {
           charitableContributions ?? this.charitableContributions,
       otherItemizedDeduction:
           otherItemizedDeduction ?? this.otherItemizedDeduction,
-
-      ///not editable fields
-      compareToStandardDeduction: compareToStandardDeduction,
+      compareToStandardDeduction: compareToStandardDeduction ?? this.compareToStandardDeduction,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      super == other &&
+          other is ItemizedDeductions &&
+          runtimeType == other.runtimeType &&
+          mortgageInterestPaid == other.mortgageInterestPaid &&
+          propertyTaxPayments == other.propertyTaxPayments &&
+          charitableContributions == other.charitableContributions &&
+          otherItemizedDeduction == other.otherItemizedDeduction &&
+          compareToStandardDeduction == other.compareToStandardDeduction;
+
+  @override
+  int get hashCode =>
+      super.hashCode ^
+      mortgageInterestPaid.hashCode ^
+      propertyTaxPayments.hashCode ^
+      charitableContributions.hashCode ^
+      otherItemizedDeduction.hashCode ^
+      compareToStandardDeduction.hashCode;
 
   @override
   String toString() {
@@ -233,12 +297,12 @@ class TaxCredits extends Equatable {
     required this.otherTaxCredit,
   });
 
-  int childTaxCredit;
-  int childAndDependentCareCredit;
-  int totalEligibleChildcareExpenses;
-  int energyCredit;
-  int electricVehicleCredit;
-  int otherTaxCredit;
+ final int childTaxCredit;
+ final double childAndDependentCareCredit;
+ final int totalEligibleChildcareExpenses;
+ final int energyCredit;
+ final int electricVehicleCredit;
+ final int otherTaxCredit;
 
   Map<String, dynamic> toJson() {
     return {
@@ -266,19 +330,43 @@ class TaxCredits extends Equatable {
     int? energyCredit,
     int? electricVehicleCredit,
     int? otherTaxCredit,
+    int? childTaxCredit,
+    double? childAndDependentCareCredit,
+    int? totalEligibleChildcareExpenses,
   }) {
     return TaxCredits(
       energyCredit: energyCredit ?? this.energyCredit,
       electricVehicleCredit:
           electricVehicleCredit ?? this.electricVehicleCredit,
       otherTaxCredit: otherTaxCredit ?? this.otherTaxCredit,
-
-      ///not editable fields
-      childTaxCredit: childTaxCredit,
-      childAndDependentCareCredit: childAndDependentCareCredit,
-      totalEligibleChildcareExpenses: totalEligibleChildcareExpenses,
+      childTaxCredit: childTaxCredit ?? this.childTaxCredit,
+      childAndDependentCareCredit: childAndDependentCareCredit ?? this.childAndDependentCareCredit,
+      totalEligibleChildcareExpenses: totalEligibleChildcareExpenses ?? this.totalEligibleChildcareExpenses,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      super == other &&
+          other is TaxCredits &&
+          runtimeType == other.runtimeType &&
+          childTaxCredit == other.childTaxCredit &&
+          childAndDependentCareCredit == other.childAndDependentCareCredit &&
+          totalEligibleChildcareExpenses == other.totalEligibleChildcareExpenses &&
+          energyCredit == other.energyCredit &&
+          electricVehicleCredit == other.electricVehicleCredit &&
+          otherTaxCredit == other.otherTaxCredit;
+
+  @override
+  int get hashCode =>
+      super.hashCode ^
+      childTaxCredit.hashCode ^
+      childAndDependentCareCredit.hashCode ^
+      totalEligibleChildcareExpenses.hashCode ^
+      energyCredit.hashCode ^
+      electricVehicleCredit.hashCode ^
+      otherTaxCredit.hashCode;
 
   @override
   String toString() {

@@ -139,7 +139,10 @@ void main() async {
         await signUpScreen.inputPassword('Test1234@', tester);
         await signUpScreen.inputConfirmPassword('Test1234@', tester);
         await signUpScreen.clickAgreeAndContinueBtn(tester);
-        await signUpScreen.verifySigupMailCodePage(emailSigup, tester);
+        await signUpScreen.verifySigupMailCodePage(tester);
+        await signUpScreen.inputConfirmCodeEmail(tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifySigupPersonalInfoPage(tester);
 
         await htLogd(
             tester,
@@ -327,6 +330,155 @@ void main() async {
             'FINISHED');
       }
 
+      try {
+        await htLogdDirect(
+            'BAR-T26 User sees error message and is not redirected on Employment page if he leaves empty all fields and click on Next button',
+            '',
+            'STARTED');
+        final email26 = getRandomString(10) + '@gmail.com';
+        await dashboardScreen.clickLogoText();
+        await signInScreen.clickBtnSignUp(tester);
+        await signUpScreen.inputEmail(email26, tester, context: context);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.inputPassword(passLogin, tester);
+        await signUpScreen.inputConfirmPassword(passLogin, tester);
+        await signUpScreen.clickAgreeAndContinueBtn(tester);
+        await signUpScreen.verifySigupMailCodePage(tester);
+        await signUpScreen.inputConfirmCodeEmail(tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifySigupPersonalInfoPage(tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter your first name', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter last name', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please chose your gender', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter the name of your city', tester);
+
+        await htLogd(
+            tester,
+            'BAR-T26 User sees error message and is not redirected on Employment page if he leaves empty all fields and click on Next buttons',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T26 User sees error message and is not redirected on Employment page if he leaves empty all fields and click on Next button',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR-T27 User sees error message and he is not redirected on Employment page if he leaves at least one empty field (First Name, Last Name, City, Gender) and clicks on Next button',
+            '',
+            'STARTED');
+        final email27 = getRandomString(10) + '@gmail.com';
+        await dashboardScreen.clickLogoText();
+        await signInScreen.clickBtnSignUp(tester);
+        await signUpScreen.inputEmail(email27, tester, context: context);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.inputPassword(passLogin, tester);
+        await signUpScreen.inputConfirmPassword(passLogin, tester);
+        await signUpScreen.clickAgreeAndContinueBtn(tester);
+        await signUpScreen.verifySigupMailCodePage(tester);
+        await signUpScreen.inputConfirmCodeEmail(tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifySigupPersonalInfoPage(tester);
+        await signUpScreen.inputFirstName(getRandomCharacter(10), tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter last name', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please chose your gender', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter the name of your city', tester);
+
+        await signUpScreen.clickStepEmailConfirmation(tester);
+        await signUpScreen.clickStepPersonalInfo(tester);
+        await signUpScreen.inputLastName(getRandomCharacter(10), tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter your first name', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please chose your gender', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter the name of your city', tester);
+
+        await signUpScreen.clickStepEmailConfirmation(tester);
+        await signUpScreen.clickStepPersonalInfo(tester);
+        await signUpScreen.clickDropdownButton(tester);
+        await signUpScreen.verifySelectDropdown(genderSignupOptions[0], tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter your first name', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter last name', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter the name of your city', tester);
+
+        await signUpScreen.clickStepEmailConfirmation(tester);
+        await signUpScreen.clickStepPersonalInfo(tester);
+        await signUpScreen.selectCity('san fran', 'San Francisco, CA', tester);
+        await signUpScreen.clickButtonNext(tester);
+
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter your first name', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please enter last name', tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'Please chose your gender', tester);
+
+        await htLogd(
+            tester,
+            'BAR-T27 User sees error message and he is not redirected on Employment page if he leaves at least one empty field (First Name, Last Name, City, Gender) and clicks on Next button',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T27 User sees error message and he is not redirected on Employment page if he leaves at least one empty field (First Name, Last Name, City, Gender) and clicks on Next button',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR-T28 User cannot enter city that does not exist in "City" feild',
+            '',
+            'STARTED');
+        final email28 = getRandomString(10) + '@gmail.com';
+        await dashboardScreen.clickLogoText();
+        await signInScreen.clickBtnSignUp(tester);
+        await signUpScreen.inputEmail(email28, tester, context: context);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.inputPassword(passLogin, tester);
+        await signUpScreen.inputConfirmPassword(passLogin, tester);
+        await signUpScreen.clickAgreeAndContinueBtn(tester);
+        await signUpScreen.verifySigupMailCodePage(tester);
+        await signUpScreen.inputConfirmCodeEmail(tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifySigupPersonalInfoPage(tester);
+        await signUpScreen.selectCity('Sap Prancisco', '', tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyMessageErrorIsVisible(
+            'There is no city with such a name. Please check if the name you are inputting is correct',
+            tester);
+
+        await htLogd(
+            tester,
+            'BAR-T28 User cannot enter city that does not exist in "City" feild',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T28 User cannot enter city that does not exist in "City" feild',
+            '',
+            'FINISHED');
+      }
       try {
         await htLogdDirect(
             'BAR-T1 User is redirected on Password page after entering correct email',

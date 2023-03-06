@@ -74,7 +74,10 @@ class _ManageAccountsLayoutState extends State<ManageAccountsLayout> {
                     isInvestmentAccounts = !isInvestmentAccounts;
                     setState(() {});
                   },
-                  options: ['Bank Accounts', 'Investments'],
+                  options: [
+                    AppLocalizations.of(context)!.bankAccounts,
+                    AppLocalizations.of(context)!.investments
+                  ],
                 ),
               ),
             ],
@@ -120,7 +123,8 @@ class _ManageAccountsLayoutState extends State<ManageAccountsLayout> {
                           ),
                           onMainButtonPressed: () async {
                             var businessNameList = [''];
-                            if(!_homeScreenCubit.user.subscription!.isStandard){
+                            if (!_homeScreenCubit
+                                .user.subscription!.isStandard) {
                               businessNameList =
                                   await _manageAccountsCubit.businessNameList();
                             }
@@ -143,7 +147,11 @@ class _ManageAccountsLayoutState extends State<ManageAccountsLayout> {
                                       context,
                                       businessNameList: businessNameList,
                                       isStandardSubscription:
-                                          BlocProvider.of<HomeScreenCubit>(context).user.subscription!.isStandard,
+                                          BlocProvider.of<HomeScreenCubit>(
+                                                  context)
+                                              .user
+                                              .subscription!
+                                              .isStandard,
                                       addAccountFunction: (
                                           {required String name,
                                           required int usageType,

@@ -19,7 +19,7 @@ import 'package:burgundy_budgeting_app/ui/screen/manage_users/manage_users_state
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+ 
 class ManageUsersLayout extends StatefulWidget {
   const ManageUsersLayout({Key? key}) : super(key: key);
 
@@ -343,7 +343,7 @@ class _ManageUsersLayoutState extends State<ManageUsersLayout> {
                     textAlign: TextAlign.justify,
                     color: Colors.white,
                     text: _homeScreenCubit.user.subscription!.isBusiness
-                        ? '  To share your budget, send the invitation. After the invitation is confirmed by mentioned user, they will have the access to your budget. You can have up to 3 active invitations: 2 coach types and 1 with partner type.'
+                        ? '  ${AppLocalizations.of(context)!.helpHintManageBusiness}'
                         : AppLocalizations.of(context)!.helpHintManageUsers,
                   ),
                 ),

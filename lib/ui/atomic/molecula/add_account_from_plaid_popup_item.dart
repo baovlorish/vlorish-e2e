@@ -137,8 +137,8 @@ class _AddAccountFromPlaidPopupItemState
 
     isMortgageLoanAccountType = _personalAccountTypes[_chosenAccountType] ==
         AppLocalizations.of(context)!.mortgageLoan;
-    var dropdownErrorText = _error?.incorrectType == true
-        ? 'Specified Account Type is not appropriate according to External Account Type and Subtype'
+    var dropdownErrorText = widget.error?.incorrectType == true
+        ? AppLocalizations.of(context)!.addAccountTypeNotAppropriateErrorMessage
         : null;
 
     if (widget.bankAccount.usageType != 0) {

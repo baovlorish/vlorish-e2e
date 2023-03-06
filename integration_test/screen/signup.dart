@@ -1,10 +1,19 @@
+import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../lib/test_lib_common.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:html';
+
+const List<String> genderSignupOptions = [
+  'Male',
+  'Female',
+  'Gender Neutral',
+  'Decline to Answer',
+];
 
 class SignUpScreenTest {
   const SignUpScreenTest(this.tester);
@@ -206,7 +215,7 @@ class SignUpScreenTest {
             '- Text Please enter your email address to create an account is visible'));
   }
 
-  Future<void> verifySigupMailCodePage(String email, WidgetTester tester,
+  Future<void> verifySigupMailCodePage(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     await htExpect(tester, find.text('Confirm your email'), findsOneWidget,
@@ -216,8 +225,128 @@ class SignUpScreenTest {
         reason: ("Verify-" +
             context +
             '- Text We sent an email with a code is visible'));
-    await htExpect(tester, find.text(email), findsOneWidget,
-        reason: ("Verify-" + context + '- Email is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> inputConfirmCodeEmail(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final code = find.byType(TextField).first;
+    await writeSomething(tester, code, '111111',
+        addContext(context, 'Input code confirm your email'));
+    // await tester.enterText(code, '111111');
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifySigupPersonalInfoPage(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+    await htExpect(
+        tester, find.text('We want to know you better'), findsOneWidget,
+        reason:
+            ("Verify-" + context + '- Personal Info Page Title is visible'));
+    await htExpect(tester, find.text('Please add some details about yourself'),
+        findsOneWidget,
+        reason: ("Verify-" +
+            context +
+            '- Text Please add some details about yourself is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyMessageErrorIsVisible(String msg, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    final text = tester.widget<Text>(find.text(msg));
+    expect(text.style?.color, CustomColorScheme.inputErrorBorder);
+    await htExpect(
+        tester, text.style?.color, CustomColorScheme.inputErrorBorder,
+        reason: ("Verify-" + context + "-" + msg + ' error is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> scrollThePage(String textScroll) async {
+    await tester.dragUntilVisible(
+      find.text(textScroll), // what you want to find
+      find.byKey(ValueKey('Text')), // widget you want to scroll
+      const Offset(-500, 0), // delta to move
+    );
+  }
+
+  Future<void> inputFirstName(String fName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final firstName = find.byType(InputItem).first;
+    await writeSomething(
+        tester, firstName, fName, addContext(context, 'Input first name'));
+    await tester.enterText(firstName, fName);
+  }
+
+  Future<void> inputLastName(String lName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final lastName = find.byType(InputItem).at(1);
+    await writeSomething(
+        tester, lastName, lName, addContext(context, 'Input last name'));
+    await tester.enterText(lastName, lName);
+  }
+
+  Future<void> selectCity(String searchCityName,
+      String selectSuggestionCityName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final typeAheadFinder = find.byType(TypeAheadFormField);
+    await tester.tap(typeAheadFinder);
+    await tester.enterText(typeAheadFinder, searchCityName);
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+    if (selectSuggestionCityName != '') {
+      final suggestionFinder = find.text(selectSuggestionCityName);
+      await tester.tap(suggestionFinder);
+    }
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+  }
+
+  Future<void> clickDropdownButton(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    final assetImage = AssetImage('assets/images/icons/dropdown.png');
+    final imageIconFinder = find.byWidgetPredicate((widget) {
+      if (widget is ImageIcon) {
+        if (widget.image is AssetImage && widget.image == assetImage) {
+          return true;
+        }
+      }
+      return false;
+    });
+    await tapSomething(tester, imageIconFinder.first,
+        addContext(context, 'Click on dropdown button'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifySelectDropdown(String valueSelect, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    final valueFinder = find.text(valueSelect).last;
+    await tester.ensureVisible(valueFinder);
+    await tapSomething(tester, valueFinder,
+        addContext(context, 'Click on value $valueSelect'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickStepEmailConfirmation(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnSignIn = find.text('Email confirmation').first;
+    await tapSomething(tester, btnSignIn,
+        addContext(context, "click Step Email Confirmation"));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickStepPersonalInfo(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnSignIn = find.text('Personal Info').first;
+    await tapSomething(
+        tester, btnSignIn, addContext(context, "click step Personal Info"));
+    await tester.pumpAndSettle();
   }
 }

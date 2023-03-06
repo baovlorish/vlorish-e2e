@@ -11,6 +11,7 @@ import 'package:burgundy_budgeting_app/ui/screen/investments/investments/investm
 import 'package:burgundy_budgeting_app/ui/screen/investments/investments/investments_state.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class InvestmentsStatisticsWidget extends StatefulWidget {
@@ -179,7 +180,7 @@ class _InvestmentsStatisticsWidgetState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Label(
-                      text: 'Asset allocations',
+                      text: AppLocalizations.of(context)!.assetAllocations,
                       type: LabelType.Header3,
                       fontSize: 18,
                     ),

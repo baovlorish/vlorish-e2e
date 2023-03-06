@@ -92,21 +92,23 @@ class _AddInvestmentLayoutState extends State<AddInvestmentLayout> {
 
   String categoryHeader(InvestmentGroup group) {
     if (group == InvestmentGroup.Stocks) {
-      return isAddScreen ? 'Add a Stock' : 'Edit a Stock';
+      return isAddScreen
+          ? AppLocalizations.of(context)!.addStock
+          : AppLocalizations.of(context)!.editStock;
     } else if (group == InvestmentGroup.IndexFunds) {
-      return isAddScreen ? 'Add an Index Fund' : 'Edit an Index Fund';
+      return isAddScreen ? AppLocalizations.of(context)!.addIndexFund:  AppLocalizations.of(context)!.editIndexFund;
     } else if (group == InvestmentGroup.Cryptocurrencies) {
-      return isAddScreen ? 'Add a Cryptocurrency' : 'Edit a Cryptocurrency';
+      return isAddScreen ? AppLocalizations.of(context)!.addCryptocurrency : AppLocalizations.of(context)!.editCryptocurrency;
     } else if (group == InvestmentGroup.Property) {
-      return isAddScreen ? 'Add a Inv. Properties' : 'Edit a Inv. Properties';
+      return isAddScreen ? AppLocalizations.of(context)!.addInvProperties : AppLocalizations.of(context)!.editInvProperties;
     } else if (group == InvestmentGroup.StartUps) {
-      return isAddScreen ? 'Add a Startup' : 'Edit a Startup';
+      return isAddScreen ? AppLocalizations.of(context)!.addStartup : AppLocalizations.of(context)!.editStartup;
     } else if (group == InvestmentGroup.OtherInvestments) {
       return isAddScreen
-          ? 'Add an Other Investment'
-          : 'Edit an Other Investment';
+          ? AppLocalizations.of(context)!.addAnotherInv
+          : AppLocalizations.of(context)!.editAnotherInv;
     } else {
-      return isAddScreen ? 'Add an Investment' : 'Edit an Investment';
+      return isAddScreen ? AppLocalizations.of(context)!.addInvestments: AppLocalizations.of(context)!.editInvestment;
     }
   }
 

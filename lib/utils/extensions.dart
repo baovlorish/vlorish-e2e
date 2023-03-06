@@ -29,6 +29,11 @@ extension ExtendedString on String {
     // Remove all white space.
     return replaceAll(RegExp(r'\s+'), '');
   }
+
+  // Capitalize first letter of a string
+  String capitalize() {
+    return '${this[0].toUpperCase()}${substring(1).toLowerCase()}';
+  }
 }
 
 extension LocalizationMapping on String {

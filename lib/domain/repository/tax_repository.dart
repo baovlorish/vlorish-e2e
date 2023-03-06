@@ -25,7 +25,7 @@ abstract class TaxRepository {
 
   Future<int> getStudentInterestPaid(int studentLoanInterestPaid, int year);
 
-  Future<int> getChildAndDependentCareCredit(
+  Future<double> getChildAndDependentCareCredit(
     IncomeAdjustments incomeAdjustments,
     int totalEligibleChildcareExpenses,
     int year,
@@ -156,7 +156,7 @@ class TaxRepositoryImpl implements TaxRepository {
   }
 
   @override
-  Future<int> getChildAndDependentCareCredit(
+  Future<double> getChildAndDependentCareCredit(
       IncomeAdjustments incomeAdjustments,
       int totalEligibleChildcareExpenses,
       int year) async {
@@ -165,7 +165,7 @@ class TaxRepositoryImpl implements TaxRepository {
     if (response.statusCode != null &&
         response.statusCode! >= 200 &&
         response.statusCode! < 300) {
-      return ((response.data['childAndDependentCareCredit']) as double).toInt();
+      return response.data['childAndDependentCareCredit'];
     } else {
       throw CustomException(response.data['message'] ?? generalErrorMessage);
     }

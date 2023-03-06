@@ -76,7 +76,7 @@ class _InvestmentsHeaderState extends State<InvestmentsHeader> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
             child: Label(
-              text: 'Investments',
+              text: AppLocalizations.of(context)!.investments,
               type: LabelType.Header2,
               color: widget.isRetirement
                   ? CustomColorScheme.clipElementInactive
@@ -93,7 +93,7 @@ class _InvestmentsHeaderState extends State<InvestmentsHeader> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
             child: Label(
-              text: 'Retirement',
+              text: AppLocalizations.of(context)!.retirement,
               type: LabelType.Header2,
               color: !widget.isRetirement
                   ? CustomColorScheme.clipElementInactive

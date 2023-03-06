@@ -171,7 +171,7 @@ class _InvestmentListState extends State<InvestmentList>
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Label(
-                          text: 'Exchange',
+                          text: AppLocalizations.of(context)!.exchange,
                           type: LabelType.TableHeader,
                           color: CustomColorScheme.tableHeaderText,
                         ),
@@ -182,7 +182,9 @@ class _InvestmentListState extends State<InvestmentList>
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Label(
-                        text: isRetirement ? 'Initial value' : AppLocalizations.of(context)!.cost,
+                        text: isRetirement
+                            ? AppLocalizations.of(context)!.initialValue
+                            : AppLocalizations.of(context)!.cost,
                         type: LabelType.TableHeader,
                         color: CustomColorScheme.tableHeaderText,
                       ),

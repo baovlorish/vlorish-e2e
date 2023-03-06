@@ -160,7 +160,7 @@ class _BudgetAnnualViewState extends State<BudgetAnnualView> {
       header: RowData(
           cells: [
             CellData(
-              'Category',
+              AppLocalizations.of(context)!.category,
               hasRightBorder: false,
               onTap: () {
                 NavigatorManager.navigateTo(
@@ -178,7 +178,7 @@ class _BudgetAnnualViewState extends State<BudgetAnnualView> {
             ),
             for (var item in monthHeaderCells) item,
             CellData(
-              'year',
+              AppLocalizations.of(context)!.year,
               mainAxisAlignment: MainAxisAlignment.start,
               hasRightBorder: false,
             ),

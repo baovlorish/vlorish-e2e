@@ -5,139 +5,183 @@ import 'package:burgundy_budgeting_app/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class PersonalCategoryGuidelineWidget extends StatelessWidget {
+class PersonalCategoryGuidelineWidget extends StatefulWidget {
   PersonalCategoryGuidelineWidget({Key? key}) : super(key: key);
-  final generalTextMap = <String, String>{
-    'Paycheck/Salary':
-        'Regular w-2 employee income such as from a fixed salary or regular hourly pay',
-    'Owner draw':
-        'Owner draw from a business including all transfers/draws from a business account to a personal account',
-    'Rental income':
-        'Income received from rental property that isn\'t tracked separately in the business budget',
-    'Dividend income':
-        'Income received from dividend sources such as stock dividend or corporate dividend, etc.',
-    'Investment income': 'Income received from the sale of an investment',
-    'Retirement income':
-        'Distributions from a retirement plan such 401k or 403b etc',
-    'Other income':
-        'Other forms of income that isn\'t included in above categories. Include sale of real estate or personal property, reimbursements, etc',
-    'Loan received':
-        'Loans received that need to be paid back at some point in the future',
-    'Uncategorized income':
-        'Temporary account used to hold income that is uncear or unknown which need your input for proper category selection',
+
+  @override
+  State<PersonalCategoryGuidelineWidget> createState() =>
+      _PersonalCategoryGuidelineWidgetState();
+}
+
+class _PersonalCategoryGuidelineWidgetState
+    extends State<PersonalCategoryGuidelineWidget> {
+  late final generalTextMap = <String, String>{
+    '${AppLocalizations.of(context)!.salary}/${AppLocalizations.of(context)!.paycheck}':
+        AppLocalizations.of(context)!.categoryDescriptionSalaryPaycheck,
+    AppLocalizations.of(context)!.ownerDraw:
+        AppLocalizations.of(context)!.categoryDescriptionOwnerGrow,
+    AppLocalizations.of(context)!.rentalIncome:
+        AppLocalizations.of(context)!.categoryDescriptionRentalIncome,
+    AppLocalizations.of(context)!.dividendIncome:
+        AppLocalizations.of(context)!.categoryDescriptionOwnerGrow,
+    AppLocalizations.of(context)!.investmentIncome:
+        AppLocalizations.of(context)!.categoryDescriptionOwnerGrow,
+    AppLocalizations.of(context)!.retirementIncome:
+        AppLocalizations.of(context)!.categoryDescrptionRetirementIncome,
+    AppLocalizations.of(context)!.otherIncome:
+        AppLocalizations.of(context)!.categoryDescriptionOtherIncome,
+    AppLocalizations.of(context)!.loanReceived:
+        AppLocalizations.of(context)!.categoryDescriptionLoanReceived,
+    AppLocalizations.of(context)!.uncategorizedIncome:
+        AppLocalizations.of(context)!.categoryDescriptionUncatagorizedIncome,
   };
 
-  final housingTextMap = <String, String>{
-    'Mortgage': 'Includes property taxes, home owner\'s insurance, PMI, HOA',
-    'Rent': 'Monthly rent payments',
-    'Utilities': 'Includes electric, gas, water, trash, sewer',
-    'Home Repairs':
-        'Home repairs paid by owner whether covered by insurance or not',
-    'Home Services': 'Lawn care, snow removal, pest control, security system'
+  late final housingTextMap = <String, String>{
+    AppLocalizations.of(context)!.mortgage:
+        AppLocalizations.of(context)!.categoryDescriptionMortgage,
+    AppLocalizations.of(context)!.rent:
+        AppLocalizations.of(context)!.categoryDescriptionRent,
+    AppLocalizations.of(context)!.utilities:
+        AppLocalizations.of(context)!.categoryDescriptionUtilities,
+    AppLocalizations.of(context)!.homeRepairs:
+        AppLocalizations.of(context)!.categoryDescriptionHomeRepairs,
+    AppLocalizations.of(context)!.homeServices:
+        AppLocalizations.of(context)!.categoryDescriptionHomeServices
   };
 
-  final debtTextMap = <String, String>{
-    'Credit Cards': 'Credit card payments',
-    'Student Loans': 'Student loan payments',
-    'Auto Loans': 'Auto loan payments',
-    'Personal Loan': 'Payments towards a personal loan',
-    'Medical Bills': 'Payments towards a medical debt',
-    'Alimony': 'Alimony payments',
-    'Other Debt': 'All forms of other debt not covered above',
+  late final debtTextMap = <String, String>{
+    AppLocalizations.of(context)!.creditCards:
+        AppLocalizations.of(context)!.categoryDescriptionCreditCards,
+    AppLocalizations.of(context)!.studentLoans:
+        AppLocalizations.of(context)!.categoryDescriptionStudentLoans,
+    AppLocalizations.of(context)!.autoLoans:
+        AppLocalizations.of(context)!.categoryDescriptionAutoLoans,
+    AppLocalizations.of(context)!.personalLoan:
+        AppLocalizations.of(context)!.categoryDescriptionPersonalLoan,
+    AppLocalizations.of(context)!.medicalBills:
+        AppLocalizations.of(context)!.categoryDescriptionMedicanBills,
+    AppLocalizations.of(context)!.alimony:
+        AppLocalizations.of(context)!.categoryDescriptionAlimony,
+    AppLocalizations.of(context)!.otherDebt:
+        AppLocalizations.of(context)!.categoryDescriptionOtherDebt,
   };
 
-  final transportationTextMap = <String, String>{
-    'Gas': 'Fuel for personal car',
-    'Auto Insurance': 'Insurance for personal car',
-    'Public Transportation':
-        'Uber, lyft, other public transport such as trains, taxi etc',
-    'Auto Repairs':
-        'Auto repairs, tires & parts purchased, insurance deductibles paid',
-    'Auto Expenses': 'Parking & tolls, registration/tabs, car wash, oil change',
+  late final transportationTextMap = <String, String>{
+    AppLocalizations.of(context)!.gas:
+        AppLocalizations.of(context)!.categoryDescriptionGas,
+    AppLocalizations.of(context)!.autoInsurance:
+        AppLocalizations.of(context)!.categoryDescriptionAutoInsurance,
+    AppLocalizations.of(context)!.publicTransportation:
+        AppLocalizations.of(context)!.categoryDescriptionPublicTransportation,
+    AppLocalizations.of(context)!.autoRepairs:
+        AppLocalizations.of(context)!.categoryDescriptionAutoRepairs,
+    AppLocalizations.of(context)!.autoExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionAutoExpenses,
   };
 
-  final livingExpensesTextMap = <String, String>{
-    'Groceries': 'Regular grocery shopping',
-    'Clothing':
-        'Essential clothing & basic family needs such as bedding. Exclude Fun Shopping described below',
-    'Phone Bill': 'Personal phone bill(s)',
-    'Internet and TV': 'Internet and TV subscription plans and fees',
-    'Household Basics':
-        'Basic household supplies inc. toileteries, laundry items, kitchen supplies',
-    'Health Insurance': 'Medical, dental, & vision premiums',
-    'Healthcare Expenses':
-        'Out of pocket medical costs such as perscription, doctor visits, copays, glasses/contacts, supplements',
-    'Pet Expenses':
-        'Expenses related to pets including food, care & other services',
+  late final livingExpensesTextMap = <String, String>{
+    AppLocalizations.of(context)!.groceries:
+        AppLocalizations.of(context)!.categoryDescriptionGroceries,
+    AppLocalizations.of(context)!.clothing:
+        AppLocalizations.of(context)!.categoryDescriptionClothing,
+    AppLocalizations.of(context)!.phoneBill:
+        AppLocalizations.of(context)!.categoryDescriptionPhoneBill,
+    AppLocalizations.of(context)!.internetAndTv:
+        AppLocalizations.of(context)!.categoryDescriptionInternetAndTv,
+    AppLocalizations.of(context)!.householdBasics:
+        AppLocalizations.of(context)!.categoryDescriptionHouseholdBasics,
+    AppLocalizations.of(context)!.healthInsurance:
+        AppLocalizations.of(context)!.categoryDescriptionHealthInsurance,
+    AppLocalizations.of(context)!.healthcareExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionHealthcareExpenses,
+    AppLocalizations.of(context)!.petExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionPetExpenses,
   };
 
-  final discretionarySpendingTextMap = <String, String>{
-    'Vacation': 'Expenses',
-    'Entertainment':
-        'Includes recreation, entertainment, hobbies and personal interests',
-    'Coffee & Eating out': 'All restaurant and coffee shop purchases',
-    'Dry Cleaning': 'Cost of dry cleaning and laundry services',
-    'Furniture & Decor': 'Home furniture and decor expenses',
-    'House Help': 'Home cleaning services such maid service',
-    'Personal Care': 'Gym, grooming, stylist visits, wellness, etc',
-    'Personal Development':
-        'Training, coursework, books, equipment to increase your skills and potential. Include association fees',
-    'Professional Services':
-        'Payments for a financial advisor, CPA, tax planning, consulting, coaching',
-    'Elective Insurances': 'Inc life insurance, disability insurance, etc',
-    'Subscriptions':
-        'All types of digital subscriptions including your Vlorish subscription cost, Netflix, Prime, etc',
-    'Fun Shopping':
-        'Shopping other than for basic clothing. Includes gadgets, gaming, phones, & fashion shopping',
+  late final discretionarySpendingTextMap = <String, String>{
+    AppLocalizations.of(context)!.vacation:
+        AppLocalizations.of(context)!.categoryDescriptionVacation,
+    AppLocalizations.of(context)!.entertainment:
+        AppLocalizations.of(context)!.categoryDescriptionEntertainment,
+    AppLocalizations.of(context)!.coffeeEatingout:
+        AppLocalizations.of(context)!.categoryDescriptionHouseCoffeeEatingout,
+    AppLocalizations.of(context)!.dryCleaning:
+        AppLocalizations.of(context)!.categoryDescriptionHouseDryCleaning,
+    AppLocalizations.of(context)!.furnitureDecor:
+        AppLocalizations.of(context)!.categoryDescriptionHouseFurnitureDecor,
+    AppLocalizations.of(context)!.householdBasics:
+        AppLocalizations.of(context)!.categoryDescriptionHouseholdBasics,
+    AppLocalizations.of(context)!.personalCare:
+        AppLocalizations.of(context)!.categoryDescriptionPersonalCare,
+    AppLocalizations.of(context)!.personalDevelopment:
+        AppLocalizations.of(context)!.categoryDescriptionPersonalDevelopment,
+    AppLocalizations.of(context)!.professionalServices:
+        AppLocalizations.of(context)!.categoryDescriptionProfessionalServices,
+    AppLocalizations.of(context)!.electiveInsurances:
+        AppLocalizations.of(context)!.categoryDescriptionElectiveInsurances,
+    AppLocalizations.of(context)!.subscriptions:
+        AppLocalizations.of(context)!.categoryDescriptionSubscriptions,
+    AppLocalizations.of(context)!.funShopping:
+        AppLocalizations.of(context)!.categoryDescriptionFunShopping,
   };
 
-  final kidsTextMap = <String, String>{
-    'Child Care': 'Child care, daycare, babysitting or nanny service',
-    'College Fund':
-        'Monies set aside or contributed to establish a college fund for a minor',
-    'Tuition & Fees':
-        'Tuition and fees for a private k-12, higher education, or other special school',
-    'School Lunches': 'In school meals',
-    'Tutoring': 'Private tutoring fees',
-    'Activities': 'Extracurricular activities',
-    'Allowance': 'Kids\' allowances',
-    'Child Support': 'Child support obligation payments'
+  late final kidsTextMap = <String, String>{
+    AppLocalizations.of(context)!.childCare:
+        AppLocalizations.of(context)!.categoryDescriptionChildCare,
+    AppLocalizations.of(context)!.collegeFund:
+        AppLocalizations.of(context)!.categoryDescriptionCollegeFund,
+    AppLocalizations.of(context)!.tuitionAndFees:
+        AppLocalizations.of(context)!.categoryDescriptionTuitionAndFees,
+    AppLocalizations.of(context)!.schoolLunches:
+        AppLocalizations.of(context)!.categoryDescriptionSchoolLunches,
+    AppLocalizations.of(context)!.tutoring:
+        AppLocalizations.of(context)!.categoryDescriptionTutoring,
+    AppLocalizations.of(context)!.activities:
+        AppLocalizations.of(context)!.categoryDescriptionActivities,
+    AppLocalizations.of(context)!.allowance:
+        AppLocalizations.of(context)!.categoryDescriptionAllowance,
+    AppLocalizations.of(context)!.childSupport:
+        AppLocalizations.of(context)!.categoryDescriptionChildSupport
   };
 
-  final givingTextMap = <String, String>{
-    'Family support': 'Financial support to family members and relatives',
-    'Donations':
-        'Charitable donations to nonfamily such as religious organization',
-    'Gifts': 'Both cash and noncash gifts'
+  late final givingTextMap = <String, String>{
+    AppLocalizations.of(context)!.familySupport:
+        AppLocalizations.of(context)!.categoryDescriptionFamilySupport,
+    AppLocalizations.of(context)!.donation:
+        AppLocalizations.of(context)!.categoryDescriptionDonation,
+    AppLocalizations.of(context)!.gifts:
+        AppLocalizations.of(context)!.categoryDescriptionGifts
   };
 
-  final taxesTextMap = <String, String>{
-    'Estimated Federal Income Taxes':
-        'Estimated state income tax payments for current year taxes or remaining balance due from last year taxes',
-    'Estimated State Income Taxes':
-        'Estimated state income tax payments for current year taxes or remaining balance due from last year taxes',
-    'Back Taxes':
-        'Past due federal and state income tax payments, including amounts in collections and on payment plans'
+  late final taxesTextMap = <String, String>{
+    AppLocalizations.of(context)!.estimatedFederalIncomeTax:
+        AppLocalizations.of(context)!
+            .categoryDescriptionEstimatedFederalIncomeTax,
+    AppLocalizations.of(context)!.estimatedStateIncomeTax:
+        AppLocalizations.of(context)!.categoryDescriptionstimatedStateIncomeTax,
+    AppLocalizations.of(context)!.backTaxes:
+        AppLocalizations.of(context)!.categoryDescriptionBackTaxes
   };
 
-  final otherExpensesTextMap = <String, String>{
-    'Misc Expenses':
-        'Use to aggregate small miscellaneous expenses including minor one-off unplanned expenses',
-    'Uncategorized Expenses':
-        'Temporary account used to hold expenses that are unclear which need your input for proper category selection',
+  late final otherExpensesTextMap = <String, String>{
+    AppLocalizations.of(context)!.miscExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionMiscExpenses,
+    AppLocalizations.of(context)!.unbudgettedExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionUnbudgettedExpenses,
   };
 
-  final totalExpensesTextMap = <String, String>{
-    'Net income': 'Total Income minus Total expenses',
-    'Goals': 'Funding or money set aside for personal goals',
-    'Total Cash Reserve':
-        'Cash available for spending after expenses have been paid and goals have been funded',
-    'Investments':
-        'Investments made from the cash reserve, often in larger amounts that require substantial cash reserves',
-    'Free cash':
-        'Cash available for spending on whatever or kept as a small cushion after all expenses, goals, & investments'
+  late final totalExpensesTextMap = <String, String>{
+    AppLocalizations.of(context)!.netIncome:
+        AppLocalizations.of(context)!.categoryDescriptionNetIncome,
+    AppLocalizations.of(context)!.goals:
+        AppLocalizations.of(context)!.categoryDescriptionGoals,
+    AppLocalizations.of(context)!.totalCashReserve:
+        AppLocalizations.of(context)!.categoryDescriptionTotalCashReserve,
+    AppLocalizations.of(context)!.investments:
+        AppLocalizations.of(context)!.categoryDescriptionInvestments,
+    AppLocalizations.of(context)!.freeCash:
+        AppLocalizations.of(context)!.categoryDescriptionFreeCash,
   };
-
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -163,7 +207,8 @@ class PersonalCategoryGuidelineWidget extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: Label(
-                      text: 'CATEGORIES',
+                      text:
+                          AppLocalizations.of(context)!.categories.capitalize(),
                       type: LabelType.GreyLabel,
                     ),
                   ),
@@ -171,7 +216,9 @@ class PersonalCategoryGuidelineWidget extends StatelessWidget {
                   Expanded(
                     flex: 7,
                     child: Label(
-                      text: 'DESCRIPTION',
+                      text: AppLocalizations.of(context)!
+                          .description
+                          .capitalize(),
                       type: LabelType.GreyLabel,
                     ),
                   )
@@ -231,125 +278,183 @@ class PersonalCategoryGuidelineWidget extends StatelessWidget {
   }
 }
 
-class BusinessCategoryGuidelineWidget extends StatelessWidget {
+class BusinessCategoryGuidelineWidget extends StatefulWidget {
   BusinessCategoryGuidelineWidget({Key? key}) : super(key: key);
 
-  final generalBusinessTextMap = <String, String>{
-    'Business Income': 'Income generated by the business from core services',
-    'Other Income': 'Auxiliary income received by the business',
-    'Loan Received': 'Loans received by the business',
-    'Investment in Business':
-        'Investments in the business made by the owner or 3rd parties',
-    'Uncategorized Income':
-        'Temporary account used to hold income that is uncear or unknown which need your input for proper category selection',
+  @override
+  State<BusinessCategoryGuidelineWidget> createState() =>
+      _BusinessCategoryGuidelineWidgetState();
+}
+
+class _BusinessCategoryGuidelineWidgetState
+    extends State<BusinessCategoryGuidelineWidget> {
+  late final generalBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.businessIncome:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessIncome,
+    AppLocalizations.of(context)!.otherIncome:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessOtherIncome,
+    AppLocalizations.of(context)!.loanReceived:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessLoanReceived,
+    AppLocalizations.of(context)!.investmentInBusiness:
+        AppLocalizations.of(context)!.categoryDescriptionInvestmentInBusiness,
+    AppLocalizations.of(context)!.uncategorizedIncome:
+        AppLocalizations.of(context)!.categoryDescriptionUncategorizedIncome,
   };
+
   // Personnel Costs
-  final personnelCostsBusinessTextMap = <String, String>{
-    'Owner Pay':
-        'Do not include owner draw or transfers, only w-2 salary form the company',
-    'Staff Salaries': 'Non-owner salaries and pay',
-    'Employee Benefits': '401k, health insurance, etc. gifts, Including owner',
-    'Payroll Taxes': 'Employer portion of FICA taxes',
+  late final personnelCostsBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.ownerPay:
+        AppLocalizations.of(context)!.categoryDescriptionOwnerPay,
+    AppLocalizations.of(context)!.staffSalaries:
+        AppLocalizations.of(context)!.categoryDescriptionStaffSalaries,
+    AppLocalizations.of(context)!.employeeBenefits:
+        AppLocalizations.of(context)!.categoryDescriptionEmployeeBenefits,
+    AppLocalizations.of(context)!.payrollTaxes:
+        AppLocalizations.of(context)!.categoryDescriptionPayrollTaxes,
   };
+
   // Professional Services
-  final professionalServicesBusinessTextMap = <String, String>{
-    'Accounting': 'Bookkeeping, payroll, & tax services',
-    'Pinancial Planning': 'Financial planning for business or side hussle',
-    'Content Writing': 'Content/copy writing',
-    'Social Media Management':
-        'Payments to professional for social media management/services',
-    'Video Production & Editing':
-        'Payments for nonemployee professional related to video production/editing',
-    'Software Development':
-        'Software development costs withtin the whole scope of web/mobile development',
-    'E-commerce Assistant': 'E-commerce assistant pay (non w-2)',
-    'Admin Assistant': 'Admin assistant pay (non w-2)',
-    'Legal and Professional Services':
-        'Legal fees and consulting services fees not covered above',
+  late final professionalServicesBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.accounting:
+        AppLocalizations.of(context)!.categoryDescriptionAccounting,
+    AppLocalizations.of(context)!.financialPlanning:
+        AppLocalizations.of(context)!.categoryDescriptionFinancialPlanning,
+    AppLocalizations.of(context)!.contentWriting:
+        AppLocalizations.of(context)!.categoryDescriptionContentWriting,
+    AppLocalizations.of(context)!.socialMediaManagement:
+        AppLocalizations.of(context)!.categoryDescriptionSocialMediaManagement,
+    AppLocalizations.of(context)!.videoProductionEditing:
+        AppLocalizations.of(context)!.categoryDescriptionVideoProductionEditing,
+    AppLocalizations.of(context)!.softwareDevelopment:
+        AppLocalizations.of(context)!.categoryDescriptionSoftwareDevelopment,
+    AppLocalizations.of(context)!.eCommerceAssistant:
+        AppLocalizations.of(context)!.categoryDescriptionEcommerceAssistant,
+    AppLocalizations.of(context)!.adminAssistant:
+        AppLocalizations.of(context)!.categoryDescriptionAdminAssistant,
+    AppLocalizations.of(context)!.legalAndProfessionalServices:
+        AppLocalizations.of(context)!
+            .categoryDescriptionLegalAndProfessionalServices,
   };
+
   // Property Management,
-  final propertyManagementBusinessTextMap = <String, String>{
-    'Mortgage Payments':
-        'Includes mortgage payment, property taxes, insurance, & HOA',
-    'Leasing and Property Management':
-        'Costs associated with leasing and professional property management',
-    'Repairs and Maintenance':
-        'Repairs and maintenance including minor eplacment costs, routine fixing, and cleaning',
-    'Capital expenditures':
-        'Major property improvements expenditures including additions and overhauls',
-    'Depreication Expenses': 'Noncash expenses booked by your accountant',
+  late final propertyManagementBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.mortgagePayments:
+        AppLocalizations.of(context)!.categoryDescriptionMortgagePayments,
+    AppLocalizations.of(context)!.leasingAndPropertyManagement:
+        AppLocalizations.of(context)!
+            .categoryDescriptionLeasingAndPropertyManagement,
+    AppLocalizations.of(context)!.repairsAndMaintainance:
+        AppLocalizations.of(context)!.categoryDescriptionRepairsAndMaintainance,
+    AppLocalizations.of(context)!.capitalExpenditures:
+        AppLocalizations.of(context)!.categoryDescriptionCapitalExpenditures,
+    AppLocalizations.of(context)!.depreicationExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionDepreicationExpenses,
   };
+
   // Product Costs,
-  final productCostsBusinessTextMap = <String, String>{
-    'Product Cost': 'Cost to acquire products, inventory cost',
-    'Fullfillment Fees':
-        'Fullfilling costs associated with product delivery such as packaging',
-    'Storage Fees': 'Storage and warehousing costs',
-    'Shipping & Handling':
-        'Shipping and handling including postage, delivery, freight, and other transportation costs',
-    'Online Selling Plans':
-        'Revenue sharing arrangements with online sales platforms that keep a percentage of your sales like Amazon',
-    'Merchant Fees': 'Transaction costs',
-    'Sales Tax': 'Sales tax',
-    'Customs and Brokers':
-        'Customs tax and clearing costs for cross-border transactions',
-    'Returns': 'Product returns',
-    'Product loss': 'Shrinkage, theft, and loss',
+  late final productCostsBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.productCost:
+        AppLocalizations.of(context)!.categoryDescriptionProductCost,
+    AppLocalizations.of(context)!.fulfillmentFees:
+        AppLocalizations.of(context)!.categoryDescriptionFulfillmentFees,
+    AppLocalizations.of(context)!.storageFees:
+        AppLocalizations.of(context)!.categoryDescriptionStorageFees,
+    AppLocalizations.of(context)!.shippingHandling:
+        AppLocalizations.of(context)!.categoryDescriptionShippingHandling,
+    AppLocalizations.of(context)!.onlineSellingPlans:
+        AppLocalizations.of(context)!.categoryDescriptionOnlineSellingPlans,
+    AppLocalizations.of(context)!.merchantFees:
+        AppLocalizations.of(context)!.categoryDescriptionMerchantFees,
+    AppLocalizations.of(context)!.salesTax:
+        AppLocalizations.of(context)!.categoryDescriptionSalesTax,
+    AppLocalizations.of(context)!.customsAndBrokers:
+        AppLocalizations.of(context)!.categoryDescriptionCustomsAndBrokers,
+    AppLocalizations.of(context)!.returns:
+        AppLocalizations.of(context)!.categoryDescriptionReturns,
+    AppLocalizations.of(context)!.productLoss:
+        AppLocalizations.of(context)!.categoryDescriptionProductLoss,
   };
+
   // Business Development,
-  final businessDevelopmentBusinessTextMap = <String, String>{
-    'Advertising & Marketing':
-        'Advertisement, marketing, and brand development costs',
-    'Referral Fees':
-        'Commissions paid by the business to others for referrals.',
-    'Other Business Development':
-        'Other business development costs not captured above',
+  late final businessDevelopmentBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.advertisingMarketing:
+        AppLocalizations.of(context)!.categoryDescriptionAdvertisingMarketing,
+    AppLocalizations.of(context)!.referralFees:
+        AppLocalizations.of(context)!.categoryDescriptionReferralFees,
+    AppLocalizations.of(context)!.otherBusinessDevelopment:
+        AppLocalizations.of(context)!
+            .categoryDescriptionOtherBusinessDevelopment,
   };
+
   // Office Expenses,
-  final officeExpensesBusinessTextMap = <String, String>{
-    'Office rent & utilities': 'Rent and utilities',
-    'Office Supplies': 'Office supplies and printing',
-    'Office Equipment': 'Computers, phones, cameras, etc',
-    'Office Furnishing & Decor': 'Furniture and decor for the office',
-    'Other Office Expenses': 'Water, repairs, etc',
+  late final officeExpensesBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.officeRentUtilities:
+        AppLocalizations.of(context)!.categoryDescriptionOfficeRentUtilities,
+    AppLocalizations.of(context)!.officeSupplies:
+        AppLocalizations.of(context)!.categoryDescriptionOfficeSupplies,
+    AppLocalizations.of(context)!.officeEquipment:
+        AppLocalizations.of(context)!.categoryDescriptionOfficeEquipment,
+    AppLocalizations.of(context)!.officeFurnishingDecor:
+        AppLocalizations.of(context)!.categoryDescriptionOfficeFurnishingDecor,
+    AppLocalizations.of(context)!.officeExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionOfficeExpenses,
   };
+
   // General Business Expenses,
-  final generalBusinessExpensesBusinessTextMap = <String, String>{
-    'Technology Fees & Subscriptions':
-        'Include technology fees such as software subscriptions, email service, web hosting, that are used to power business',
-    'Auto Expenses':
-        'Expenses related to operating and maintaining a business car including fuel, mileage, registration, repair and insurance',
-    'Phone & Internet': 'Business phone and internet cost',
-    'Business Meals 1': 'Business meals furnished outside business premises',
-    'Business Meals 2': 'Business meals furnished on business premises',
-    'Business Entertainment': 'Costs associated with business entertainment',
-    'Travel Expenses':
-        'Travel related to business function or business development',
-    'Events & Venue Fees': 'Events and venue booking and related expenses',
-    'Business Licenses & Fees': 'Business licenses, registrations, & fees',
-    'Professional Development':
-        'Continuing education for employees including owner paid by business',
+  late final generalBusinessExpensesBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.techFeesAndSubscriptions:
+        AppLocalizations.of(context)!
+            .categoryDescriptionBusinessTechFeesAndSubscriptions,
+    AppLocalizations.of(context)!.autoExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessAutoExpenses,
+    AppLocalizations.of(context)!.phoneAndInternet:
+        AppLocalizations.of(context)!.categoryDescriptionPhoneAndInternet,
+    AppLocalizations.of(context)!.businessMealsOne:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessMealsOne,
+    AppLocalizations.of(context)!.businessMealsTwo:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessMealsTwo,
+    AppLocalizations.of(context)!.businessEntertainment:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessEntertainment,
+    AppLocalizations.of(context)!.travelExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessTravelExpenses,
+    AppLocalizations.of(context)!.eventsVenueFees:
+        AppLocalizations.of(context)!.categoryDescriptionEventsVenueFees,
+    AppLocalizations.of(context)!.businessLicensesAndFees:
+        AppLocalizations.of(context)!
+            .categoryDescriptionBusinessLicensesAndFees,
+    AppLocalizations.of(context)!.professionalDevelopment:
+        AppLocalizations.of(context)!
+            .categoryDescriptionProfessionalDevelopment,
   };
+
   // Debts Payments,
-  final debtsPaymentsBusinessTextMap = <String, String>{
-    'Credit Card': 'Business credit card payment',
-    'Auto Loan': 'Business car payment',
-    'Business Loan': 'Repayments of business loans',
+  late final debtsPaymentsBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.creditCard:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessCreditCards,
+    AppLocalizations.of(context)!.autoLoan:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessAutoLoans,
+    AppLocalizations.of(context)!.businessLoan:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessLoan,
   };
+
   // Other Expenses,
-  final otherExpensesBusinessTextMap = <String, String>{
-    'Misc Expenses':
-        'Use to aggregate small miscellaneous expenses including minor one-off unplanned expenses',
-    'Uncategorized Expenses':
-        'Temporary account used to hold expenses that are uncear or unknown which need your input for proper category selection',
+  late final otherExpensesBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.miscExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionMiscExpenses,
+    AppLocalizations.of(context)!.unbudgettedExpenses:
+        AppLocalizations.of(context)!.categoryDescriptionUnbudgettedExpenses,
   };
+
   // Total Expenses,
-  final totalExpensesBusinessTextMap = <String, String>{
-    'Net Income': 'Income after expenses have been paid',
-    'Owner draw': 'Owner draw or amounts transfered to owner as a draw',
-    'Retained in the Business': 'Income remaining after owner draw',
-    'Ending Cash Reserve':
-        'Ending cash reserve, which is previous cash reserve plus amount retained in the business this month',
+  late final totalExpensesBusinessTextMap = <String, String>{
+    AppLocalizations.of(context)!.netIncome:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessNetIncome,
+    AppLocalizations.of(context)!.ownerDraw:
+        AppLocalizations.of(context)!.categoryDescriptionBusinessOwnerDraw,
+    AppLocalizations.of(context)!.retainedInTheBusiness:
+        AppLocalizations.of(context)!.categoryDescriptionRetainedInTheBusiness,
+    AppLocalizations.of(context)!.endingCashReserve:
+        AppLocalizations.of(context)!.categoryDescriptionEndingCashReserve,
   };
 
   @override

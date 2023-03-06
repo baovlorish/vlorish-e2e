@@ -37,7 +37,7 @@ class BillingCardBlock extends StatelessWidget {
           ),
           Text(
             (subscriptionModel.isCancelledByPeriodEnd
-                    ? 'Subscription is active until '
+                    ? '${AppLocalizations.of(context)!.subscriptionActiveUntil} '
                     : AppLocalizations.of(context)!.nextPaymentOn) +
                 ' ' +
                 CustomDateFormats.defaultDateFormat.format(

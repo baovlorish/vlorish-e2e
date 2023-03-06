@@ -79,7 +79,7 @@ class __AddManualAccountItemState extends State<_AddManualAccountItem> {
   @override
   void initState() {
     // added for https://itomych.atlassian.net/browse/BAR-2988
-    if(widget.isStandardSubscription) _usageType = 1;
+    if (widget.isStandardSubscription) _usageType = 1;
     super.initState();
   }
 
@@ -122,64 +122,65 @@ class __AddManualAccountItemState extends State<_AddManualAccountItem> {
           ),
         ),
         SizedBox(height: 24),
-        if (!widget.isStandardSubscription) Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Label(
-                    text: AppLocalizations.of(context)!.chooseAccountType,
-                    type: LabelType.General),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    CustomRadioButton(
-                      title: AppLocalizations.of(context)!.personal,
-                      value: 1,
-                      groupValue: _usageType,
-                      onTap: () => setState(() {
-                        _usageType = 1;
-                      }),
-                    ),
-                    SizedBox(width: 24),
-                    CustomRadioButton(
-                      title: AppLocalizations.of(context)!.business,
-                      value: 2,
-                      groupValue: _usageType,
-                      onTap: () => setState(() {
-                        _usageType = 2;
-                      }),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(width: 8),
-            if (_usageType != 2) Spacer(),
-            if (_usageType == 2)
-              Expanded(
-                child: TextFieldWithSuggestion<String>(
-                    search: (value) => widget.businessNameList
-                        .where((element) => element.contains(value))
-                        .toList(),
-                    hideOnEmpty: true,
-                    maxSymbols: 15,
-                    onSelectedModel: (value) {
-                      businessName = value;
-                      setState(() {});
-                    },
-                    shouldEraseOnFocus: false,
-                    onSaved: (value) {
-                      businessName = value;
-                      setState(() {});
-                    },
-                    hintText: 'Enter business name',
-                    label: 'Business name'),
+        if (!widget.isStandardSubscription)
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Label(
+                      text: AppLocalizations.of(context)!.chooseAccountType,
+                      type: LabelType.General),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      CustomRadioButton(
+                        title: AppLocalizations.of(context)!.personal,
+                        value: 1,
+                        groupValue: _usageType,
+                        onTap: () => setState(() {
+                          _usageType = 1;
+                        }),
+                      ),
+                      SizedBox(width: 24),
+                      CustomRadioButton(
+                        title: AppLocalizations.of(context)!.business,
+                        value: 2,
+                        groupValue: _usageType,
+                        onTap: () => setState(() {
+                          _usageType = 2;
+                        }),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-          ],
-        ),
+              SizedBox(width: 8),
+              if (_usageType != 2) Spacer(),
+              if (_usageType == 2)
+                Expanded(
+                  child: TextFieldWithSuggestion<String>(
+                      search: (value) => widget.businessNameList
+                          .where((element) => element.contains(value))
+                          .toList(),
+                      hideOnEmpty: true,
+                      maxSymbols: 15,
+                      onSelectedModel: (value) {
+                        businessName = value;
+                        setState(() {});
+                      },
+                      shouldEraseOnFocus: false,
+                      onSaved: (value) {
+                        businessName = value;
+                        setState(() {});
+                      },
+                      hintText: AppLocalizations.of(context)!.enterBusinessName,
+                      label: AppLocalizations.of(context)!.businessName),
+                ),
+            ],
+          ),
         SizedBox(height: 28),
         (_usageType == 1)
             ? DropdownItem<int>(

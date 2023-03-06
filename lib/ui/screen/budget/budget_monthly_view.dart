@@ -179,7 +179,7 @@ class _BudgetMonthlyViewState extends State<BudgetMonthlyView> {
               tooltipMessage:
                   AppLocalizations.of(context)!.categoriesManagement,
             ),
-            CellData('Planned', hasRightBorder: false),
+            CellData('  ', hasRightBorder: false),
             CellData('Actual', hasRightBorder: false),
             CellData('Difference', hasRightBorder: false),
           ],

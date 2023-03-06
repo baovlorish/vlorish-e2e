@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:burgundy_budgeting_app/utils/extensions.dart';
 
 import 'fi_score_state.dart';
 
@@ -30,9 +31,10 @@ class _FiScoreLayoutState extends State<FiScoreLayout> {
   late final FiScoreCubit _fiScoreCubit;
 
   late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
-      .currentForeignSession
-      ?.access
-      .isReadOnly ?? false;
+          .currentForeignSession
+          ?.access
+          .isReadOnly ??
+      false;
 
   @override
   void initState() {
@@ -187,36 +189,41 @@ class _FiScoreLayoutState extends State<FiScoreLayout> {
                                                     text: TextSpan(children: [
                                                       TextSpan(children: [
                                                         TextSpan(
-                                                          text: AppLocalizations.of(context)!
+                                                          text: AppLocalizations
+                                                                  .of(context)!
                                                               .fiScorePieChartTextPart1,
-                                                          style:
-                                                          CustomTextStyle.LabelTextStyle(
-                                                              context),
+                                                          style: CustomTextStyle
+                                                              .LabelTextStyle(
+                                                                  context),
                                                         ),
                                                         TextSpan(
                                                           text: ' ' +
-                                                              state.vlorishScoreModel
+                                                              state
+                                                                  .vlorishScoreModel
                                                                   .totalVlorishScore!
                                                                   .toString(),
                                                           style: CustomTextStyle
-                                                              .LabelBoldTextStyle(context),
+                                                              .LabelBoldTextStyle(
+                                                                  context),
                                                         ),
                                                         TextSpan(
                                                           text: ' ' +
-                                                              AppLocalizations.of(context)!
+                                                              AppLocalizations.of(
+                                                                      context)!
                                                                   .fiScorePieChartTextPart2,
-                                                          style:
-                                                          CustomTextStyle.LabelTextStyle(
-                                                              context),
+                                                          style: CustomTextStyle
+                                                              .LabelTextStyle(
+                                                                  context),
                                                         ),
                                                         TextSpan(
                                                           text: ' ' +
-                                                              AppLocalizations.of(context)!
+                                                              AppLocalizations.of(
+                                                                      context)!
                                                                   .fiScorePieChartTextPart3 +
                                                               '',
-                                                          style:
-                                                          CustomTextStyle.LabelTextStyle(
-                                                              context),
+                                                          style: CustomTextStyle
+                                                              .LabelTextStyle(
+                                                                  context),
                                                         ),
                                                         TextSpan(
                                                           text: ' ' +
@@ -224,13 +231,15 @@ class _FiScoreLayoutState extends State<FiScoreLayout> {
                                                                   .vlorishScoreModel
                                                                   .totalVlorishScore!],
                                                           style: CustomTextStyle
-                                                              .LabelBoldTextStyle(context),
+                                                              .LabelBoldTextStyle(
+                                                                  context),
                                                         )
                                                       ]),
                                                       TextSpan(
-                                                        text: '. ' +AppLocalizations
-                                                                .of(context)!
-                                                            .fiScoreTextScorePart1,
+                                                        text: '. ' +
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .fiScoreTextScorePart1,
                                                         style: CustomTextStyle
                                                             .LabelTextStyle(
                                                                 context),
@@ -258,7 +267,8 @@ class _FiScoreLayoutState extends State<FiScoreLayout> {
                                                         text: ' ' +
                                                             textListInterpretation[state
                                                                 .vlorishScoreModel
-                                                                .totalVlorishScore!] + '. ',
+                                                                .totalVlorishScore!] +
+                                                            '. ',
                                                         style: CustomTextStyle
                                                             .LabelBoldTextStyle(
                                                                 context),
@@ -296,42 +306,51 @@ class _FiScoreLayoutState extends State<FiScoreLayout> {
                                                   AppLocalizations.of(context)!
                                                       .vlorishScore,
                                               type: LabelType.Header3),
-                                          if(!isReadOnlyAdvisor)
-                                          CustomTooltip(
-                                            message: 'Refresh score',
-                                            child: Container(
-                                              height: 38,
-                                              width: 38,
-                                              decoration: BoxDecoration(
-                                                  color: CustomColorScheme
-                                                      .mainDarkBackground,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          19)),
-                                              child: Align(
-                                                alignment: Alignment.topCenter,
-                                                child: CustomMaterialInkWell(
+                                          if (!isReadOnlyAdvisor)
+                                            CustomTooltip(
+                                              message:
+                                                  AppLocalizations.of(context)!
+                                                      .refreshScore,
+                                              child: Container(
+                                                height: 38,
+                                                width: 38,
+                                                decoration: BoxDecoration(
+                                                    color: CustomColorScheme
+                                                        .mainDarkBackground,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            19)),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: CustomMaterialInkWell(
                                                       type: InkWellType.White,
                                                       onTap: () async {
-                                                        final shouldShowAlert = await _fiScoreCubit.refresh();
-                                                        if (shouldShowAlert) {
-                                                          await showDialog(
-                                                            context: context,
-                                                            builder: (_) => SuccessAlertDialog(
-                                                              context,
-                                                              title: 'Refreshed',
-                                                            ),
-                                                          );
-                                                        }
+                                                        await _fiScoreCubit
+                                                            .refresh()
+                                                            .then(
+                                                                (value) =>
+                                                                    showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) {
+                                                                        return SuccessAlertDialog(
+                                                                          context,
+                                                                          title:
+                                                                              AppLocalizations.of(context)!.refreshed,
+                                                                        );
+                                                                      },
+                                                                    ));
                                                       },
-                                                    child: Icon(
-                                                      Icons.refresh_rounded,
-                                                      size: 38,
-                                                      color: Colors.white,
-                                                    )),
+                                                      child: Icon(
+                                                        Icons.refresh_rounded,
+                                                        size: 38,
+                                                        color: Colors.white,
+                                                      )),
+                                                ),
                                               ),
-                                            ),
-                                          )
+                                            )
                                         ],
                                       ),
                                       SfCircularChart(
@@ -400,17 +419,16 @@ class FIScoreCategoryChart extends StatelessWidget {
       : super(key: key);
   final List<VlorishScoreComponents>? vlorishScoreComponents;
 
-  static const _textMap = <String>[
-    'Income',
-    'Spending',
-    'NetWorth',
-    'Retirement',
-    'Investment',
-//    'Cash savings'
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final _textMap = <String>[
+      AppLocalizations.of(context)!.income.capitalize(),
+      AppLocalizations.of(context)!.spending.capitalize(),
+      AppLocalizations.of(context)!.netWorth.capitalize(),
+      AppLocalizations.of(context)!.retirement.capitalize(),
+      AppLocalizations.of(context)!.investment.capitalize(),
+//    'Cash savings'
+    ];
     final _colorMap = <Color>[
       CustomColorScheme.button,
       CustomColorScheme.goalColor5,

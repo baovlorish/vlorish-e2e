@@ -77,7 +77,7 @@ class PolicyScreen extends StatelessWidget {
                           child: CustomSelectableText(
                             textData: SelectableTextData(
                               text:
-                                  'Last updated: ${CustomDateFormats.defaultDateFormat.format(lastUpdate)}',
+                                  '${AppLocalizations.of(context)!.lastUpdated}: ${CustomDateFormats.defaultDateFormat.format(lastUpdate)}',
                             ),
                           ),
                         ),

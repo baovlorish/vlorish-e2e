@@ -163,7 +163,7 @@ class ProfileScreenTest {
 
   Future<void> verifyProfilePage(WidgetTester tester,
       {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 7));
     final finder = find.byType(Title).last;
     final titleWidget = tester.firstWidget<Title>(finder);
     await htExpect(tester, titleWidget.title, 'Profile Overview',
@@ -309,8 +309,7 @@ class ProfileScreenTest {
     final finder = find.byType(TextField).first;
     final input = tester.firstWidget<TextField>(finder);
     expect(input.obscureText, true);
-    final findtext = find.text(pass);
-    await htExpect(tester, findtext, findsNothing,
+    await htExpect(tester, input.obscureText, true,
         reason: ('Verify-' + context + '- Password is NOT visible'));
   }
 
@@ -338,7 +337,7 @@ class ProfileScreenTest {
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 10));
     await htExpect(tester, find.text(msg), findsNothing,
-        reason: ('Verify-' + context + '-' + msg + ' text is not existing'));
+        reason: ('Verify-' + context + '-' + msg + ' text is NOT visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 

@@ -43,14 +43,32 @@ class _TaxCreditsAndAdjustmentTabState extends State<TaxCreditsAndAdjustmentTab>
   late var taxCubit = BlocProvider.of<TaxCubit>(context);
   var selectedExpansionTile = _TaxCreditsTile.IncomeAdjustments;
 
-  late TaxCreditsAndAdjustmentModel endCreditsAndAdjustmentModel =
-      widget.creditsAndAdjustmentModel.copyWith();
-  late TaxCreditsAndAdjustmentModel startCreditsAndAdjustmentModel =
-      widget.creditsAndAdjustmentModel.copyWith();
+  late TaxCreditsAndAdjustmentModel currentCreditsAndAdjustmentModel =
+      widget.creditsAndAdjustmentModel;
+
   late var isReadOnlyAdvisor = BlocProvider.of<HomeScreenCubit>(context)
       .currentForeignSession
       ?.access
       .isReadOnly ?? false;
+
+  @override
+  void didUpdateWidget(TaxCreditsAndAdjustmentTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    currentCreditsAndAdjustmentModel = widget.creditsAndAdjustmentModel;
+  }
+
+  bool get buttonEnabled => widget.creditsAndAdjustmentModel != currentCreditsAndAdjustmentModel;
+
+  bool get hasChildrenThirteenOrYounger =>
+      (widget.personalInfoModel.children13andYoungerCount !=
+          null &&
+          widget.personalInfoModel.children13andYoungerCount! > 0);
+
+  bool get hasChildrenSeventeenOrYounger =>
+      (widget.personalInfoModel.children17andYoungerCount != null &&
+          widget.personalInfoModel.children17andYoungerCount! > 0);
+
+  bool get hasChildren => hasChildrenThirteenOrYounger || hasChildrenSeventeenOrYounger;
 
   @override
   Widget build(BuildContext context) {
@@ -89,69 +107,49 @@ class _TaxCreditsAndAdjustmentTabState extends State<TaxCreditsAndAdjustmentTab>
           ),
         ),
         IncomeAdjustmentsExpansionTile(
-          incomeAdjustments: endCreditsAndAdjustmentModel.incomeAdjustments,
-          onUpdate: () {
-            setState(() {});
-          },
-          onUpdateTiles: (bool isExpanded) {
-            if (isExpanded) {
-              selectedExpansionTile = _TaxCreditsTile.IncomeAdjustments;
-            } else {
-              selectedExpansionTile = _TaxCreditsTile.none;
-            }
-          },
+          incomeAdjustments: currentCreditsAndAdjustmentModel.incomeAdjustments,
+          onUpdate: (IncomeAdjustments model) => setState(() =>
+              currentCreditsAndAdjustmentModel = currentCreditsAndAdjustmentModel.copyWith(incomeAdjustments: model)),
+          onUpdateTiles: (bool isExpanded) => setState(
+              () => selectedExpansionTile = isExpanded ? _TaxCreditsTile.IncomeAdjustments : _TaxCreditsTile.none),
           selectedIndex: selectedExpansionTile,
+          tileColor:CustomColorScheme.tableExpenseBackground,
           enabled: !isReadOnlyAdvisor,
+          taxCubit: taxCubit,
         ),
         ItemizedDeductionsExpansionTile(
-          itemizedDeductions: endCreditsAndAdjustmentModel.itemizedDeductions,
-          onUpdate: () {
-            setState(() {});
-          },
-          onUpdateTiles: (bool isExpanded) {
-            if (isExpanded) {
-              selectedExpansionTile = _TaxCreditsTile.ItemizedDeductions;
-            } else {
-              selectedExpansionTile = _TaxCreditsTile.none;
-            }
-          },
-          selectedIndex: selectedExpansionTile, enabled: !isReadOnlyAdvisor,
+          itemizedDeductions: currentCreditsAndAdjustmentModel.itemizedDeductions,
+          onUpdate: (ItemizedDeductions model) => setState(() =>
+              currentCreditsAndAdjustmentModel = currentCreditsAndAdjustmentModel.copyWith(itemizedDeductions: model)),
+          onUpdateTiles: (bool isExpanded) => setState(
+              () => selectedExpansionTile = isExpanded ? _TaxCreditsTile.ItemizedDeductions : _TaxCreditsTile.none),
+          selectedIndex: selectedExpansionTile,
+          enabled: !isReadOnlyAdvisor,
+          tileColor: CustomColorScheme.tableNetWorthBackground,
         ),
         QBIDeductionExpansionTile(
           qualifiedBusinessIncomeDeduction:
-              endCreditsAndAdjustmentModel.qualifiedBusinessIncomeDeduction,
-          onUpdate: () {
-            setState(() {});
-          },
-          onUpdateTiles: (bool isExpanded) {
-            if (isExpanded) {
-              selectedExpansionTile = _TaxCreditsTile.QBIDeduction;
-            } else {
-              selectedExpansionTile = _TaxCreditsTile.none;
-            }
-          },
+              currentCreditsAndAdjustmentModel.qualifiedBusinessIncomeDeduction,
+          onUpdateTiles: (bool isExpanded) =>
+              setState(() => selectedExpansionTile = isExpanded ? _TaxCreditsTile.QBIDeduction : _TaxCreditsTile.none),
           selectedIndex: selectedExpansionTile,
+          tileColor: CustomColorScheme.QBIDeduction,
+          onUpdate: (model) {},
+          enabled: !isReadOnlyAdvisor,
         ),
         TaxCreditExpansionTile(
           taxFilingStatus: widget.personalInfoModel.taxFilingStatus!,
-          hasChildren: (widget.personalInfoModel.children13andYoungerCount !=
-                      null &&
-                  widget.personalInfoModel.children13andYoungerCount! > 0) ||
-              (widget.personalInfoModel.children17andYoungerCount != null &&
-                  widget.personalInfoModel.children17andYoungerCount! > 0),
-          taxCredits: endCreditsAndAdjustmentModel.taxCredits,
-          incomAdjustments: endCreditsAndAdjustmentModel.incomeAdjustments,
-          onUpdate: () {
-            setState(() {});
-          },
-          onUpdateTiles: (bool isExpanded) {
-            if (isExpanded) {
-              selectedExpansionTile = _TaxCreditsTile.TaxCredit;
-            } else {
-              selectedExpansionTile = _TaxCreditsTile.none;
-            }
-          },
-          selectedIndex: selectedExpansionTile, enabled: !isReadOnlyAdvisor,
+          hasChildren: hasChildren,
+          taxCredits: currentCreditsAndAdjustmentModel.taxCredits,
+          incomAdjustments: currentCreditsAndAdjustmentModel.incomeAdjustments,
+          onUpdate: (TaxCredits model) => setState(
+              () => currentCreditsAndAdjustmentModel = currentCreditsAndAdjustmentModel.copyWith(taxCredits: model)),
+          onUpdateTiles: (bool isExpanded) =>
+              setState(() => selectedExpansionTile = isExpanded ? _TaxCreditsTile.TaxCredit : _TaxCreditsTile.none),
+          selectedIndex: selectedExpansionTile,
+          enabled: !isReadOnlyAdvisor,
+          tileColor: CustomColorScheme.legendUnfilled,
+          taxCubit: taxCubit,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -165,13 +163,12 @@ class _TaxCreditsAndAdjustmentTabState extends State<TaxCreditsAndAdjustmentTab>
                   text: taxCubit.estimationStage == 4
                       ? AppLocalizations.of(context)!.apply
                       : AppLocalizations.of(context)!.done,
-                  enabled: !isReadOnlyAdvisor,
-                  onPressed: isReadOnlyAdvisor? (){} : () {
-                    taxCubit.updateCreditsAndAdjustment(
-                        endCreditsAndAdjustmentModel);
-                    startCreditsAndAdjustmentModel =
-                        endCreditsAndAdjustmentModel.copyWith();
-                  },
+                  enabled: buttonEnabled && !isReadOnlyAdvisor,
+                  onPressed: buttonEnabled && !isReadOnlyAdvisor
+                      ? () {
+                          taxCubit.updateCreditsAndAdjustment(currentCreditsAndAdjustmentModel);
+                        }
+                      : () {},
                 ),
               ),
             ),
@@ -186,66 +183,63 @@ mixin _FlexFactors {
   List<int> get flexFactors => [10, 10];
 }
 
-class IncomeAdjustmentsExpansionTile extends StatefulWidget {
-  const IncomeAdjustmentsExpansionTile({
-    Key? key,
-    required this.incomeAdjustments,
+abstract class CalculationExpansionTile<T> extends StatelessWidget{
+  final void Function(T) onUpdate;
+  final void Function(bool isExpanded) onUpdateTiles;
+  final bool enabled;
+  final Color tileColor;
+
+  const CalculationExpansionTile({
     required this.onUpdate,
     required this.onUpdateTiles,
-    required this.selectedIndex, required this.enabled,
-  }) : super(key: key);
+    required this.enabled,
+    required this.tileColor,
+    super.key,
+  });
+}
+
+class IncomeAdjustmentsExpansionTile extends CalculationExpansionTile<IncomeAdjustments>{
+  const IncomeAdjustmentsExpansionTile({
+    super.key,
+    required this.incomeAdjustments,
+    required this.selectedIndex,
+    required this.taxCubit,
+    required super.onUpdate,
+    required super.onUpdateTiles,
+    required super.enabled,
+    required super.tileColor,
+  });
 
   final IncomeAdjustments incomeAdjustments;
   final _TaxCreditsTile selectedIndex;
-  final VoidCallback onUpdate;
-  final void Function(bool isExpanded) onUpdateTiles;
-final bool enabled;
-  @override
-  State<IncomeAdjustmentsExpansionTile> createState() =>
-      _IncomeAdjustmentsExpansionTileState();
-}
+  final TaxCubit taxCubit;
 
-class _IncomeAdjustmentsExpansionTileState
-    extends State<IncomeAdjustmentsExpansionTile> with _FlexFactors {
-  var totalIncomeAdjustment = 0;
-  var categoryColor = CustomColorScheme.tableExpenseBackground;
-
-  void calculateTotal() {
-    totalIncomeAdjustment =
-        (widget.incomeAdjustments.selfEmployedHealthInsurance +
-                widget.incomeAdjustments.hsaContribution +
-                widget.incomeAdjustments
+  int get calculateTotal =>
+        (incomeAdjustments.selfEmployedHealthInsurance +
+                incomeAdjustments.hsaContribution +
+                incomeAdjustments
                     .retirementContributionsNotDeductedFromPaycheck +
-                widget.incomeAdjustments.studentInterestPaidDuringTheYear +
-                widget.incomeAdjustments.halfOfSelfEmploymentTaxesPaid +
-                widget.incomeAdjustments.other)
+                incomeAdjustments.studentInterestPaidDuringTheYear +
+                incomeAdjustments.halfOfSelfEmploymentTaxesPaid +
+                incomeAdjustments.other)
             .round();
-  }
-
-  @override
-  void initState() {
-    calculateTotal();
-    super.initState();
-  }
-
-  late var taxCubit = BlocProvider.of<TaxCubit>(context);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: categoryColor,
+        color: tileColor,
         border: Border(
           top: BorderSide(color: CustomColorScheme.tableBorder, width: 2),
           left: BorderSide(
             width: 4,
-            color: categoryColor,
+            color: tileColor,
           ),
         ),
       ),
       child: ExpansionTile(
         trailing: ImageIcon(
-          widget.selectedIndex == _TaxCreditsTile.IncomeAdjustments
+          selectedIndex == _TaxCreditsTile.IncomeAdjustments
               ? AssetImage('assets/images/icons/arrow_up.png')
               : AssetImage('assets/images/icons/arrow.png'),
           color: CustomColorScheme.errorPopupButton,
@@ -254,11 +248,8 @@ class _IncomeAdjustmentsExpansionTileState
         // expandedAlignment: Alignment.topLeft,
         expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
         initiallyExpanded:
-            widget.selectedIndex == _TaxCreditsTile.IncomeAdjustments,
-        onExpansionChanged: (bool expanded) {
-          widget.onUpdateTiles(expanded);
-          widget.onUpdate();
-        },
+            selectedIndex == _TaxCreditsTile.IncomeAdjustments,
+        onExpansionChanged: (bool expanded) => onUpdateTiles(expanded),
         title: Label(
           type: LabelType.General,
           fontWeight: FontWeight.w600,
@@ -266,71 +257,47 @@ class _IncomeAdjustmentsExpansionTileState
         ),
         children: [
           _RowInputItem(
-            enabled: widget.enabled,
+            enabled: enabled,
               title: 'Self employed health insurance',
-              value: widget.incomeAdjustments.selfEmployedHealthInsurance,
-              onUpdateValue: (int value) {
-                widget.incomeAdjustments.selfEmployedHealthInsurance = value;
-                widget.onUpdate();
-                calculateTotal();
-                setState(() {});
-              }),
+              value: incomeAdjustments.selfEmployedHealthInsurance,
+              onUpdateValue: (int value) => onUpdate(incomeAdjustments.copyWith(selfEmployedHealthInsurance: value))),
           _RowInputItem(
-              enabled: widget.enabled,
+              enabled: enabled,
               title: 'HSA contribution',
-              value: widget.incomeAdjustments.hsaContribution,
-              onUpdateValue: (int value) {
-                widget.incomeAdjustments.hsaContribution = value;
-                widget.onUpdate();
-                calculateTotal();
-                setState(() {});
-              }),
+              value: incomeAdjustments.hsaContribution,
+              onUpdateValue: (int value) => onUpdate(incomeAdjustments.copyWith(hsaContribution: value))),
           _RowInputItem(
-              enabled: widget.enabled,
+              enabled: enabled,
               title: 'Retirement contributions not deducted from paycheck',
-              value: widget.incomeAdjustments
+              value: incomeAdjustments
                   .retirementContributionsNotDeductedFromPaycheck,
-              onUpdateValue: (int value) {
-                widget.incomeAdjustments
-                    .retirementContributionsNotDeductedFromPaycheck = value;
-                widget.onUpdate();
-                calculateTotal();
-                setState(() {});
-              }),
+              onUpdateValue: (int value) => onUpdate(incomeAdjustments.copyWith(retirementContributionsNotDeductedFromPaycheck: value))),
           _RowLabelItem(
             title: 'Student interest paid during the year',
-            value: widget.incomeAdjustments.studentInterestPaidDuringTheYear,
+            value: incomeAdjustments.studentInterestPaidDuringTheYear,
           ),
           _RowInputItem(
-              enabled: widget.enabled,
+              enabled: enabled,
               title: 'Student loan interest paid',
-              value: widget.incomeAdjustments.studentLoanInterestPaid,
-              onUpdateValue: (int value) async {
-                widget.incomeAdjustments.studentLoanInterestPaid = value;
-                widget.incomeAdjustments.studentInterestPaidDuringTheYear =
-                    await taxCubit.getStudentInterestPaid(value);
-                widget.onUpdate();
-                calculateTotal();
-                setState(() {});
-              }),
+              value: incomeAdjustments.studentLoanInterestPaid,
+              onUpdateValue: (int value) async => onUpdate(
+                  incomeAdjustments.copyWith(
+                      studentLoanInterestPaid: value,
+                      studentInterestPaidDuringTheYear: await taxCubit.getStudentInterestPaid(value)),
+                )),
           _RowLabelItem(
             title: '50% of self-employment taxes paid',
-            value: widget.incomeAdjustments.halfOfSelfEmploymentTaxesPaid,
+            value: incomeAdjustments.halfOfSelfEmploymentTaxesPaid,
           ),
           _RowInputItem(
-              enabled: widget.enabled,
+              enabled: enabled,
               title: 'Other',
-              value: widget.incomeAdjustments.other,
-              onUpdateValue: (int value) {
-                widget.incomeAdjustments.other = value;
-                widget.onUpdate();
-                calculateTotal();
-                setState(() {});
-              }),
+              value: incomeAdjustments.other,
+              onUpdateValue: (int value) => onUpdate(incomeAdjustments.copyWith(other: value))),
           _RowLabelItem(
             title: 'Total income adjustments',
-            value: totalIncomeAdjustment,
-            rowColor: categoryColor,
+            value: calculateTotal,
+            rowColor: tileColor,
           ),
         ],
       ),
@@ -338,66 +305,42 @@ class _IncomeAdjustmentsExpansionTileState
   }
 }
 
-class ItemizedDeductionsExpansionTile extends StatefulWidget {
+class ItemizedDeductionsExpansionTile extends CalculationExpansionTile<ItemizedDeductions>{
   const ItemizedDeductionsExpansionTile({
-    Key? key,
+    super.key,
     required this.itemizedDeductions,
-    required this.onUpdate,
-    required this.onUpdateTiles,
     required this.selectedIndex,
-    required this.enabled,
-  }) : super(key: key);
+    required super.onUpdate,
+    required super.onUpdateTiles,
+    required super.enabled,
+    required super.tileColor,
+  });
 
   final ItemizedDeductions itemizedDeductions;
   final _TaxCreditsTile selectedIndex;
 
-  final void Function() onUpdate;
-  final void Function(bool isExpanded) onUpdateTiles;
-
-  final bool enabled;
-  @override
-  State<ItemizedDeductionsExpansionTile> createState() =>
-      _ItemizedDeductionsExpansionTileState();
-}
-
-class _ItemizedDeductionsExpansionTileState
-    extends State<ItemizedDeductionsExpansionTile> {
-  var isExpanded = false;
-
-  var totalItemizedDeductions = 0;
-
-  void calculateTotal() {
-    totalItemizedDeductions = (widget.itemizedDeductions.mortgageInterestPaid +
-            widget.itemizedDeductions.propertyTaxPayments +
-            widget.itemizedDeductions.charitableContributions +
-            widget.itemizedDeductions.otherItemizedDeduction)
+  int get calculateTotal => (itemizedDeductions.mortgageInterestPaid +
+            itemizedDeductions.propertyTaxPayments +
+            itemizedDeductions.charitableContributions +
+            itemizedDeductions.otherItemizedDeduction)
         .round();
-  }
-
-  @override
-  void initState() {
-    calculateTotal();
-    super.initState();
-  }
-
-  var categoryColor = CustomColorScheme.tableNetWorthBackground;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: categoryColor,
+        color: tileColor,
         border: Border(
           top: BorderSide(color: CustomColorScheme.tableBorder, width: 2),
           left: BorderSide(
             width: 4,
-            color: categoryColor,
+            color: tileColor,
           ),
         ),
       ),
       child: ExpansionTile(
         trailing: ImageIcon(
-          widget.selectedIndex == _TaxCreditsTile.ItemizedDeductions
+          selectedIndex == _TaxCreditsTile.ItemizedDeductions
               ? AssetImage('assets/images/icons/arrow_up.png')
               : AssetImage('assets/images/icons/arrow.png'),
           color: CustomColorScheme.errorPopupButton,
@@ -406,11 +349,8 @@ class _ItemizedDeductionsExpansionTileState
         expandedAlignment: Alignment.topLeft,
         expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
         initiallyExpanded:
-            widget.selectedIndex == _TaxCreditsTile.ItemizedDeductions,
-        onExpansionChanged: (expanded) {
-          widget.onUpdateTiles(expanded);
-          widget.onUpdate();
-        },
+            selectedIndex == _TaxCreditsTile.ItemizedDeductions,
+        onExpansionChanged: (expanded) => onUpdateTiles(expanded),
         title: Label(
           type: LabelType.General,
           fontWeight: FontWeight.w600,
@@ -418,55 +358,35 @@ class _ItemizedDeductionsExpansionTileState
         ),
         children: [
           _RowInputItem(
-              enabled: widget.enabled,
+              enabled: enabled,
               title: 'Mortgage interest paid',
-              value: widget.itemizedDeductions.mortgageInterestPaid,
-              onUpdateValue: (int value) {
-                widget.itemizedDeductions.mortgageInterestPaid = value;
-                widget.onUpdate();
-                calculateTotal();
-                setState(() {});
-              }),
+              value: itemizedDeductions.mortgageInterestPaid,
+              onUpdateValue: (int value) => onUpdate(itemizedDeductions.copyWith(mortgageInterestPaid: value))),
           _RowInputItem(
-              enabled: widget.enabled,
+              enabled: enabled,
               title: 'Property tax payments',
-              value: widget.itemizedDeductions.propertyTaxPayments,
-              onUpdateValue: (int value) {
-                widget.itemizedDeductions.propertyTaxPayments = value;
-                widget.onUpdate();
-                calculateTotal();
-                setState(() {});
-              }),
+              value: itemizedDeductions.propertyTaxPayments,
+              onUpdateValue: (int value) => onUpdate(itemizedDeductions.copyWith(propertyTaxPayments: value))),
           _RowInputItem(
-              enabled: widget.enabled,
+              enabled:enabled,
               title: 'Charitable contributions',
-              value: widget.itemizedDeductions.charitableContributions,
-              onUpdateValue: (int value) {
-                widget.itemizedDeductions.charitableContributions = value;
-                widget.onUpdate();
-                calculateTotal();
-                setState(() {});
-              }),
+              value: itemizedDeductions.charitableContributions,
+              onUpdateValue: (int value) => onUpdate(itemizedDeductions.copyWith(charitableContributions: value))),
           _RowInputItem(
-            enabled: widget.enabled,
+            enabled: enabled,
             title: 'Other itemized deduction (deductible portion only)',
-            value: widget.itemizedDeductions.otherItemizedDeduction,
-            onUpdateValue: (int value) {
-              widget.itemizedDeductions.otherItemizedDeduction = value;
-              widget.onUpdate();
-              calculateTotal();
-              setState(() {});
-            },
+            value: itemizedDeductions.otherItemizedDeduction,
+            onUpdateValue: (int value) => onUpdate(itemizedDeductions.copyWith(otherItemizedDeduction: value)),
           ),
           _RowLabelItem(
             title: 'Total Itemized Deductions',
-            value: totalItemizedDeductions,
-            rowColor: categoryColor,
+            value: calculateTotal,
+            rowColor: tileColor,
           ),
           _RowLabelItem(
             title: 'Compare to Standard deduction',
-            value: widget.itemizedDeductions.compareToStandardDeduction,
-            rowColor: categoryColor,
+            value: itemizedDeductions.compareToStandardDeduction,
+            rowColor: tileColor,
           ),
         ],
       ),
@@ -474,46 +394,36 @@ class _ItemizedDeductionsExpansionTileState
   }
 }
 
-class QBIDeductionExpansionTile extends StatefulWidget {
+class QBIDeductionExpansionTile extends CalculationExpansionTile<int>{
   final int qualifiedBusinessIncomeDeduction;
   final _TaxCreditsTile selectedIndex;
 
-  final void Function() onUpdate;
-  final void Function(bool isExpanded) onUpdateTiles;
-
-
   const QBIDeductionExpansionTile({
-    Key? key,
+    super.key,
     required this.qualifiedBusinessIncomeDeduction,
-    required this.onUpdate,
-    required this.onUpdateTiles,
     required this.selectedIndex,
-  }) : super(key: key);
-
-  @override
-  State<QBIDeductionExpansionTile> createState() =>
-      _QBIDeductionExpansionTileState();
-}
-
-class _QBIDeductionExpansionTileState extends State<QBIDeductionExpansionTile> {
-  var categoryColor = CustomColorScheme.QBIDeduction;
+    required super.onUpdate,
+    required super.onUpdateTiles,
+    required super.enabled,
+    required super.tileColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: categoryColor,
+        color: tileColor,
         border: Border(
           top: BorderSide(color: CustomColorScheme.tableBorder, width: 2),
           left: BorderSide(
             width: 4,
-            color: categoryColor,
+            color: tileColor,
           ),
         ),
       ),
       child: ExpansionTile(
         trailing: ImageIcon(
-          widget.selectedIndex == _TaxCreditsTile.QBIDeduction
+          selectedIndex == _TaxCreditsTile.QBIDeduction
               ? AssetImage('assets/images/icons/arrow_up.png')
               : AssetImage('assets/images/icons/arrow.png'),
           color: CustomColorScheme.errorPopupButton,
@@ -521,11 +431,8 @@ class _QBIDeductionExpansionTileState extends State<QBIDeductionExpansionTile> {
         ),
         expandedAlignment: Alignment.topLeft,
         expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-        initiallyExpanded: widget.selectedIndex == _TaxCreditsTile.QBIDeduction,
-        onExpansionChanged: (expanded) {
-          widget.onUpdateTiles(expanded);
-          widget.onUpdate();
-        },
+        initiallyExpanded: selectedIndex == _TaxCreditsTile.QBIDeduction,
+        onExpansionChanged: (expanded) => onUpdateTiles(expanded),
         title: Label(
           type: LabelType.General,
           fontWeight: FontWeight.w600,
@@ -534,7 +441,7 @@ class _QBIDeductionExpansionTileState extends State<QBIDeductionExpansionTile> {
         children: [
           _RowLabelItem(
             title: 'Qualified business income deduction',
-            value: widget.qualifiedBusinessIncomeDeduction,
+            value: qualifiedBusinessIncomeDeduction,
           ),
         ],
       ),
@@ -542,70 +449,53 @@ class _QBIDeductionExpansionTileState extends State<QBIDeductionExpansionTile> {
   }
 }
 
-class TaxCreditExpansionTile extends StatefulWidget {
+class TaxCreditExpansionTile extends CalculationExpansionTile<TaxCredits>{
+
+
   final TaxCredits taxCredits;
   final int taxFilingStatus;
   final _TaxCreditsTile selectedIndex;
-
-  final void Function() onUpdate;
-  final void Function(bool isExpanded) onUpdateTiles;
-
   final IncomeAdjustments incomAdjustments;
-
   final bool hasChildren;
-  final bool enabled;
+  final TaxCubit taxCubit;
+
 
   const TaxCreditExpansionTile({
-    Key? key,
+    super.key,
     required this.taxCredits,
-    required this.onUpdate,
-    required this.onUpdateTiles,
     required this.selectedIndex,
     required this.incomAdjustments,
     required this.taxFilingStatus,
     required this.hasChildren,
-    required this.enabled,
-  }) : super(key: key);
+    required this.taxCubit,
+    required super.enabled,
+    required super.onUpdate,
+    required super.onUpdateTiles,
+    required super.tileColor,
+  });
 
-  @override
-  State<TaxCreditExpansionTile> createState() => _TaxCreditExpansionTileState();
-}
-
-class _TaxCreditExpansionTileState extends State<TaxCreditExpansionTile> {
-  var totalCredits = 0;
-  var categoryColor = CustomColorScheme.legendUnfilled;
-
-  void calculateTotal() {
-    totalCredits = (widget.taxCredits.childTaxCredit +
-            widget.taxCredits.childAndDependentCareCredit +
-            widget.taxCredits.energyCredit +
-            widget.taxCredits.electricVehicleCredit +
-            widget.taxCredits.otherTaxCredit)
+  int get calculateTotal => (taxCredits.childTaxCredit +
+            taxCredits.childAndDependentCareCredit +
+            taxCredits.energyCredit +
+            taxCredits.electricVehicleCredit +
+            taxCredits.otherTaxCredit)
         .round();
-  }
 
-  @override
-  void initState() {
-    calculateTotal();
-    super.initState();
-  }
-
-  late var taxCubit = BlocProvider.of<TaxCubit>(context);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: categoryColor,
+        color: tileColor,
         border: Border(
           top: BorderSide(color: CustomColorScheme.tableBorder, width: 2),
-          left: BorderSide(width: 4, color: categoryColor),
+          left: BorderSide(width: 4, color: tileColor),
           bottom: BorderSide(color: CustomColorScheme.tableBorder, width: 2),
         ),
       ),
       child: ExpansionTile(
         trailing: ImageIcon(
-          widget.selectedIndex == _TaxCreditsTile.TaxCredit
+          selectedIndex == _TaxCreditsTile.TaxCredit
               ? AssetImage('assets/images/icons/arrow_up.png')
               : AssetImage('assets/images/icons/arrow.png'),
           color: CustomColorScheme.errorPopupButton,
@@ -613,11 +503,8 @@ class _TaxCreditExpansionTileState extends State<TaxCreditExpansionTile> {
         ),
         expandedAlignment: Alignment.topLeft,
         expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-        initiallyExpanded: widget.selectedIndex == _TaxCreditsTile.TaxCredit,
-        onExpansionChanged: (expanded) {
-          widget.onUpdateTiles(expanded);
-          widget.onUpdate();
-        },
+        initiallyExpanded: selectedIndex == _TaxCreditsTile.TaxCredit,
+        onExpansionChanged: (expanded) => onUpdateTiles(expanded),
         title: Label(
           type: LabelType.General,
           fontWeight: FontWeight.w600,
@@ -626,63 +513,43 @@ class _TaxCreditExpansionTileState extends State<TaxCreditExpansionTile> {
         children: [
           _RowLabelItem(
             title: 'Child tax credit',
-            value: widget.taxCredits.childTaxCredit,
+            value: taxCredits.childTaxCredit,
           ),
           _RowLabelItem(
             title: 'Child & dependent care credit',
-            value: widget.taxCredits.childAndDependentCareCredit,
+            value: taxCredits.childAndDependentCareCredit,
           ),
           _RowInputItem(
-            enabled: widget.taxFilingStatus != 1 && widget.hasChildren && widget.enabled,
+            enabled: taxFilingStatus != 1 && hasChildren && enabled,
             title: 'Total eligible childcare expenses',
-            value: widget.taxCredits.totalEligibleChildcareExpenses,
-            onUpdateValue: (int value) async {
-              widget.taxCredits.totalEligibleChildcareExpenses = value;
-              widget.taxCredits.childAndDependentCareCredit =
-                  await taxCubit.getChildAndDependentCareCredit(
-                      widget.incomAdjustments, value);
-              widget.onUpdate();
-              calculateTotal();
-              setState(() {});
-            },
+            value: taxCredits.totalEligibleChildcareExpenses,
+            onUpdateValue: (int value) async => onUpdate(taxCredits.copyWith(
+                  totalEligibleChildcareExpenses: value,
+                  childAndDependentCareCredit:
+                  await taxCubit.getChildAndDependentCareCredit(incomAdjustments, value))),
           ),
           _RowInputItem(
-            enabled: widget.enabled,
+            enabled: enabled,
             title: 'Energy Credit',
-            value: widget.taxCredits.energyCredit,
-            onUpdateValue: (int value) {
-              widget.taxCredits.energyCredit = value;
-              widget.onUpdate();
-              calculateTotal();
-              setState(() {});
-            },
-          ),
-          _RowInputItem(            enabled: widget.enabled,
-            title: 'Electric Vehicle Credit',
-            value: widget.taxCredits.electricVehicleCredit,
-            onUpdateValue: (int value) {
-              widget.taxCredits.electricVehicleCredit = value;
-              widget.onUpdate();
-              calculateTotal();
-              setState(() {});
-            },
+            value: taxCredits.energyCredit,
+            onUpdateValue: (int value) => onUpdate(taxCredits.copyWith(energyCredit: value)),
           ),
           _RowInputItem(
-            enabled: widget.enabled,
-
+            enabled:enabled,
+            title: 'Electric Vehicle Credit',
+            value: taxCredits.electricVehicleCredit,
+            onUpdateValue: (int value) => onUpdate(taxCredits.copyWith(electricVehicleCredit: value)),
+          ),
+          _RowInputItem(
+            enabled: enabled,
             title: 'Other Tax Credit',
-            value: widget.taxCredits.otherTaxCredit,
-            onUpdateValue: (int value) {
-              widget.taxCredits.otherTaxCredit = value;
-              widget.onUpdate();
-              calculateTotal();
-              setState(() {});
-            },
+            value: taxCredits.otherTaxCredit,
+            onUpdateValue: (int value) => onUpdate(taxCredits.copyWith(otherTaxCredit: value)),
           ),
           _RowLabelItem(
             title: 'Total Credits',
-            value: totalCredits,
-            rowColor: categoryColor,
+            value: calculateTotal,
+            rowColor: tileColor,
           ),
         ],
       ),
@@ -769,15 +636,11 @@ class _RowInputItemState extends State<_RowInputItem> with _FlexFactors {
                     ],
                     onChanged: (String value) {
                       valueNew = value.replaceAll(',', '');
-                      widget.onUpdateValue(
-                          valueNew.isNotEmpty ? int.parse(valueNew) : 0);
-                      setState(() {});
+                      setState(() => widget.onUpdateValue(
+                          valueNew.isNotEmpty ? int.parse(valueNew) : 0));
                     },
-                    onEditingComplete: () {
-                      widget.onUpdateValue(
-                          valueNew.isNotEmpty ? int.parse(valueNew) : 0);
-                      setState(() {});
-                    },
+                    onEditingComplete: () => setState(() => widget.onUpdateValue(
+                          valueNew.isNotEmpty ? int.parse(valueNew) : 0)),
                   ),
                 ),
               ),

@@ -55,16 +55,29 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
           ?.access
           .isReadOnly ??
       false;
+
   @override
   void initState() {
     super.initState();
     calculateTotalAmount();
   }
 
+  var canContinue = false;
+
   @override
-  Widget build(BuildContext context) {
+  void didUpdateWidget(covariant TaxIncomeDetailsTab oldWidget) {
+    updateState();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  void updateState() {
     calculateTotalAmount();
-    var canContinue = true;
+
+    if (taxCubit.estimationStage == 4) {
+      canContinue = false;
+    }
+
+
     for (var item in endIncomeDetailsModel.salaryPaychecks) {
       if (item.beforeTaxAmount == null && !item.statusValue) {
         canContinue = false;
@@ -72,6 +85,15 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
       }
     }
 
+    if(startIncomeDetailsModel != endIncomeDetailsModel) {
+      canContinue = true;
+    }
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -127,7 +149,7 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
             onUpdate: (newModel) {
               endIncomeDetailsModel = endIncomeDetailsModel
                   .updateWithSalary(newModel as TaxSalaryPaycheck);
-              setState(() {});
+              updateState();
             }, isEditable: !isReadOnlyAdvisor,
           ),
         for (var item in endIncomeDetailsModel.incomeSources)
@@ -136,7 +158,7 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
             onUpdate: (newModel) {
               endIncomeDetailsModel = endIncomeDetailsModel
                   .updateWithSource(newModel as TaxIncomeDetailSource);
-              setState(() {});
+              updateState();
             },isEditable: !isReadOnlyAdvisor,
           ),
         Container(
@@ -216,13 +238,10 @@ class _TaxIncomeDetailsTabState extends State<TaxIncomeDetailsTab>
                       } else {
                         showDialog(
                           context: context,
-                          builder: (_context) {
-                            return ErrorAlertDialog(
-                              _context,
-                              message: AppLocalizations.of(context)!
-                                  .beforeTaxShouldBeGreaterThanAfterTax,
-                            );
-                          },
+                          builder: (_context) => ErrorAlertDialog(
+                            _context,
+                            message: AppLocalizations.of(context)!.beforeTaxShouldBeGreaterThanAfterTax,
+                          ),
                         );
                       }
                     }
@@ -331,7 +350,7 @@ class _IncomeDetailsItemRowState extends State<_IncomeDetailsItemRow>
               ),
               child: CustomTextSwitch
                 (enabled: widget.isEditable,
-                onSelected: (value) {
+                onSelected: (value) => setState(() {
                   var newModel = widget.isSalary
                       ? (widget.itemModel as TaxSalaryPaycheck).copyWith(
                           setStatus: value ? 2 : 1,
@@ -341,8 +360,7 @@ class _IncomeDetailsItemRowState extends State<_IncomeDetailsItemRow>
                       : (widget.itemModel as TaxIncomeDetailSource)
                           .copyWith(status: value ? 2 : 1);
                   widget.onUpdate(newModel);
-                  setState(() {});
-                },
+                  }),
                 secondOptionName: widget.itemModel.secondOptionName,
                 firstOptionName: widget.itemModel.firstOptionName,
                 initialSelection: widget.itemModel.statusValue,
@@ -394,15 +412,14 @@ class _IncomeDetailsItemRowState extends State<_IncomeDetailsItemRow>
                           ],
                           onChanged: (String value) {
                             var valueNew = value.replaceAll(',', '');
-                            widget.onUpdate(
+                            setState(() => widget.onUpdate(
                                 (widget.itemModel as TaxSalaryPaycheck)
                                     .copyWith(
                                         replaceBeforeTax: true,
                                         beforeTaxAmount: valueNew.isNotEmpty
                                             ? int.parse(valueNew)
                                             : null,
-                                        setStatus: 1));
-                            setState(() {});
+                                        setStatus: 1)));
                           },
                           focusNode: node,
                           onEditingComplete: () {
