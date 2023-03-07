@@ -41,9 +41,6 @@ void main() async {
             'BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
             '',
             'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
-        await personalBudgetScreen.clickPersonalTab(tester);
-        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
         await personalBudgetScreen.verifyShowDifferencePage(
             btnDifference, tester);
@@ -67,7 +64,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickProfileIcon(tester);
         await personalBudgetScreen.clickPersonalTab(tester);
-        await personalBudgetScreen.clickBudgetTab(btnInvestments, tester);
+        await personalBudgetScreen.clickSideMenu(btnInvestments, tester);
         await personalBudgetScreen.verifyInvestmentsPage(tester);
         await htLogd(
             tester,
@@ -89,7 +86,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickProfileIcon(tester);
         await personalBudgetScreen.clickPersonalTab(tester);
-        await personalBudgetScreen.clickBudgetTab(btnInvestments, tester);
+        await personalBudgetScreen.clickSideMenu(btnInvestments, tester);
         await personalBudgetScreen.verifyInvestmentsPage(tester);
         await personalBudgetScreen.clickRetirementTab(tester);
         await personalBudgetScreen.verifyRetirementPage(tester);

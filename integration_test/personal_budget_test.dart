@@ -329,13 +329,42 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T222 User can change Current selected year on previous year or any further year for budget planning',
+            '',
+            'STARTED');
+        await dashboardScreen.clickProfileIcon(tester);
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickRightArrowBtn(tester);
+        await personalBudgetScreen.verifyYearOnBudgetAnnual(nextYear, tester);
+        await personalBudgetScreen.clickLeftArrowBtn(tester);
+        await personalBudgetScreen.verifyYearOnBudgetAnnual(
+            currentYear, tester);
+        await personalBudgetScreen.clickLeftArrowBtn(tester);
+        await personalBudgetScreen.verifyYearOnBudgetAnnual(
+            previousYear, tester);
+        await htLogd(
+            tester,
+            'BAR_T222 User can change Current selected year on previous year or any further year for budget planning',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR_T222 User can change Current selected year on previous year or any further year for budget planning',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T124 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',
             '',
             'STARTED');
         await dashboardScreen.clickProfileIcon(tester);
         await personalBudgetScreen.clickPersonalTab(tester);
-        // await dashboardScreen.clickAccountsTransactionsIconCards(tester);
-        // await personalBudgetScreen.verifyAccountsTransactionsPage(tester);
+        await dashboardScreen.clickAccountsTransactionsIconCards(tester);
+        await personalBudgetScreen.verifyAccountsTransactionsPage(tester);
         await htLogd(
             tester,
             'BAR_T124 Check that the user is redirected on Accounts&Transactions page after clicking on “A&T” icon (cards)',

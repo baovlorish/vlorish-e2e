@@ -338,10 +338,10 @@ void main() async {
             'STARTED');
         await businessBudgetScreen.clickPersonalTab(tester);
         await businessBudgetScreen.verifyPersonalBudgetPage(tester);
-        // await businessBudgetScreen.clickBusinessTab(tester);
-        // await businessBudgetScreen.verifyBusinessBudgetPage(tester);
-        // await businessBudgetScreen.clickMonthly(tester);
-        // await businessBudgetScreen.verifyBudgetMonthlyPage(tester);
+        await businessBudgetScreen.clickBusinessTab(tester);
+        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        await businessBudgetScreen.clickMonthly(tester);
+        await businessBudgetScreen.verifyBudgetMonthlyPage(tester);
         await htLogd(
             tester,
             'BAR_T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',

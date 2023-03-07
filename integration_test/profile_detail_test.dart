@@ -583,7 +583,8 @@ void main() async {
       }
 
       try {
-        await htLogdDirect('BAR_T212 ', '', 'STARTED');
+        await htLogdDirect(
+            'BAR_T212 Check that user can update "Occupation”', '', 'STARTED');
 
         await dashboardScreen.clickProfileIcon(tester);
         await profileScreen.verifyProfilePage(tester);
@@ -605,13 +606,19 @@ void main() async {
         await profileScreen.clickUpdateProfileButton(tester);
         await profileScreen.clickContinueButton(tester);
 
-        await htLogd(tester, 'BAR_T212 ', '', 'FINISHED');
+        await htLogd(tester, 'BAR_T212 Check that user can update "Occupation”',
+            '', 'FINISHED');
       } catch (e) {
-        await htLogd(tester, 'Failed BAR-T212 ', '', 'FINISHED');
+        await htLogd(
+            tester,
+            'Failed BAR-T212 Check that user can update "Occupation”',
+            '',
+            'FINISHED');
       }
 
       try {
-        await htLogdDirect('BAR_T213 ', '', 'STARTED');
+        await htLogdDirect(
+            'BAR_T213 Check that user can update "Gender”', '', 'STARTED');
 
         await dashboardScreen.clickProfileIcon(tester);
         await profileScreen.verifyProfilePage(tester);
@@ -633,9 +640,48 @@ void main() async {
         await profileScreen.clickUpdateProfileButton(tester);
         await profileScreen.clickContinueButton(tester);
 
-        await htLogd(tester, 'BAR_T213 ', '', 'FINISHED');
+        await htLogd(tester, 'BAR_T213 Check that user can update "Gender”', '',
+            'FINISHED');
       } catch (e) {
-        await htLogd(tester, 'Failed BAR-T213 ', '', 'FINISHED');
+        await htLogd(
+            tester,
+            'Failed BAR-T213 Check that user can update "Gender”',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T214 Check that user can update "Gender”', '', 'STARTED');
+
+        await dashboardScreen.clickProfileIcon(tester);
+        await profileScreen.verifyProfilePage(tester);
+        await profileScreen.clickProfileDetailsButton(tester);
+        await profileScreen.verifyProfileDetailtPage(tester);
+        final genderOption = genderOptions;
+        await profileScreen.verifyShowMessage(genderOption[0], tester);
+        for (int i = 1; i < genderOption.length; i++) {
+          await profileScreen.clickDropdownButton(genderBtn, tester);
+          await profileScreen.verifySelectDropdown(
+              genderBtn, genderOption[i], tester);
+          await profileScreen.clickUpdateProfileButton(tester);
+          await profileScreen.clickContinueButton(tester);
+          await profileScreen.verifyShowMessage(genderOption[i], tester);
+        }
+        await profileScreen.clickDropdownButton(genderBtn, tester);
+        await profileScreen.verifySelectDropdown(
+            genderBtn, genderOption[0], tester);
+        await profileScreen.clickUpdateProfileButton(tester);
+        await profileScreen.clickContinueButton(tester);
+
+        await htLogd(tester, 'BAR_T214 Check that user can update "Gender”', '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T214 Check that user can update "Gender”',
+            '',
+            'FINISHED');
       }
 
       try {

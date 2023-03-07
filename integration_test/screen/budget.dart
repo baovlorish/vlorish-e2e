@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/side_menu_button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/period_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
@@ -127,7 +128,7 @@ class BudgetScreenTest {
 
   Future<void> verifyInvestmentsPage(WidgetTester tester,
       {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 10));
     final finder = find.byType(Title).last;
     final titleWidget = tester.firstWidget<Title>(finder);
     expect(titleWidget.title, 'Investments');
@@ -196,6 +197,15 @@ class BudgetScreenTest {
     final btnBackIcon = find.text(str);
     await tapSomething(
         tester, btnBackIcon, addContext(context, 'Click on ' + str + ' tab'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> clickSideMenu(String menuName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnSideMenu = find.widgetWithText(SideMenuButtonItem, menuName);
+    await tapSomething(
+        tester, btnSideMenu, addContext(context, 'Click on $menuName Menu'));
     await tester.pumpAndSettle();
   }
 
