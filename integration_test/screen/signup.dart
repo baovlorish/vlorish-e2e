@@ -264,6 +264,16 @@ class SignUpScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
+  Future<void> verifyHideMessageError(String msg, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    final text = tester.widget<Text>(find.text(msg));
+    expect(text.style?.color, CustomColorScheme.inputErrorBorder);
+    await htExpect(tester, text, findsNothing,
+        reason: ("Verify-" + context + "-" + msg + ' error is NOT visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
   Future<void> scrollThePage(String textScroll) async {
     await tester.dragUntilVisible(
       find.text(textScroll), // what you want to find

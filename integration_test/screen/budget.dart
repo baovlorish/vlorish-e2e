@@ -200,6 +200,17 @@ class BudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
+  Future<void> clickDifferenceTab(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final btnBackIcon =
+        find.widgetWithText(CustomMaterialInkWell, btnDifference);
+    ;
+    await tapSomething(tester, btnBackIcon,
+        addContext(context, 'Click on ' + btnDifference + ' tab'));
+    await tester.pumpAndSettle();
+  }
+
   Future<void> clickSideMenu(String menuName, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));

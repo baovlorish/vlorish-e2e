@@ -479,6 +479,115 @@ void main() async {
             '',
             'FINISHED');
       }
+
+      try {
+        await htLogdDirect('BAR-T29 User can select gender', '', 'STARTED');
+        final email29 = getRandomString(10) + '@gmail.com';
+        await dashboardScreen.clickLogoText();
+        await signInScreen.clickBtnSignUp(tester);
+        await signUpScreen.inputEmail(email29, tester, context: context);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.inputPassword(passLogin, tester);
+        await signUpScreen.inputConfirmPassword(passLogin, tester);
+        await signUpScreen.clickAgreeAndContinueBtn(tester);
+        await signUpScreen.verifySigupMailCodePage(tester);
+        await signUpScreen.inputConfirmCodeEmail(tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.clickDropdownButton(tester);
+        await signUpScreen.verifySelectDropdown(genderSignupOptions[0], tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyErrorMessage(genderSignupOptions[0], tester);
+
+        await signUpScreen.clickStepEmailConfirmation(tester);
+        await signUpScreen.clickStepPersonalInfo(tester);
+        await signUpScreen.verifySelectDropdown(genderSignupOptions[1], tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyErrorMessage(genderSignupOptions[1], tester);
+
+        await signUpScreen.clickStepEmailConfirmation(tester);
+        await signUpScreen.clickStepPersonalInfo(tester);
+        await signUpScreen.verifySelectDropdown(genderSignupOptions[2], tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyErrorMessage(genderSignupOptions[2], tester);
+
+        await signUpScreen.clickStepEmailConfirmation(tester);
+        await signUpScreen.clickStepPersonalInfo(tester);
+        await signUpScreen.verifySelectDropdown(genderSignupOptions[3], tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyErrorMessage(genderSignupOptions[3], tester);
+
+        await htLogd(tester, 'BAR-T29 User can select gender', '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester, 'Failed BAR-T29 User can select gender', '', 'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR-T31 First name field contains max 50 characters',
+            '',
+            'STARTED');
+        final email31 = getRandomString(10) + '@gmail.com';
+        await dashboardScreen.clickLogoText();
+        await signInScreen.clickBtnSignUp(tester);
+        await signUpScreen.inputEmail(email31, tester, context: context);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.inputPassword(passLogin, tester);
+        await signUpScreen.inputConfirmPassword(passLogin, tester);
+        await signUpScreen.clickAgreeAndContinueBtn(tester);
+        await signUpScreen.verifySigupMailCodePage(tester);
+        await signUpScreen.inputConfirmCodeEmail(tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.inputFirstName(getRandomCharacter(50), tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyHideMessageError(
+            'First name should be up to 32 characters', tester);
+
+        await htLogd(
+            tester,
+            'BAR-T31 First name field contains max 50 characters',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T31 First name field contains max 50 characters',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect('BAR-T32 Last name field contains max 50 characters',
+            '', 'STARTED');
+        final email31 = getRandomString(10) + '@gmail.com';
+        await dashboardScreen.clickLogoText();
+        await signInScreen.clickBtnSignUp(tester);
+        await signUpScreen.inputEmail(email31, tester, context: context);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.inputPassword(passLogin, tester);
+        await signUpScreen.inputConfirmPassword(passLogin, tester);
+        await signUpScreen.clickAgreeAndContinueBtn(tester);
+        await signUpScreen.verifySigupMailCodePage(tester);
+        await signUpScreen.inputConfirmCodeEmail(tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.inputLastName(getRandomCharacter(50), tester);
+        await signUpScreen.clickButtonNext(tester);
+        await signUpScreen.verifyHideMessageError(
+            'Last name should be up to 32 characters', tester);
+
+        await htLogd(
+            tester,
+            'BAR-T32 Last name field contains max 50 characters',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T32 Last name field contains max 50 characters',
+            '',
+            'FINISHED');
+      }
+
       try {
         await htLogdDirect(
             'BAR-T1 User is redirected on Password page after entering correct email',

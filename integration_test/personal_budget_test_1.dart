@@ -41,7 +41,7 @@ void main() async {
             'BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
             '',
             'STARTED');
-        await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
+        await personalBudgetScreen.clickDifferenceTab(tester);
         await personalBudgetScreen.verifyShowDifferencePage(
             btnDifference, tester);
         await htLogd(
@@ -108,11 +108,10 @@ void main() async {
             'BAR_T167 Business Budget - User is redirected on Available Annually tab button after clicking on “Difference” button',
             '',
             'STARTED');
-        await personalBudgetScreen.clickPersonalTab(tester);
-        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await dashboardScreen.clickProfileIcon(tester);
         await personalBudgetScreen.clickBusinessTab(tester);
         await personalBudgetScreen.verifyBusinessBudgetPage(tester);
-        await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
+        await personalBudgetScreen.clickDifferenceTab(tester);
         await personalBudgetScreen.verifyShowDifferencePage(
             btnDifference, tester);
         await htLogd(
