@@ -1,11 +1,17 @@
 import 'dart:math';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/dashboard_item.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/editable_table_body_cell.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/month_dashboard.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/side_menu_button_item.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/table_body_cell.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/toggling_cell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/period_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/annual_monthly_button.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/avatar_widget.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../lib/function_common.dart';
@@ -469,5 +475,113 @@ class BudgetScreenTest {
     }
 
     await tester.pumpAndSettle();
+  }
+
+  //-----------------
+  Future<void> clickCategoryList(String categoryName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    final categoryFinder = find.descendant(
+      of: find.byType(TogglingCell),
+      matching: find.text(categoryName),
+    );
+
+    await tapSomething(tester, categoryFinder,
+        addContext(context, 'Click on btn $categoryName'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> inputValuePlannedCell(
+      String rowName, int indexCell, String value, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    // print('final rowFinder :$rowFinder');
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    // print('final sizedBoxFinder: $sizedBoxFinder');
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextFormField),
+    );
+
+    final textFormFields =
+        tester.widgetList(textFormFieldFinder).cast<TextFormField>();
+    final count = textFormFields.length;
+
+    print('Number of TextFormFields in SizedBox: $count');
+
+    await tester.tap(textFormFieldFinder.at(indexCell));
+    await tester.pump(const Duration(seconds: 5));
+    if (value != '') {
+      await tester.enterText(textFormFieldFinder.at(indexCell), '');
+      await tester.pump(const Duration(seconds: 5));
+      await tester.tap(textFormFieldFinder.at(indexCell));
+      await tester.enterText(textFormFieldFinder.at(indexCell), value);
+      await tester.pumpAndSettle(const Duration(seconds: 15));
+    }
+    // await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    // print('final input input 11111111');
+
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+  }
+
+  Future<void> getValueCell(
+      String rowName, int indexCell, String value, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    print('final rowFinder :$rowFinder');
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    print('final sizedBoxFinder: $sizedBoxFinder');
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextFormField),
+    );
+
+    final textFormFields =
+        tester.widgetList(textFormFieldFinder).cast<TextFormField>();
+    final count = textFormFields.length;
+
+    print('Number of TextFormFields in SizedBox: $count');
+
+// Get the value of the TextFormField widget
+    final formFieldState = tester.state(textFormFieldFinder.at(indexCell))
+        as FormFieldState<String>;
+    final textFormFieldValue = formFieldState.value;
+
+    // Verify that the TextFormField widget has the correct value
+    // expect(textFormFieldValue, 'Hello, World!');
+
+//------End get value----------------------
+    print('End get value-------------------------: $textFormFieldValue');
+
+    // expect(textFormFieldValue, '6');
+    await htExpect(tester, textFormFieldValue, value,
+        reason: ('Verify-' +
+            context +
+            'value $textFormFieldValue in cell is visible'));
+    print('Complete-------------------------------------');
+
+    await tester.pumpAndSettle(const Duration(seconds: 5));
   }
 }
