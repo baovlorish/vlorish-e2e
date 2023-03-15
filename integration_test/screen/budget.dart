@@ -523,11 +523,13 @@ class BudgetScreenTest {
     await tester.tap(textFormFieldFinder.at(indexCell));
     await tester.pump(const Duration(seconds: 5));
     if (value != '') {
-      await tester.enterText(textFormFieldFinder.at(indexCell), '');
+      // await tester.enterText(textFormFieldFinder.at(indexCell), '');
+      // await tester.pump(const Duration(seconds: 5));
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
       await tester.pump(const Duration(seconds: 5));
       await tester.tap(textFormFieldFinder.at(indexCell));
       await tester.enterText(textFormFieldFinder.at(indexCell), value);
-      await tester.pumpAndSettle(const Duration(seconds: 15));
+      await tester.pumpAndSettle(const Duration(seconds: 5));
     }
     // await tester.sendKeyEvent(LogicalKeyboardKey.tab);
     // print('final input input 11111111');
@@ -567,6 +569,7 @@ class BudgetScreenTest {
 // Get the value of the TextFormField widget
     final formFieldState = tester.state(textFormFieldFinder.at(indexCell))
         as FormFieldState<String>;
+
     final textFormFieldValue = formFieldState.value;
 
     // Verify that the TextFormField widget has the correct value
@@ -575,11 +578,11 @@ class BudgetScreenTest {
 //------End get value----------------------
     print('End get value-------------------------: $textFormFieldValue');
 
-    // expect(textFormFieldValue, '6');
-    await htExpect(tester, textFormFieldValue, value,
-        reason: ('Verify-' +
-            context +
-            'value $textFormFieldValue in cell is visible'));
+    expect(textFormFieldValue, value);
+    // await htExpect(tester, textFormFieldValue, value,
+    //     reason: ('Verify-' +
+    //         context +
+    //         'value $textFormFieldValue in cell is visible'));
     print('Complete-------------------------------------');
 
     await tester.pumpAndSettle(const Duration(seconds: 5));
