@@ -20,8 +20,7 @@ final monthNames = [
 
 String getRandomString(int len) {
   var r = Random();
-  const _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   return List.generate(len, (index) => _chars[r.nextInt(_chars.length)]).join();
 }
 
@@ -40,8 +39,8 @@ String getRandomNumber(int len) {
 String getRandomSymbolString(int length) {
   final random = Random();
   const symbols = r'!@#\$%^&*(),.?":{}|<>';
-  return String.fromCharCodes(Iterable.generate(
-      length, (_) => symbols.codeUnitAt(random.nextInt(symbols.length))));
+  return String.fromCharCodes(
+      Iterable.generate(length, (_) => symbols.codeUnitAt(random.nextInt(symbols.length))));
 }
 
 int getDateNow() {
@@ -96,4 +95,15 @@ String getNextMonthYear(DateTime date) {
   final nextMonthYear = '${monthNames[nextMonth]} $nextYear';
 
   return '$nextMonthYear';
+}
+
+int randomInt(int toNumber) {
+  final random = Random();
+  final number = random.nextInt(toNumber);
+  return number;
+}
+
+String formatted(int number) {
+  final formatted = NumberFormat('#,##0').format(number);
+  return formatted;
 }
