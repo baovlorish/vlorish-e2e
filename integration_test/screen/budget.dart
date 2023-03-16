@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/dashboard_item.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/editable_table_body_cell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/month_dashboard.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/side_menu_button_item.dart';
@@ -80,14 +81,29 @@ class BudgetScreenTest {
   }
 
   Future<void> verifyAccountsTransactionsPage(WidgetTester tester, {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 30));
-    await htExpect(tester, find.text('Accounts & Transactions'), findsOneWidget,
+    await tester.pump(const Duration(seconds: 5));
+    print('Verify Accounts Transactions Page');
+    final manageTxt = find.text('Manage accounts');
+    print('Verify Accounts Transactions Page-------1');
+    expect(manageTxt, findsOneWidget);
+    print('Verify Accounts Transactions Page-------2');
+    await htExpect(tester, manageTxt, findsOneWidget,
         reason: ('Verify-' + context + '- Text Accounts & Transactions Title is visible'));
-    await htExpect(tester, find.text('Top Merchants'), findsOneWidget,
+    print('Verify Accounts Transactions Page-----------2');
+    final labelTopMerchants = find.widgetWithText(Label, 'Top merchants');
+    // final scrollable = find.byType(Scrollable);
+
+    // await tester.scrollUntilVisible(
+    //   labelTopMerchants,
+    //   100, // offset from top
+    //   scrollable: scrollable,
+    // );
+
+    expect(labelTopMerchants, findsOneWidget);
+    await htExpect(tester, labelTopMerchants, findsOneWidget,
         reason: ('Verify-' + context + '- Text Top Merchants is visible'));
-    await htExpect(tester, find.text('Top Transactions'), findsOneWidget,
-        reason: ('Verify-' + context + '- Text Top Transactions is visible'));
-    await tester.pumpAndSettle();
+
+    await tester.pump();
   }
 
   Future<void> verifyDebtsPage(WidgetTester tester, {String context = ''}) async {

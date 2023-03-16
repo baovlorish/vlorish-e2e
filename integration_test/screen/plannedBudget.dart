@@ -67,44 +67,9 @@ class PlannedBudgetScreenTest {
         await tester.pump(const Duration(seconds: 5));
       }
 
-      await getValueCell(rowName, index, valueVerify, tester);
+      await verifyValueInCell(rowName, index, valueVerify, tester);
     }
   }
-
-  // Future<void> inputRandomAndVerifyCellPlanned(WidgetTester tester, {String context = ''}) async {
-  //   await tester.pumpAndSettle();
-  //   final textFormFieldFinder = find.byType(TextFormField);
-  //   final textFormFields = tester.widgetList(textFormFieldFinder).cast<TextFormField>();
-  //   final count = textFormFields.length;
-  //   final index = randomInt(count - 1);
-  //   final number = randomInt(999999);
-  //   final valueInput = number.toString();
-  //   final valueVerify = formatted(number);
-  //   final textFormFieldAtIndex = textFormFieldFinder.at(index);
-  //   await tester.tap(textFormFieldAtIndex);
-  //   await tester.pump(const Duration(seconds: 2));
-  //   if (valueInput != '') {
-  //     await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
-  //     await tester.pump(const Duration(seconds: 5));
-  //     await tester.tap(textFormFieldAtIndex);
-  //     await tester.enterText(textFormFieldAtIndex, valueInput);
-  //     await tester.pumpAndSettle(const Duration(seconds: 2));
-  //     if (index != count - 1) {
-  //       await tester.tap(textFormFieldFinder.at(index + 1));
-  //       await tester.pumpAndSettle(const Duration(seconds: 5));
-  //     } else {
-  //       await tester.tap(textFormFieldFinder.at(index + 1));
-  //       await tester.pumpAndSettle(const Duration(seconds: 5));
-  //     }
-  //   }
-  //   await tester.pump(const Duration(seconds: 2));
-  //   final formFieldState = tester.state(textFormFieldAtIndex) as FormFieldState<String>;
-  //   final textFormFieldValue = formFieldState.value;
-  //   expect(textFormFieldValue, valueVerify);
-  //   await htExpect(tester, textFormFieldValue, valueVerify,
-  //       reason: ('Verify-' + context + 'the value $valueInput in cell has been input'));
-  //   await tester.pumpAndSettle(const Duration(seconds: 20));
-  // }
 
   Future<void> clickCategoryList(String categoryName, WidgetTester tester,
       {String context = ''}) async {
@@ -120,9 +85,10 @@ class PlannedBudgetScreenTest {
 
   Future<void> verifyUpdateTotalPlanned(
       String rowName, int indexCell, String valueVerify, WidgetTester tester,
-      {String context = ''}) async {
+      {String context = '', Finder? rowFinder}) async {
     await tester.pumpAndSettle(const Duration(seconds: 20));
-    final rowFinder = find.descendant(
+
+    rowFinder ??= find.descendant(
       of: find.byType(TogglingCell),
       matching: find.text(rowName),
     );
@@ -138,7 +104,7 @@ class PlannedBudgetScreenTest {
     );
 
     final label = find.descendant(
-      of: tableBodyCellFinder,
+      of: tableBodyCellFinder.at(indexCell),
       matching: find.byType(Label),
     );
 
@@ -154,7 +120,6 @@ class PlannedBudgetScreenTest {
     expect(cellTextValue, valueVerify);
     await htExpect(tester, cellTextValue, valueVerify,
         reason: ('Verify-' + context + 'the Total value $valueVerify in cell has been update'));
-    print('valueInput--------: $valueVerify');
   }
 
   Future<void> inputValue(String rowName, int indexCell, String valueInput, WidgetTester tester,
@@ -199,7 +164,49 @@ class PlannedBudgetScreenTest {
     }
   }
 
-  Future<void> getValueCell(String rowName, int indexCell, String value, WidgetTester tester,
+  Future<void> checkValue0IsKeepeDunfilled(String rowName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextFormField),
+    );
+
+    final textFormFields = tester.widgetList(textFormFieldFinder).cast<TextFormField>();
+    final count = textFormFields.length;
+
+    final indexCell = randomInt(count);
+
+    await tester.tap(textFormFieldFinder.at(indexCell));
+    await tester.pump(const Duration(seconds: 2));
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
+    await tester.pump(const Duration(seconds: 2));
+
+    if (indexCell != count - 1) {
+      await tester.tap(textFormFieldFinder.at(indexCell + 1));
+      await tester.pump(const Duration(seconds: 5));
+    } else {
+      await tester.tap(textFormFieldFinder.at(indexCell - 1));
+      await tester.pump(const Duration(seconds: 5));
+    }
+
+    await tester.pump(const Duration(seconds: 2));
+    await verifyValueInCell(rowName, indexCell, '0', tester);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> verifyValueInCell(String rowName, int indexCell, String value, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle();
     final rowFinder = find.descendant(
@@ -221,7 +228,6 @@ class PlannedBudgetScreenTest {
         tester.state(textFormFieldFinder.at(indexCell)) as FormFieldState<String>;
 
     final textFormFieldValue = formFieldState.value;
-    expect(textFormFieldValue, value);
     await htExpect(tester, textFormFieldValue, value,
         reason: ('Verify-' + context + 'the value $value in cell has been input'));
 

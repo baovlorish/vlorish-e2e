@@ -47,6 +47,8 @@ void main() async {
         await personalBudgetScreen.clickCategoryList('Income', tester);
         await plannedPersonalBudgetScreen.inputValuePlannedCell('Other Income', tester);
         await tester.pumpAndSettle(const Duration(seconds: 2));
+        await personalBudgetScreen.clickCategoryArrowIcon(tester);
+        await tester.pump(const Duration(seconds: 2));
         await htLogd(
             tester,
             'BAR_T223 User can enter planned sum in any line by clicking on the necessary cell on "Planned" table',
@@ -66,11 +68,8 @@ void main() async {
             '',
             'STARTED');
         final number = randomInt(999999);
-        print('number = number.toString();:----: $number');
         final valueInput = number.toString();
-        print('value = number.toString();:----: $valueInput');
         final valueVerify = '\$' + formatted(number);
-        print('valueVerify = number.toString();:----: $valueVerify');
         await personalBudgetScreen.clickPersonalTab(tester);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
@@ -82,8 +81,9 @@ void main() async {
         await plannedPersonalBudgetScreen.inputValue('Home Services', 0, '0', tester);
         await plannedPersonalBudgetScreen.verifyUpdateTotalPlanned(
             'Housing', 0, valueVerify, tester);
-
         await tester.pumpAndSettle(const Duration(seconds: 2));
+        await personalBudgetScreen.clickCategoryArrowIcon(tester);
+        await tester.pump(const Duration(seconds: 2));
         await htLogd(
             tester,
             'BAR_T226 Check that Total Planned sum is updated automatically if Customer inserts a new value',
@@ -94,6 +94,56 @@ void main() async {
             tester,
             'Failed BAR_T226 Check that Total Planned sum is updated automatically if Customer inserts a new value',
             '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T230 Check cells with "0" value is keeped unfilled on "Planned" table',
+            '',
+            'STARTED');
+
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        await personalBudgetScreen.clickCategoryList('Income', tester);
+        await plannedPersonalBudgetScreen.checkValue0IsKeepeDunfilled('Owner Draw', tester);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+        await personalBudgetScreen.clickCategoryArrowIcon(tester);
+        await tester.pump(const Duration(seconds: 2));
+        await htLogd(
+            tester,
+            'BAR_T226 Check cells with "0" value is keeped unfilled on "Planned" table',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR_T230 Check cells with "0" value is keeped unfilled on "Planned" table',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T227 Check that max value in cells is 1000000000000', '', 'STARTED');
+        final value = 1000000000000 - 1;
+        final valueInput = value.toString();
+        final valuVerify = formatted(value);
+
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        await personalBudgetScreen.clickCategoryList('Debt Payments', tester);
+        await plannedPersonalBudgetScreen.inputValue('Student Loans', 0, valueInput, tester);
+        await plannedPersonalBudgetScreen.verifyValueInCell('Student Loans', 0, valuVerify, tester);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+        await personalBudgetScreen.clickCategoryArrowIcon(tester);
+        await tester.pump(const Duration(seconds: 2));
+        await htLogd(
+            tester, 'BAR_T227 Check that max value in cells is 1000000000000', '', 'FINISHED');
+      } catch (e) {
+        await htLogd(tester, 'Failed BAR_T227 Check that max value in cells is 1000000000000e', '',
             'FINISHED');
       }
     });

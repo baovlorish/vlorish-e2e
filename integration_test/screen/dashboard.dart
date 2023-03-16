@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:burgundy_budgeting_app/ui/atomic/atom/back_button.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen.dart';
 import 'package:burgundy_budgeting_app/ui/screen/category_management/category_management_cubit.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/avatar_widget.dart';
@@ -30,8 +31,7 @@ class DashboardScreenTest {
 
   Future<void> openUrl(String url) async {
     //html.window.open(url, "_self");
-    var urllaunchable =
-        await canLaunch(url); //canLaunch is from url_launcher package
+    var urllaunchable = await canLaunch(url); //canLaunch is from url_launcher package
     if (urllaunchable) {
       await launch(url); //launch is from url_launcher package to launch URL
     } else {
@@ -39,40 +39,35 @@ class DashboardScreenTest {
     }
   }
 
-  Future<void> clickButton(String btnName, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickButton(String btnName, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     final btnSignIn = find.text(btnName).first;
-    await tapSomething(
-        tester, btnSignIn, addContext(context, 'click Btn ' + btnName));
+    await tapSomething(tester, btnSignIn, addContext(context, 'click Btn ' + btnName));
     await tester.pumpAndSettle();
   }
 
-  Future<void> clickLogoutButton(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickLogoutButton(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
     final iconText = find.byType(AppBarItem).at(5);
-    await tapSomething(
-        tester, iconText, addContext(context, 'Click on btn Logout'));
+    await tapSomething(tester, iconText, addContext(context, 'Click on btn Logout'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> clickProfileIcon(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickProfileIcon(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
     print(find.byType(AvatarWidget).toString());
     final avatar = find.byType(AvatarWidget).first;
-    await tapSomething(
-        tester, avatar, addContext(context, 'Click on btn avatar'));
+    await tapSomething(tester, avatar, addContext(context, 'Click on btn avatar'));
     await tester.pumpAndSettle(const Duration(seconds: 5));
   }
 
   Future<void> clickAccountsTransactionsIconCards(WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle();
-    final iconText = find.byType(AppBarItem).at(1);
-    await tapSomething(tester, iconText,
-        addContext(context, 'Click on btn Accounts & Transactions'));
+    final appBarItem = find.byWidgetPredicate((widget) =>
+        widget is AppBarItem && widget.iconUrl == 'assets/images/icons/card_default.png');
+    await tester.tap(appBarItem);
+    await tester.pump();
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 }
