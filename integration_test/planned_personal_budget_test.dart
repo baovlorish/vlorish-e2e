@@ -146,6 +146,119 @@ void main() async {
         await htLogd(tester, 'Failed BAR_T227 Check that max value in cells is 1000000000000e', '',
             'FINISHED');
       }
+
+      try {
+        await htLogdDirect(
+            'BAR_T234 Check that total sum is shown by all subcategory in the "Income" line on Personal Monthly page',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        final incomeRowValue =
+            await plannedPersonalBudgetScreen.getValueTotalPlanned(btnAnnual, 'Income', 2, tester);
+        await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
+        await personalBudgetScreen.verifyBudgetMonthlyPage(tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Income', 0, incomeRowValue, tester);
+        await tester.pump(const Duration(seconds: 2));
+        await htLogd(
+            tester,
+            'BAR_T234 Check that total sum is shown by all subcategory in the "Income" line on Personal Monthly page',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR_T234 Check that total sum is shown by all subcategory in the "Income" line on Personal Monthly page',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T235 Check that  total sum is shown by all subcategory in thein the "Category name" line on Personal Monthly page',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        final incomeValue =
+            await plannedPersonalBudgetScreen.getValueTotalPlanned(btnAnnual, 'Income', 2, tester);
+        final housingValue =
+            await plannedPersonalBudgetScreen.getValueTotalPlanned(btnAnnual, 'Housing', 2, tester);
+        final debtPaymentsValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Debt Payments', 2, tester);
+        final transportationValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Transportation', 2, tester);
+        final livingExpensesValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Living Expenses', 2, tester);
+        final lifestyleExpensesValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Lifestyle Expenses', 2, tester);
+        final kidsValue =
+            await plannedPersonalBudgetScreen.getValueTotalPlanned(btnAnnual, 'Kids', 2, tester);
+        final givingValue =
+            await plannedPersonalBudgetScreen.getValueTotalPlanned(btnAnnual, 'Giving', 2, tester);
+        final taxesValue =
+            await plannedPersonalBudgetScreen.getValueTotalPlanned(btnAnnual, 'Taxes', 2, tester);
+        final otherExpensesValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Other Expenses', 2, tester);
+        final totalExpensesValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Total Expenses', 2, tester);
+        final netIncomeValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Net Income', 2, tester);
+        final goalsSinkingFundsValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Goals/Sinking Funds', 2, tester);
+        final investmentsValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Investments', 2, tester);
+        final freeCashValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            btnAnnual, 'Free Cash', 2, tester);
+
+        await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
+        await personalBudgetScreen.verifyBudgetMonthlyPage(tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Income', 0, incomeValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Housing', 0, housingValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Debt Payments', 0, debtPaymentsValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Transportation', 0, transportationValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Living Expenses', 0, livingExpensesValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Lifestyle Expenses', 0, lifestyleExpensesValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Kids', 0, kidsValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Giving', 0, givingValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Taxes', 0, taxesValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Other Expenses', 0, otherExpensesValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Total Expenses', 0, totalExpensesValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Net Income', 0, netIncomeValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Goals/Sinking Funds', 0, goalsSinkingFundsValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Investments', 0, investmentsValue, tester);
+        await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
+            'Free Cash', 0, freeCashValue, tester);
+        await tester.pump(const Duration(seconds: 2));
+        await htLogd(
+            tester,
+            'BAR_T235 Check that  total sum is shown by all subcategory in thein the "Category name" line on Personal Monthly page',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR_T235 Check that  total sum is shown by all subcategory in thein the "Category name" line on Personal Monthly pagee',
+            '',
+            'FINISHED');
+      }
     });
   });
 }

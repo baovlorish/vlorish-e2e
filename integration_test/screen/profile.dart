@@ -153,31 +153,26 @@ class ProfileScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> verifySelectDropdown(
-      String dropdownName, String valueSelect, WidgetTester tester,
+  Future<void> verifySelectDropdown(String dropdownName, String valueSelect, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 5));
     await tapSomething(tester, find.text(valueSelect).last,
         addContext(context, 'Click on value $valueSelect of $dropdownName'));
   }
 
-  Future<void> verifyProfilePage(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> verifyProfilePage(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 7));
     final finder = find.byType(Title).last;
     final titleWidget = tester.firstWidget<Title>(finder);
     await htExpect(tester, titleWidget.title, 'Profile Overview',
-        reason:
-            ('Verify-' + context + '- Profile Overview title page is visible'));
+        reason: ('Verify-' + context + '- Profile Overview title page is visible'));
     await tester.pumpAndSettle();
   }
 
-  Future<void> verifyProfileDetailtPage(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> verifyProfileDetailtPage(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
     await htExpect(tester, find.text('Personal Details'), findsOneWidget,
-        reason:
-            ('Verify-' + context + '-' + 'Personal Details Title is visible'));
+        reason: ('Verify-' + context + '-' + 'Personal Details Title is visible'));
     await htExpect(tester, find.text('First Name'), findsOneWidget,
         reason: ('Verify-' + context + '-' + 'First Name text is visible'));
     await htExpect(tester, find.text('Date of birth'), findsOneWidget,
@@ -185,30 +180,24 @@ class ProfileScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> clickProfileDetailsButton(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickProfileDetailsButton(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
     final profileButton = find.widgetWithText(Label, 'Profile details');
-    await tapSomething(tester, profileButton,
-        addContext(context, 'Click on btn Profile Details'));
+    await tapSomething(tester, profileButton, addContext(context, 'Click on btn Profile Details'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> inputUpdateName(
-      String firstName, String lastName, WidgetTester tester,
+  Future<void> inputUpdateName(String firstName, String lastName, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle();
     final first = find.byType(InputItem).at(0);
     final last = find.byType(InputItem).at(1);
-    await writeSomething(
-        tester, first, firstName, addContext(context, 'Input First Name'));
-    await writeSomething(
-        tester, last, lastName, addContext(context, 'Input Last Name'));
+    await writeSomething(tester, first, firstName, addContext(context, 'Input First Name'));
+    await writeSomething(tester, last, lastName, addContext(context, 'Input Last Name'));
     await tester.pumpAndSettle(const Duration(seconds: 20));
   }
 
-  Future<void> verifyNameUpdate(
-      String firstName, String lastName, WidgetTester tester,
+  Future<void> verifyNameUpdate(String firstName, String lastName, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 10));
     await htExpect(tester, find.text(firstName), findsOneWidget,
@@ -218,84 +207,68 @@ class ProfileScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> inputFirstName(String firstName, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> inputFirstName(String firstName, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
     final first = find.byType(InputItem).at(0);
-    await writeSomething(
-        tester, first, firstName, addContext(context, 'Input First Name'));
+    await writeSomething(tester, first, firstName, addContext(context, 'Input First Name'));
     await tester.pumpAndSettle(const Duration(seconds: 10));
   }
 
-  Future<void> inputLastName(String lastName, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> inputLastName(String lastName, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
     final last = find.byType(InputItem).at(1);
-    await writeSomething(
-        tester, last, lastName, addContext(context, 'Input Last Name'));
+    await writeSomething(tester, last, lastName, addContext(context, 'Input Last Name'));
     await tester.pumpAndSettle(const Duration(seconds: 10));
   }
 
-  Future<void> clickUpdateProfileButton(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickUpdateProfileButton(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
     final updateButton = find.text('Update');
-    await tapSomething(tester, updateButton,
-        addContext(context, 'Click on btn Update Profile Button'));
+    await tapSomething(
+        tester, updateButton, addContext(context, 'Click on btn Update Profile Button'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> inputUpdatePassword(
-      String oldPassword, String newPassord, WidgetTester tester,
+  Future<void> inputUpdatePassword(String oldPassword, String newPassord, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle();
     final oldPass = find.byType(InputItem).at(0);
     final newPass = find.byType(InputItem).at(1);
-    await writeSomething(tester, oldPass, oldPassword,
-        addContext(context, 'Input Old Password'));
-    await writeSomething(
-        tester, newPass, newPassord, addContext(context, 'Input New Password'));
+    await writeSomething(tester, oldPass, oldPassword, addContext(context, 'Input Old Password'));
+    await writeSomething(tester, newPass, newPassord, addContext(context, 'Input New Password'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> clickUpdatePasswordButton(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickUpdatePasswordButton(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
     final updateButton = find.text('Update password');
     // await tester.tap(updateButton);
-    await tapSomething(tester, updateButton,
-        addContext(context, 'Click on btn Update Password'));
+    await tapSomething(tester, updateButton, addContext(context, 'Click on btn Update Password'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> clickContinueButton(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickContinueButton(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
     final continueBtn = find.text('Continue');
-    await tapSomething(
-        tester, continueBtn, addContext(context, 'Click on btn Continue'));
+    await tapSomething(tester, continueBtn, addContext(context, 'Click on btn Continue'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> clickBackButton(WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickBackButton(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     final btnBackIcon = find.byIcon(Icons.arrow_back_rounded);
-    await tapSomething(
-        tester, btnBackIcon, addContext(context, 'Click on btn BackIcon'));
+    await tapSomething(tester, btnBackIcon, addContext(context, 'Click on btn BackIcon'));
     await tester.pumpAndSettle();
   }
 
-  Future<void> clickEyePassword(int index, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickEyePassword(int index, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     final btnNext = find.byType(IconButton).at(index);
     await tapSomething(tester, btnNext, addContext(context, 'Click on Eye'));
     await tester.pumpAndSettle();
   }
 
-  Future<void> verifyPasswordShow(String pass, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> verifyPasswordShow(String pass, WidgetTester tester, {String context = ''}) async {
     final finder = find.byType(TextField).first;
     final input = tester.firstWidget<TextField>(finder);
     expect(input.obscureText, false);
@@ -304,8 +277,7 @@ class ProfileScreenTest {
         reason: ('Verify-' + context + '- Show Password text is visible'));
   }
 
-  Future<void> verifyPasswordHidden(String pass, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> verifyPasswordHidden(String pass, WidgetTester tester, {String context = ''}) async {
     final finder = find.byType(TextField).first;
     final input = tester.firstWidget<TextField>(finder);
     expect(input.obscureText, true);
@@ -313,50 +285,43 @@ class ProfileScreenTest {
         reason: ('Verify-' + context + '- Password is NOT visible'));
   }
 
-  Future<void> verifyNewPasswordMax128Char(
-      String pass128, String pass129, WidgetTester tester,
+  Future<void> verifyNewPasswordMax128Char(String pass128, String pass129, WidgetTester tester,
       {String context = ''}) async {
     final findtext128 = find.text(pass128);
     await htExpect(tester, findtext128, findsOneWidget,
         reason: ('Verify-' + context + '- Password Max 128 Chars is visible'));
     final findtext129 = find.text(pass129);
     await htExpect(tester, findtext129, findsNothing,
-        reason:
-            ('Verify-' + context + '- Password Max 129 Chars is NOT visible'));
+        reason: ('Verify-' + context + '- Password Max 129 Chars is NOT visible'));
   }
 
-  Future<void> verifyShowMessage(String msg, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> verifyShowMessage(String msg, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
     await htExpect(tester, find.text(msg), findsOneWidget,
         reason: ('Verify-' + context + '-' + msg + ' text is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> verifyHideMessage(String msg, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> verifyHideMessage(String msg, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 10));
     await htExpect(tester, find.text(msg), findsNothing,
         reason: ('Verify-' + context + '-' + msg + ' text is NOT visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> clickPopupButton(String btnText, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickPopupButton(String btnText, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
     final updateButton = find.text(btnText);
-    await tapSomething(tester, updateButton,
-        addContext(context, 'Click on btn ' + btnText + ' Button'));
+    await tapSomething(
+        tester, updateButton, addContext(context, 'Click on btn ' + btnText + ' Button'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  Future<void> clickButton(String btn, WidgetTester tester,
-      {String context = ''}) async {
+  Future<void> clickButton(String btn, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
     final updateButton = find.text(btn);
     // await tester.tap(updateButton);
-    await tapSomething(
-        tester, updateButton, addContext(context, 'Click on btn ' + btn));
+    await tapSomething(tester, updateButton, addContext(context, 'Click on btn ' + btn));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
@@ -364,8 +329,7 @@ class ProfileScreenTest {
       {String context = ''}) async {
     final text = tester.widget<Text>(find.text(msg));
     expect(text.style?.color, CustomColorScheme.inputErrorBorder);
-    await htExpect(
-        tester, text.style?.color, CustomColorScheme.inputErrorBorder,
+    await htExpect(tester, text.style?.color, CustomColorScheme.inputErrorBorder,
         reason: ("Verify-" + context + "-" + msg + ' error is visible'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
@@ -378,8 +342,8 @@ class ProfileScreenTest {
     );
   }
 
-  Future<void> selectCity(String searchCityName,
-      String selectSuggestionCityName, WidgetTester tester,
+  Future<void> selectCity(
+      String searchCityName, String selectSuggestionCityName, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle();
     final typeAheadFinder = find.byType(TypeAheadFormField);

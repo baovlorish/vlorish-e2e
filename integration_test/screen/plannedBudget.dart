@@ -233,4 +233,80 @@ class PlannedBudgetScreenTest {
 
     await tester.pumpAndSettle();
   }
+
+  Future<String> getValueTotalPlanned(
+      String getValueOnPage, String rowName, int indexCell, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 20));
+
+    rowFinder ??= getValueOnPage == btnMonthly
+        ? find.descendant(
+            of: find.byType(TableBodyCell),
+            matching: find.text(rowName),
+          )
+        : find.descendant(
+            of: find.byType(TogglingCell),
+            matching: find.text(rowName),
+          );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final tableBodyCellFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TableBodyCell),
+    );
+
+    final label = find.descendant(
+      of: tableBodyCellFinder.at(indexCell),
+      matching: find.byType(Label),
+    );
+
+    final cellText = find.descendant(
+      of: label,
+      matching: find.byType(Text),
+    );
+
+    final cellTextWidget = tester.widget<Text>(cellText);
+    final cellTextValue = cellTextWidget.data ?? '';
+
+    return cellTextValue;
+  }
+
+  Future<void> verifyValueTotalPlannedOnMonthlyPage(
+      String rowName, int indexCell, String valueVerify, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle();
+
+    final rowFinder = find.descendant(
+      of: find.byType(TogglingCell),
+      matching: find.text(rowName),
+      skipOffstage: false,
+    );
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+    final tableBodyCellFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TableBodyCell),
+    );
+    final label = find.descendant(
+      of: tableBodyCellFinder.at(indexCell),
+      matching: find.byType(Label),
+    );
+    final cellText = find.descendant(
+      of: label,
+      matching: find.byType(Text),
+    );
+    final cellTextWidget = tester.widget<Text>(cellText);
+    final cellTextValue = cellTextWidget.data ?? '';
+    expect(cellTextValue, equals(valueVerify));
+    await htExpect(tester, cellTextValue, valueVerify,
+        reason: ('Verify-' + context + 'total value in $rowName is found on the Monthly page'));
+
+    await tester.pumpAndSettle();
+  }
 }
