@@ -107,3 +107,8 @@ String formatted(int number) {
   final formatted = NumberFormat('#,##0').format(number);
   return formatted;
 }
+
+int formatValueToInt(String stringValue) {
+  final intValue = int.parse(stringValue.replaceAll(RegExp(r','), ''));
+  return intValue;
+}

@@ -247,6 +247,35 @@ class ProfileScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
+  Future<void> clickUpdatePassword(WidgetTester tester, {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final updateButton = find.ancestor(
+      of: find.text('Update password'),
+      matching: find.byType(ButtonItem),
+    );
+    await tester.tap(updateButton);
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    // await tapSomething(tester, updateButton, addContext(context, 'Click on btn Update Password'));
+    tester.printToConsole('Click Update password, Passed');
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> clickContinueUpdate(WidgetTester tester, {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final continueButton = find.ancestor(
+      of: find.text('Continue'),
+      matching: find.byType(DisplayFeatureSubScreen),
+    );
+
+    await tester.tap(continueButton);
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    // await tapSomething(tester, updateButton, addContext(context, 'Click on btn Update Password'));
+    tester.printToConsole('Click Continue, Passed');
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
   Future<void> clickContinueButton(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 15));
     final continueBtn = find.text('Continue');

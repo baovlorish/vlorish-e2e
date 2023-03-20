@@ -276,15 +276,20 @@ class PlannedBudgetScreenTest {
   }
 
   Future<void> verifyValueTotalPlannedOnMonthlyPage(
-      String rowName, int indexCell, String valueVerify, WidgetTester tester,
+      String rowStyle, String rowName, int indexCell, String valueVerify, WidgetTester tester,
       {String context = '', Finder? rowFinder}) async {
     await tester.pumpAndSettle();
 
-    final rowFinder = find.descendant(
-      of: find.byType(TogglingCell),
-      matching: find.text(rowName),
-      skipOffstage: false,
-    );
+    rowFinder ??= rowStyle == 'readOnly'
+        ? find.descendant(
+            of: find.byType(TableBodyCell),
+            matching: find.text(rowName),
+          )
+        : find.descendant(
+            of: find.byType(TogglingCell),
+            matching: find.text(rowName),
+          );
+
     final sizedBoxFinder = find.ancestor(
       of: rowFinder,
       matching: find.byType(SizedBox),
@@ -308,5 +313,72 @@ class PlannedBudgetScreenTest {
         reason: ('Verify-' + context + 'total value in $rowName is found on the Monthly page'));
 
     await tester.pumpAndSettle();
+  }
+
+  Future<String> getValueInCell(String rowName, int indexCell, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextFormField),
+    );
+
+    final formFieldState =
+        tester.state(textFormFieldFinder.at(indexCell)) as FormFieldState<String>;
+
+    final textFormFieldValue = formFieldState.value ?? '';
+    await tester.pumpAndSettle();
+    return textFormFieldValue;
+  }
+
+  Future<void> verifyValueTotalSubCategoryPlannedIsChange(
+      String valueTotalBefore, String valueTotalAfter, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 20));
+    await htExpect(tester, valueTotalBefore, isNot(valueTotalAfter),
+        reason: ('Verify-' +
+            context +
+            'Total sum subCategory $valueTotalBefore in cell has been update to $valueTotalAfter'));
+  }
+
+  Future<void> verifyDashboardContains4Blocks(
+      int dashboardItemIndex, String dashboardValue, String dashboardTitle, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+    final dashboardItemList = tester.widgetList(find.byType(DashboardItem));
+    final count = dashboardItemList.length;
+    tester.printToConsole('Number of DashboardItem widgets: $count');
+
+    final dashboardTotalPlanned = dashboardItemList.elementAt(dashboardItemIndex);
+
+    final textFinderAtIndex1 = find.descendant(
+      of: find.byWidget(dashboardTotalPlanned),
+      matching: find.byType(Text).at(1),
+    );
+
+    final textWidgetAtIndex1 = tester.widget<Text>(textFinderAtIndex1);
+    final textValueAtIndex1 = textWidgetAtIndex1.data;
+    await htExpect(tester, textValueAtIndex1, equals(dashboardTitle),
+        reason: ('Verify-' + context + '$dashboardTitle is visible'));
+
+    final textFinderAtIndex0 = find.descendant(
+      of: find.byWidget(dashboardTotalPlanned),
+      matching: find.byType(Text).at(0),
+    );
+    final textWidgetAtIndex = tester.widget<Text>(textFinderAtIndex0);
+    final textValueAtIndex = textWidgetAtIndex.data;
+
+    await htExpect(tester, textValueAtIndex, equals(dashboardValue),
+        reason: ('Verify-' + context + '$dashboardTitle have value $dashboardValue is visible'));
   }
 }
