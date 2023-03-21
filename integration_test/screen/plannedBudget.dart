@@ -48,7 +48,7 @@ class PlannedBudgetScreenTest {
     final index = randomInt(count - 1);
     final number = randomInt(999999);
     final valueInput = number.toString();
-    final valueVerify = formatted(number);
+    final valueVerify = formatNumberToValue(number);
 
     await tester.tap(textFormFieldFinder.at(index));
     await tester.pump(const Duration(seconds: 2));
@@ -239,7 +239,7 @@ class PlannedBudgetScreenTest {
       {String context = '', Finder? rowFinder}) async {
     await tester.pumpAndSettle(const Duration(seconds: 20));
 
-    rowFinder ??= getValueOnPage == btnMonthly
+    rowFinder ??= getValueOnPage == 'readOnly'
         ? find.descendant(
             of: find.byType(TableBodyCell),
             matching: find.text(rowName),
@@ -352,33 +352,72 @@ class PlannedBudgetScreenTest {
   }
 
   Future<void> verifyDashboardContains4Blocks(
-      int dashboardItemIndex, String dashboardValue, String dashboardTitle, WidgetTester tester,
+      String dashboardTitle, String dashboardValue, WidgetTester tester,
       {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 10));
-    final dashboardItemList = tester.widgetList(find.byType(DashboardItem));
-    final count = dashboardItemList.length;
-    tester.printToConsole('Number of DashboardItem widgets: $count');
+    await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    final dashboardTotalPlanned = dashboardItemList.elementAt(dashboardItemIndex);
+    final labelText = find.descendant(
+      of: find.byType(Label),
+      matching: find.text(dashboardTitle),
+    );
+    await htExpect(tester, labelText, findsOneWidget,
+        reason: ('Verify-' + context + '$dashboardTitle Block Title is visible'));
 
-    final textFinderAtIndex1 = find.descendant(
-      of: find.byWidget(dashboardTotalPlanned),
-      matching: find.byType(Text).at(1),
+    final dashboardItem = find.ancestor(
+      of: labelText,
+      matching: find.byType(DashboardItem),
     );
 
-    final textWidgetAtIndex1 = tester.widget<Text>(textFinderAtIndex1);
-    final textValueAtIndex1 = textWidgetAtIndex1.data;
-    await htExpect(tester, textValueAtIndex1, equals(dashboardTitle),
-        reason: ('Verify-' + context + '$dashboardTitle is visible'));
-
-    final textFinderAtIndex0 = find.descendant(
-      of: find.byWidget(dashboardTotalPlanned),
-      matching: find.byType(Text).at(0),
+    final textFinder = find.descendant(
+      of: dashboardItem,
+      matching: find.byType(Text),
     );
-    final textWidgetAtIndex = tester.widget<Text>(textFinderAtIndex0);
-    final textValueAtIndex = textWidgetAtIndex.data;
+    final textList = tester.widgetList(textFinder).cast<Text>();
+    final textValue = textList.elementAt(0).data;
 
-    await htExpect(tester, textValueAtIndex, equals(dashboardValue),
-        reason: ('Verify-' + context + '$dashboardTitle have value $dashboardValue is visible'));
+    await htExpect(tester, textValue, equals(dashboardValue),
+        reason:
+            ('Verify-' + context + '$dashboardTitle Block have value $dashboardValue is visible'));
+  }
+
+  Future<String> getValueOnMonthly(
+      String valueType, String rowName, int indexCell, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    rowFinder ??= valueType == 'readOnly'
+        ? find.descendant(
+            of: find.byType(TableBodyCell),
+            matching: find.text(rowName),
+          )
+        : find.descendant(
+            of: find.byType(TogglingCell),
+            matching: find.text(rowName),
+          );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final tableBodyCellFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TableBodyCell),
+    );
+
+    final label = find.descendant(
+      of: tableBodyCellFinder.at(indexCell),
+      matching: find.byType(Label),
+    );
+
+    final cellText = find.descendant(
+      of: label,
+      matching: find.byType(Text),
+    );
+
+    final cellTextWidget = tester.widget<Text>(cellText);
+    final cellTextValue = cellTextWidget.data ?? '';
+
+    return cellTextValue;
   }
 }

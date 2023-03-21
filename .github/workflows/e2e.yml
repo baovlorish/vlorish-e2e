@@ -61,6 +61,9 @@ jobs:
       
       - name: Run Planned Personal Budget Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/planned_personal_budget_test.dart -d chrome |./integration_test/testout.sh
+      
+      - name: Run Planned Personal Budget Testsuite
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/planned_personal_budget_test_1.dart -d chrome |./integration_test/testout.sh
        
       - name: Run Business Budget Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh

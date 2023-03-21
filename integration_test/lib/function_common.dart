@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 
 final monthNames = [
@@ -103,12 +104,42 @@ int randomInt(int toNumber) {
   return number;
 }
 
-String formatted(int number) {
+String formatNumberToValue(int number) {
   final formatted = NumberFormat('#,##0').format(number);
   return formatted;
 }
 
-int formatValueToInt(String stringValue) {
+int formatValueToNumber(String stringValue) {
   final intValue = int.parse(stringValue.replaceAll(RegExp(r','), ''));
   return intValue;
+}
+
+int currencyStringToNumber(String currencyString) {
+  return int.parse(currencyString.replaceAll(',', '').replaceAll('\$', ''));
+}
+
+int totalSpentSum(
+    String housingValue,
+    String debtPaymentsValue,
+    String transportationValue,
+    String livingExpensesValue,
+    String lifestyleExpensesValue,
+    String kidsValue,
+    String givingValue,
+    String taxesValue,
+    String otherExpensesValue) {
+  final list = [
+    currencyStringToNumber(housingValue),
+    currencyStringToNumber(debtPaymentsValue),
+    currencyStringToNumber(transportationValue),
+    currencyStringToNumber(livingExpensesValue),
+    currencyStringToNumber(lifestyleExpensesValue),
+    currencyStringToNumber(kidsValue),
+    currencyStringToNumber(givingValue),
+    currencyStringToNumber(taxesValue),
+    currencyStringToNumber(otherExpensesValue)
+  ];
+
+  final sumTotalSpent = list.sum;
+  return sumTotalSpent;
 }

@@ -69,7 +69,7 @@ void main() async {
             'STARTED');
         final number = randomInt(999999);
         final valueInput = number.toString();
-        final valueVerify = '\$' + formatted(number);
+        final valueVerify = '\$' + formatNumberToValue(number);
         await personalBudgetScreen.clickPersonalTab(tester);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
@@ -129,7 +129,7 @@ void main() async {
             'BAR_T227 Check that max value in cells is 1000000000000', '', 'STARTED');
         final value = 1000000000000 - 1;
         final valueInput = value.toString();
-        final valuVerify = formatted(value);
+        final valuVerify = formatNumberToValue(value);
 
         await personalBudgetScreen.clickPersonalTab(tester);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
@@ -152,8 +152,8 @@ void main() async {
             'BAR_T234 Check that total sum is shown by all subcategory in the "Income" line on Personal Monthly page',
             '',
             'STARTED');
-        // await personalBudgetScreen.clickPersonalTab(tester);
-        // await personalBudgetScreen.verifyPersonalBudgetPage(tester);
+        await personalBudgetScreen.clickPersonalTab(tester);
+        await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
         final incomeRowValue =
             await plannedPersonalBudgetScreen.getValueTotalPlanned(btnAnnual, 'Income', 2, tester);
@@ -162,8 +162,6 @@ void main() async {
         await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
             '', 'Income', 0, incomeRowValue, tester);
         await tester.pumpAndSettle(const Duration(seconds: 2));
-        await personalBudgetScreen.clickCategoryArrowIcon(tester);
-        await tester.pump(const Duration(seconds: 2));
         await htLogd(
             tester,
             'BAR_T234 Check that total sum is shown by all subcategory in the "Income" line on Personal Monthly page',
@@ -318,29 +316,29 @@ void main() async {
 
         final mortgageValue =
             await plannedPersonalBudgetScreen.getValueInCell('Mortgage', 0, tester);
-        final mortgageValueToInt = formatValueToInt(mortgageValue);
+        final mortgageValueToInt = formatValueToNumber(mortgageValue);
 
         final rentValue = await plannedPersonalBudgetScreen.getValueInCell('Rent', 0, tester);
-        final rentValueToInt = formatValueToInt(rentValue);
+        final rentValueToInt = formatValueToNumber(rentValue);
 
         final utilitiesValue =
             await plannedPersonalBudgetScreen.getValueInCell('Utilities', 0, tester);
-        final utilitiesValueToInt = formatValueToInt(utilitiesValue);
+        final utilitiesValueToInt = formatValueToNumber(utilitiesValue);
 
         final homeRepairsValue =
             await plannedPersonalBudgetScreen.getValueInCell('Home Repairs', 0, tester);
-        final homeRepairsValueToInt = formatValueToInt(homeRepairsValue);
+        final homeRepairsValueToInt = formatValueToNumber(homeRepairsValue);
 
         final homeServicesValue =
             await plannedPersonalBudgetScreen.getValueInCell('Home Services', 0, tester);
-        final homeServicesValueToInt = formatValueToInt(homeServicesValue);
+        final homeServicesValueToInt = formatValueToNumber(homeServicesValue);
 
         final totalSumOfCategory = mortgageValueToInt +
             rentValueToInt +
             utilitiesValueToInt +
             homeRepairsValueToInt +
             homeServicesValueToInt;
-        final valueVerify = '\$' + formatted(totalSumOfCategory);
+        final valueVerify = '\$' + formatNumberToValue(totalSumOfCategory);
 
         await plannedPersonalBudgetScreen.verifyUpdateTotalPlanned(
             'Housing', 0, valueVerify, tester);
@@ -371,26 +369,32 @@ void main() async {
         await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
         final totalExpensesPlanned = await plannedPersonalBudgetScreen.getValueTotalPlanned(
             'readOnly', 'Total Expenses', 3, tester);
-        await plannedPersonalBudgetScreen.verifyDashboardContains4Blocks(
-            0, totalExpensesPlanned, 'TOTAL PLANNED', tester);
+        print('totalExpensesPlanned: $totalExpensesPlanned');
 
         await personalBudgetScreen.clickBudgetTab(btnActual, tester);
         final totalExpensesActual = await plannedPersonalBudgetScreen.getValueTotalPlanned(
             'readOnly', 'Total Expenses', 3, tester);
-        await plannedPersonalBudgetScreen.verifyDashboardContains4Blocks(
-            1, totalExpensesActual, 'TOTAL SPENT', tester);
+        print('totalExpensesActual: $totalExpensesActual');
 
         await personalBudgetScreen.clickCategoryList('Other Expenses', tester);
         final totalUncategorizedExpensesActual = await plannedPersonalBudgetScreen
             .getValueTotalPlanned('readOnly', 'Uncategorized Expenses', 3, tester);
-        await plannedPersonalBudgetScreen.verifyDashboardContains4Blocks(
-            2, totalUncategorizedExpensesActual, 'TOTAL UNCATEGORIZED', tester);
+        print('totalUncategorizedExpensesActual: $totalUncategorizedExpensesActual');
 
         await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
         final totalExpensesDifference = await plannedPersonalBudgetScreen.getValueTotalPlanned(
             'readOnly', 'Total Expenses', 3, tester);
+        print('totalExpensesDifference: $totalExpensesDifference');
+
+        await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
         await plannedPersonalBudgetScreen.verifyDashboardContains4Blocks(
-            3, totalExpensesDifference, 'DIFFERENCE', tester);
+            'TOTAL PLANNED', totalExpensesPlanned, tester);
+        await plannedPersonalBudgetScreen.verifyDashboardContains4Blocks(
+            'TOTAL SPENT', totalExpensesActual, tester);
+        await plannedPersonalBudgetScreen.verifyDashboardContains4Blocks(
+            'TOTAL UNCATEGORIZED', totalUncategorizedExpensesActual, tester);
+        await plannedPersonalBudgetScreen.verifyDashboardContains4Blocks(
+            'DIFFERENCE', totalExpensesDifference, tester);
 
         await personalBudgetScreen.clickCategoryArrowIcon(tester);
         await tester.pump(const Duration(seconds: 2));
