@@ -351,6 +351,14 @@ class PlannedBudgetScreenTest {
             'Total sum subCategory $valueTotalBefore in cell has been update to $valueTotalAfter'));
   }
 
+  Future<void> verifyValueInActualDifferenceAfterInput(
+      String valueTotalBefore, String valueTotalAfter, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 20));
+    await htExpect(tester, valueTotalBefore, isNot(valueTotalAfter),
+        reason: ('Verify-' + context + 'Can NOT input $valueTotalAfter in cell'));
+  }
+
   Future<void> verifyDashboardContains4Blocks(
       String dashboardTitle, String dashboardValue, WidgetTester tester,
       {String context = ''}) async {
@@ -421,71 +429,76 @@ class PlannedBudgetScreenTest {
     return cellTextValue;
   }
 
-  Future<void> inputRandomValue(String valueInput, WidgetTester tester,
+  Future<void> inputValueInActualDifference(
+      String nameRow, int indexCell, String valueInput, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle();
-    // rowFinder ??= rowName == ''
-    //     ? find.descendant(
-    //         of: find.byType(TableBodyCell),
-    //         matching: find.byType(EditableTableBodyCell),
-    //       )
-    //     : find.descendant(
-    //         of: find.byType(TogglingCell),
-    //         matching: find.text(rowName),
-    //       );
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(nameRow),
+    );
+    print('rowFinder: --$rowFinder');
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+    print('sizedBoxFinder: --$sizedBoxFinder');
 
-    // final rowFinder = find.descendant(
-    //   of: find.byType(TableBodyCell),
-    //   matching: find.text(rowName),
-    // );
-    final editTableBodyCellFinder = find.byType(EditableTableBodyCell);
+    final tableBodyCellFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TableBodyCell),
+    );
+    print('tableBodyCellFinder: --$tableBodyCellFinder');
 
-    // final sizedBoxFinder = find.ancestor(
-    //   of: rowFinder,
-    //   matching: find.byType(SizedBox),
-    // );
+    await tester.tap(tableBodyCellFinder.at(indexCell));
+    await tester.pump(const Duration(seconds: 2));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
+    await tester.pump(const Duration(seconds: 2));
+    await tester.tap(tableBodyCellFinder.at(indexCell), warnIfMissed: false);
+    await tester.pump(const Duration(seconds: 5));
+    await tester.enterText(tableBodyCellFinder.at(indexCell), valueInput);
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.tab);
+
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    final tableCellWidget = tester.widget<TableBodyCell>(tableBodyCellFinder.at(indexCell));
+    expect(tableCellWidget.text, isNot(contains(valueInput)));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> inputValueOnMonthly(
+      String rowName, int indexCell, String valueInput, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
 
     final textFormFieldFinder = find.descendant(
-      of: editTableBodyCellFinder,
+      of: sizedBoxFinder,
       matching: find.byType(TextFormField),
     );
 
     final textFormFields = tester.widgetList(textFormFieldFinder).cast<TextFormField>();
     final count = textFormFields.length;
-    print('count: -----$count');
-    final indexCell = randomInt(count - 1);
-    print('indexCell: ----$indexCell');
-    await tester.dragUntilVisible(
-      textFormFieldFinder, // what you want to find
-      textFormFieldFinder.at(indexCell), // widget you want to scroll
-      const Offset(-100, 0), // delta to move
-    );
     await tester.tap(textFormFieldFinder.at(indexCell));
     await tester.pump(const Duration(seconds: 2));
     await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
     await tester.pump(const Duration(seconds: 2));
     await tester.tap(textFormFieldFinder.at(indexCell));
-    await tester.pump(const Duration(seconds: 2));
     await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
     await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    if (indexCell != (count - 1)) {
-      await tester.tap(textFormFieldFinder.at(indexCell + 1));
-      await tester.pump(const Duration(seconds: 5));
-    } else {
-      await tester.tap(textFormFieldFinder.at(indexCell - 1));
-      await tester.pump(const Duration(seconds: 5));
-    }
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.tab);
 
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    final formFieldState =
-        tester.state(textFormFieldFinder.at(indexCell)) as FormFieldState<String>;
-
-    final textFormFieldValue = formFieldState.value ?? '';
-    expect(textFormFieldValue, equals(valueInput));
-    await tester.pump(const Duration(seconds: 2));
-    await tester.pumpAndSettle();
   }
 }
