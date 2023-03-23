@@ -46,24 +46,20 @@ void main() async {
             '',
             'STARTED');
         await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
-        final housingValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Housing', 1, tester);
+        final housingValue = await plannedPersonalBudgetScreen.getValue('', 'Housing', 1, tester);
         final debtPaymentsValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Debt Payments', 1, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Debt Payments', 1, tester);
         final transportationValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Transportation', 1, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Transportation', 1, tester);
         final livingExpensesValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Living Expenses', 1, tester);
-        final lifestyleExpensesValue = await plannedPersonalBudgetScreen.getValueOnMonthly(
-            '', 'Lifestyle Expenses', 1, tester);
-        final kidsValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Kids', 1, tester);
-        final givingValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Giving', 1, tester);
-        final taxesValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Taxes', 1, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Living Expenses', 1, tester);
+        final lifestyleExpensesValue =
+            await plannedPersonalBudgetScreen.getValue('', 'Lifestyle Expenses', 1, tester);
+        final kidsValue = await plannedPersonalBudgetScreen.getValue('', 'Kids', 1, tester);
+        final givingValue = await plannedPersonalBudgetScreen.getValue('', 'Giving', 1, tester);
+        final taxesValue = await plannedPersonalBudgetScreen.getValue('', 'Taxes', 1, tester);
         final otherExpensesValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Other Expenses', 1, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Other Expenses', 1, tester);
 
         final sumTotalSpent = totalSpentSum(
             housingValue,
@@ -78,8 +74,8 @@ void main() async {
 
         final sumTotalSpentVerify = '\$' + formatNumberToValue(sumTotalSpent);
 
-        final totalExpensesValue = await plannedPersonalBudgetScreen.getValueOnMonthly(
-            'readOnly', 'Total Expenses', 2, tester);
+        final totalExpensesValue =
+            await plannedPersonalBudgetScreen.getValue('readOnly', 'Total Expenses', 2, tester);
 
         expect(totalExpensesValue, equals(sumTotalSpentVerify));
         await htExpect(tester, totalExpensesValue, equals(sumTotalSpentVerify),
@@ -109,24 +105,20 @@ void main() async {
 
         await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
         await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
-        final housingValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Housing', 2, tester);
+        final housingValue = await plannedPersonalBudgetScreen.getValue('', 'Housing', 2, tester);
         final debtPaymentsValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Debt Payments', 2, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Debt Payments', 2, tester);
         final transportationValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Transportation', 2, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Transportation', 2, tester);
         final livingExpensesValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Living Expenses', 2, tester);
-        final lifestyleExpensesValue = await plannedPersonalBudgetScreen.getValueOnMonthly(
-            '', 'Lifestyle Expenses', 2, tester);
-        final kidsValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Kids', 2, tester);
-        final givingValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Giving', 2, tester);
-        final taxesValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Taxes', 2, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Living Expenses', 2, tester);
+        final lifestyleExpensesValue =
+            await plannedPersonalBudgetScreen.getValue('', 'Lifestyle Expenses', 2, tester);
+        final kidsValue = await plannedPersonalBudgetScreen.getValue('', 'Kids', 2, tester);
+        final givingValue = await plannedPersonalBudgetScreen.getValue('', 'Giving', 2, tester);
+        final taxesValue = await plannedPersonalBudgetScreen.getValue('', 'Taxes', 2, tester);
         final otherExpensesValue =
-            await plannedPersonalBudgetScreen.getValueOnMonthly('', 'Other Expenses', 2, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Other Expenses', 2, tester);
 
         final sumTotalSpent = totalSpentSum(
             housingValue,
@@ -141,8 +133,8 @@ void main() async {
 
         final sumTotalSpentVerify = '\$' + formatNumberToValue(sumTotalSpent);
 
-        final totalExpensesValue = await plannedPersonalBudgetScreen.getValueOnMonthly(
-            'readOnly', 'Total Expenses', 3, tester);
+        final totalExpensesValue =
+            await plannedPersonalBudgetScreen.getValue('readOnly', 'Total Expenses', 3, tester);
 
         expect(totalExpensesValue, equals(sumTotalSpentVerify));
         await htExpect(tester, totalExpensesValue, equals(sumTotalSpentVerify),
@@ -162,6 +154,149 @@ void main() async {
             'Failed BAR_T249 Check that Difference column for "Category name" category line should contain total sum by all subcategories for "Category name" category',
             '',
             'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T259 Check that Months are shown by columns from Jan to Dec with heading appropriate to month value',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        for (var i = 1; i < monthNames.length; i++) {
+          final columnValue =
+              await plannedPersonalBudgetScreen.getValue('readOnly', 'CATEGORY', i, tester);
+          await plannedPersonalBudgetScreen.verifyShowHeadingOfTheMonth(
+              columnValue, getMonthAtYear(i), i, btnPlanned, tester);
+        }
+
+        await personalBudgetScreen.clickBudgetTab(btnActual, tester);
+        for (var i = 1; i < monthNames.length; i++) {
+          final columnValue =
+              await plannedPersonalBudgetScreen.getValue('readOnly', 'CATEGORY', i, tester);
+          await plannedPersonalBudgetScreen.verifyShowHeadingOfTheMonth(
+              columnValue, getMonthAtYear(i), i, btnActual, tester);
+        }
+
+        await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
+        for (var i = 1; i < monthNames.length; i++) {
+          final columnValue =
+              await plannedPersonalBudgetScreen.getValue('readOnly', 'CATEGORY', i, tester);
+          await plannedPersonalBudgetScreen.verifyShowHeadingOfTheMonth(
+              columnValue, getMonthAtYear(i), i, btnDifference, tester);
+        }
+        await htLogd(
+            tester,
+            'BAR_T259 Check that Months are shown by columns from Jan to Dec with heading appropriate to month value',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR_T259 Check that Months are shown by columns from Jan to Dec with heading appropriate to month value',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T251 Check that values for all categories in columns are shown from Jan to Dec on ‘Planned’, ‘Actual’ and ‘Difference’ tables',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        for (var i = 0; i < mainCategoryList.length; i++) {
+          await personalBudgetScreen.clickBudgetTab(getMonthAtYear(1), tester);
+          for (var j = 1; j < monthNames.length; j++) {
+            if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+              final columnValue = await plannedPersonalBudgetScreen.getValue(
+                  'readOnly', mainCategoryList[i], j, tester);
+              await plannedPersonalBudgetScreen.verifyShowValueInCell(
+                  columnValue, getMonthAtYear(j), mainCategoryList[i], btnPlanned, tester);
+            } else {
+              final columnValue = await plannedPersonalBudgetScreen.getValue(
+                  '', mainCategoryList[i], j - 1, tester);
+              await plannedPersonalBudgetScreen.verifyShowValueInCell(
+                  columnValue, getMonthAtYear(j), mainCategoryList[i], btnPlanned, tester);
+            }
+          }
+        }
+
+        await personalBudgetScreen.clickBudgetTab(btnActual, tester);
+        for (var i = 0; i < mainCategoryList.length; i++) {
+          await personalBudgetScreen.clickBudgetTab(getMonthAtYear(1), tester);
+          for (var j = 1; j < monthNames.length; j++) {
+            if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+              final columnValue = await plannedPersonalBudgetScreen.getValue(
+                  'readOnly', mainCategoryList[i], j, tester);
+              await plannedPersonalBudgetScreen.verifyShowValueInCell(
+                  columnValue, getMonthAtYear(j), mainCategoryList[i], btnActual, tester);
+            } else {
+              final columnValue =
+                  await plannedPersonalBudgetScreen.getValue('', mainCategoryList[i], j, tester);
+              await plannedPersonalBudgetScreen.verifyShowValueInCell(
+                  columnValue, getMonthAtYear(j), mainCategoryList[i], btnActual, tester);
+            }
+          }
+        }
+
+        await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
+        for (var i = 0; i < mainCategoryList.length; i++) {
+          await personalBudgetScreen.clickBudgetTab(getMonthAtYear(1), tester);
+          for (var j = 1; j < monthNames.length; j++) {
+            if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+              final columnValue = await plannedPersonalBudgetScreen.getValue(
+                  'readOnly', mainCategoryList[i], j, tester);
+              await plannedPersonalBudgetScreen.verifyShowValueInCell(
+                  columnValue, getMonthAtYear(j), mainCategoryList[i], btnDifference, tester);
+            } else {
+              final columnValue =
+                  await plannedPersonalBudgetScreen.getValue('', mainCategoryList[i], j, tester);
+              await plannedPersonalBudgetScreen.verifyShowValueInCell(
+                  columnValue, getMonthAtYear(j), mainCategoryList[i], btnDifference, tester);
+            }
+          }
+        }
+        await htLogd(
+            tester,
+            'BAR_T251 Check that values for all categories in columns are shown from Jan to Dec on ‘Planned’, ‘Actual’ and ‘Difference’ tables',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR_T251 Check that values for all categories in columns are shown from Jan to Dec on ‘Planned’, ‘Actual’ and ‘Difference’ tables',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T247 Check that user cannot change Actual sum manually', '', 'STARTED');
+        await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
+        await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
+        await personalBudgetScreen.clickCategoryList('Housing', tester);
+        for (int i = 0; i < incomeSubCategoryList.length; i++) {
+          final number = randomInt(999999).toString();
+          final number1 = randomInt(999999).toString();
+          await plannedPersonalBudgetScreen.inputValueInActualDifference(
+              housingSubCategoryList[i], 1, number, tester);
+          final getvalue = await plannedPersonalBudgetScreen.getValue(
+              'readOnly', housingSubCategoryList[i], 1, tester);
+          await plannedPersonalBudgetScreen.verifyValueInActualDifferenceAfterInput(
+              getvalue, number, tester);
+          await plannedPersonalBudgetScreen.inputValueInActualDifference(
+              housingSubCategoryList[i], 2, number1, tester);
+          final getvalue1 = await plannedPersonalBudgetScreen.getValue(
+              'readOnly', housingSubCategoryList[i], 2, tester);
+          await plannedPersonalBudgetScreen.verifyValueInActualDifferenceAfterInput(
+              getvalue1, number1, tester);
+        }
+        await personalBudgetScreen.clickCategoryArrowIcon(tester);
+        await tester.pump(const Duration(seconds: 2));
+        await htLogd(
+            tester, 'BAR_T247 Check that user cannot change Actual sum manually', '', 'FINISHED');
+      } catch (e) {
+        await htLogd(tester, 'Failed BAR_T247 Check that user cannot change Actual sum manually',
+            '', 'FINISHED');
       }
 
       try {
@@ -188,37 +323,6 @@ void main() async {
             'Failed BAR_T239 Check that user can change planned sum in any line manually',
             '',
             'FINISHED');
-      }
-
-      try {
-        await htLogdDirect(
-            'BAR_T247 Check that user cannot change Actual sum manually', '', 'STARTED');
-        await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
-        await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
-        await personalBudgetScreen.clickCategoryList('Housing', tester);
-        for (int i = 0; i < incomeSubCategoryList.length; i++) {
-          final number = randomInt(999999).toString();
-          final number1 = randomInt(999999).toString();
-          await plannedPersonalBudgetScreen.inputValueInActualDifference(
-              housingSubCategoryList[i], 1, number, tester);
-          final getvalue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-              'readOnly', housingSubCategoryList[i], 1, tester);
-          await plannedPersonalBudgetScreen.verifyValueInActualDifferenceAfterInput(
-              getvalue, number, tester);
-          await plannedPersonalBudgetScreen.inputValueInActualDifference(
-              housingSubCategoryList[i], 2, number1, tester);
-          final getvalue1 = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-              'readOnly', housingSubCategoryList[i], 2, tester);
-          await plannedPersonalBudgetScreen.verifyValueInActualDifferenceAfterInput(
-              getvalue1, number1, tester);
-        }
-        await personalBudgetScreen.clickCategoryArrowIcon(tester);
-        await tester.pump(const Duration(seconds: 2));
-        await htLogd(
-            tester, 'BAR_T247 Check that user cannot change Actual sum manually', '', 'FINISHED');
-      } catch (e) {
-        await htLogd(tester, 'Failed BAR_T247 Check that user cannot change Actual sum manually',
-            '', 'FINISHED');
       }
     });
   });

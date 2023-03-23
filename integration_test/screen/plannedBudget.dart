@@ -7,6 +7,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/molecula/side_menu_button_item.
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/table_body_cell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/toggling_cell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/period_selector.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
@@ -234,47 +235,6 @@ class PlannedBudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<String> getValueTotalPlanned(
-      String getValueOnPage, String rowName, int indexCell, WidgetTester tester,
-      {String context = '', Finder? rowFinder}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 20));
-
-    rowFinder ??= getValueOnPage == 'readOnly'
-        ? find.descendant(
-            of: find.byType(TableBodyCell),
-            matching: find.text(rowName),
-          )
-        : find.descendant(
-            of: find.byType(TogglingCell),
-            matching: find.text(rowName),
-          );
-
-    final sizedBoxFinder = find.ancestor(
-      of: rowFinder,
-      matching: find.byType(SizedBox),
-    );
-
-    final tableBodyCellFinder = find.descendant(
-      of: sizedBoxFinder,
-      matching: find.byType(TableBodyCell),
-    );
-
-    final label = find.descendant(
-      of: tableBodyCellFinder.at(indexCell),
-      matching: find.byType(Label),
-    );
-
-    final cellText = find.descendant(
-      of: label,
-      matching: find.byType(Text),
-    );
-
-    final cellTextWidget = tester.widget<Text>(cellText);
-    final cellTextValue = cellTextWidget.data ?? '';
-
-    return cellTextValue;
-  }
-
   Future<void> verifyValueTotalPlannedOnMonthlyPage(
       String rowStyle, String rowName, int indexCell, String valueVerify, WidgetTester tester,
       {String context = '', Finder? rowFinder}) async {
@@ -388,47 +348,6 @@ class PlannedBudgetScreenTest {
             ('Verify-' + context + '$dashboardTitle Block have value $dashboardValue is visible'));
   }
 
-  Future<String> getValueOnMonthly(
-      String valueType, String rowName, int indexCell, WidgetTester tester,
-      {String context = '', Finder? rowFinder}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    rowFinder ??= valueType == 'readOnly'
-        ? find.descendant(
-            of: find.byType(TableBodyCell),
-            matching: find.text(rowName),
-          )
-        : find.descendant(
-            of: find.byType(TogglingCell),
-            matching: find.text(rowName),
-          );
-
-    final sizedBoxFinder = find.ancestor(
-      of: rowFinder,
-      matching: find.byType(SizedBox),
-    );
-
-    final tableBodyCellFinder = find.descendant(
-      of: sizedBoxFinder,
-      matching: find.byType(TableBodyCell),
-    );
-
-    final label = find.descendant(
-      of: tableBodyCellFinder.at(indexCell),
-      matching: find.byType(Label),
-    );
-
-    final cellText = find.descendant(
-      of: label,
-      matching: find.byType(Text),
-    );
-
-    final cellTextWidget = tester.widget<Text>(cellText);
-    final cellTextValue = cellTextWidget.data ?? '';
-
-    return cellTextValue;
-  }
-
   Future<void> inputValueInActualDifference(
       String nameRow, int indexCell, String valueInput, WidgetTester tester,
       {String context = ''}) async {
@@ -489,6 +408,40 @@ class PlannedBudgetScreenTest {
 
     final textFormFields = tester.widgetList(textFormFieldFinder).cast<TextFormField>();
     final count = textFormFields.length;
+    await tester.tap(textFormFieldFinder.at(indexCell), buttons: kPrimaryButton | kSecondaryButton);
+    await tester.pump(const Duration(seconds: 2));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
+    await tester.pump(const Duration(seconds: 2));
+    await tester.tap(textFormFieldFinder.at(indexCell), buttons: kPrimaryButton | kSecondaryButton);
+    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.tab);
+
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> inputValueInCell(
+      String rowName, int indexCell, String valueInput, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextFormField),
+    );
+
+    final textFormFields = tester.widgetList(textFormFieldFinder).cast<TextFormField>();
+    final count = textFormFields.length;
     await tester.tap(textFormFieldFinder.at(indexCell));
     await tester.pump(const Duration(seconds: 2));
     await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
@@ -496,9 +449,82 @@ class PlannedBudgetScreenTest {
     await tester.tap(textFormFieldFinder.at(indexCell));
     await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.tab);
+
+    if (indexCell != count - 1) {
+      await tester.tap(textFormFieldFinder.at(indexCell + 1));
+      await tester.pump(const Duration(seconds: 5));
+    } else {
+      await tester.tap(textFormFieldFinder.at(indexCell - 1));
+      await tester.pump(const Duration(seconds: 5));
+    }
 
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<String> getValue(String valueType, String rowName, int indexCell, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pump(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    if (valueType == 'readOnly') {
+      rowFinder ??= find.descendant(
+        of: find.byType(TableBodyCell),
+        matching: find.text(rowName),
+      );
+    } else {
+      rowFinder ??= find.descendant(
+        of: find.byType(TogglingCell),
+        matching: find.text(rowName),
+      );
+    }
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final tableBodyCellFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TableBodyCell),
+    );
+
+    final label = find.descendant(
+      of: tableBodyCellFinder.at(indexCell),
+      matching: find.byType(Label),
+    );
+
+    var cellTextValue = '';
+
+    final cellText = find.descendant(
+      of: label,
+      matching: find.byType(Text),
+    );
+
+    final cellTextWidget = tester.widget<Text>(cellText);
+    cellTextValue = cellTextWidget.data ?? '';
+
+    await tester.pump(const Duration(seconds: 2));
+    return cellTextValue;
+  }
+
+  Future<void> verifyShowHeadingOfTheMonth(String monthOfColumn, String monthDisplay, int indexCell,
+      String pageName, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await htExpect(tester, monthOfColumn, equals(monthDisplay),
+        reason: ('Verify-' +
+            context +
+            'At column position $indexCell value $monthOfColumn is visible on the $pageName'));
+  }
+
+  Future<void> verifyShowValueInCell(
+      String valueInCell, String monthDisplay, String nameRow, String pageName, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await htExpect(tester, valueInCell, contains('\$'),
+        reason: ('Verify-' +
+            context +
+            'The value in the $monthDisplay column of $pageName\'s $nameRow is non-null and contains the \$ character is visible'));
   }
 }

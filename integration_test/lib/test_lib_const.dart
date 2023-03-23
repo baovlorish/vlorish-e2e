@@ -207,7 +207,7 @@ const allSubCategoryList = [
   'Other Investments'
 ];
 
-const categoryList = [
+const mainCategoryList = [
   'Income',
   'Housing',
   'Debt Payments',
@@ -223,5 +223,5 @@ const categoryList = [
   'Goals/Sinking Funds',
   'Investments',
   'Free Cash',
-  'Total Cash Reserve'
+  'Total Cash Reserves'
 ];

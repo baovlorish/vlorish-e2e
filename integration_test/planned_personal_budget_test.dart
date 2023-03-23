@@ -155,8 +155,7 @@ void main() async {
         await personalBudgetScreen.clickPersonalTab(tester);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
-        final incomeRowValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned(btnAnnual, 'Income', 2, tester);
+        final incomeRowValue = await plannedPersonalBudgetScreen.getValue('', 'Income', 2, tester);
         await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
         await personalBudgetScreen.verifyBudgetMonthlyPage(tester);
         await plannedPersonalBudgetScreen.verifyValueTotalPlannedOnMonthlyPage(
@@ -183,36 +182,31 @@ void main() async {
         await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
-        final incomeValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Income', 2, tester);
-        final housingValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Housing', 2, tester);
+        final incomeValue = await plannedPersonalBudgetScreen.getValue('', 'Income', 2, tester);
+        final housingValue = await plannedPersonalBudgetScreen.getValue('', 'Housing', 2, tester);
         final debtPaymentsValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Debt Payments', 2, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Debt Payments', 2, tester);
         final transportationValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Transportation', 2, tester);
-        final livingExpensesValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-            '', 'Living Expenses', 2, tester);
-        final lifestyleExpensesValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-            '', 'Lifestyle Expenses', 2, tester);
-        final kidsValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Kids', 2, tester);
-        final givingValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Giving', 2, tester);
-        final taxesValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Taxes', 2, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Transportation', 2, tester);
+        final livingExpensesValue =
+            await plannedPersonalBudgetScreen.getValue('', 'Living Expenses', 2, tester);
+        final lifestyleExpensesValue =
+            await plannedPersonalBudgetScreen.getValue('', 'Lifestyle Expenses', 2, tester);
+        final kidsValue = await plannedPersonalBudgetScreen.getValue('', 'Kids', 2, tester);
+        final givingValue = await plannedPersonalBudgetScreen.getValue('', 'Giving', 2, tester);
+        final taxesValue = await plannedPersonalBudgetScreen.getValue('', 'Taxes', 2, tester);
         final otherExpensesValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Other Expenses', 2, tester);
-        final totalExpensesValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-            'readOnly', 'Total Expenses', 3, tester);
-        final netIncomeValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-            'readOnly', 'Net Income', 3, tester);
-        final goalsSinkingFundsValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
+            await plannedPersonalBudgetScreen.getValue('', 'Other Expenses', 2, tester);
+        final totalExpensesValue =
+            await plannedPersonalBudgetScreen.getValue('readOnly', 'Total Expenses', 3, tester);
+        final netIncomeValue =
+            await plannedPersonalBudgetScreen.getValue('readOnly', 'Net Income', 3, tester);
+        final goalsSinkingFundsValue = await plannedPersonalBudgetScreen.getValue(
             'readOnly', 'Goals/Sinking Funds', 3, tester);
         final investmentsValue =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Investments', 2, tester);
-        final freeCashValue = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-            'readOnly', 'Free Cash', 3, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Investments', 2, tester);
+        final freeCashValue =
+            await plannedPersonalBudgetScreen.getValue('readOnly', 'Free Cash', 3, tester);
 
         await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
         await personalBudgetScreen.verifyBudgetMonthlyPage(tester);
@@ -270,13 +264,12 @@ void main() async {
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
         var valueBeforeChange =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Housing', 0, tester);
+            await plannedPersonalBudgetScreen.getValue('', 'Housing', 0, tester);
         print('valueBeforeChange: $valueBeforeChange');
         await personalBudgetScreen.clickCategoryList('Housing', tester);
         await plannedPersonalBudgetScreen.inputValue(
             'Mortgage', 0, randomInt(999999).toString(), tester);
-        var valueAfterChange =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Housing', 0, tester);
+        var valueAfterChange = await plannedPersonalBudgetScreen.getValue('', 'Housing', 0, tester);
 
         await plannedPersonalBudgetScreen.verifyValueTotalSubCategoryPlannedIsChange(
             valueBeforeChange, valueAfterChange, tester);
@@ -284,32 +277,28 @@ void main() async {
 
         await plannedPersonalBudgetScreen.inputValue(
             'Rent', 0, randomInt(999999).toString(), tester);
-        valueAfterChange =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Housing', 0, tester);
+        valueAfterChange = await plannedPersonalBudgetScreen.getValue('', 'Housing', 0, tester);
         await plannedPersonalBudgetScreen.verifyValueTotalSubCategoryPlannedIsChange(
             valueBeforeChange, valueAfterChange, tester);
         valueBeforeChange = valueAfterChange;
 
         await plannedPersonalBudgetScreen.inputValue(
             'Utilities', 0, randomInt(999999).toString(), tester);
-        valueAfterChange =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Housing', 0, tester);
+        valueAfterChange = await plannedPersonalBudgetScreen.getValue('', 'Housing', 0, tester);
         await plannedPersonalBudgetScreen.verifyValueTotalSubCategoryPlannedIsChange(
             valueBeforeChange, valueAfterChange, tester);
         valueBeforeChange = valueAfterChange;
 
         await plannedPersonalBudgetScreen.inputValue(
             'Home Repairs', 0, randomInt(999999).toString(), tester);
-        valueAfterChange =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Housing', 0, tester);
+        valueAfterChange = await plannedPersonalBudgetScreen.getValue('', 'Housing', 0, tester);
         await plannedPersonalBudgetScreen.verifyValueTotalSubCategoryPlannedIsChange(
             valueBeforeChange, valueAfterChange, tester);
         valueBeforeChange = valueAfterChange;
 
         await plannedPersonalBudgetScreen.inputValue(
             'Home Services', 0, randomInt(999999).toString(), tester);
-        valueAfterChange =
-            await plannedPersonalBudgetScreen.getValueTotalPlanned('', 'Housing', 0, tester);
+        valueAfterChange = await plannedPersonalBudgetScreen.getValue('', 'Housing', 0, tester);
         await plannedPersonalBudgetScreen.verifyValueTotalSubCategoryPlannedIsChange(
             valueBeforeChange, valueAfterChange, tester);
         valueBeforeChange = valueAfterChange;
@@ -367,23 +356,23 @@ void main() async {
         await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
         await personalBudgetScreen.verifyPersonalBudgetPage(tester);
         await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
-        final totalExpensesPlanned = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-            'readOnly', 'Total Expenses', 3, tester);
+        final totalExpensesPlanned =
+            await plannedPersonalBudgetScreen.getValue('readOnly', 'Total Expenses', 3, tester);
         print('totalExpensesPlanned: $totalExpensesPlanned');
 
         await personalBudgetScreen.clickBudgetTab(btnActual, tester);
-        final totalExpensesActual = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-            'readOnly', 'Total Expenses', 3, tester);
+        final totalExpensesActual =
+            await plannedPersonalBudgetScreen.getValue('readOnly', 'Total Expenses', 3, tester);
         print('totalExpensesActual: $totalExpensesActual');
 
         await personalBudgetScreen.clickCategoryList('Other Expenses', tester);
-        final totalUncategorizedExpensesActual = await plannedPersonalBudgetScreen
-            .getValueTotalPlanned('readOnly', 'Uncategorized Expenses', 3, tester);
+        final totalUncategorizedExpensesActual = await plannedPersonalBudgetScreen.getValue(
+            'readOnly', 'Uncategorized Expenses', 3, tester);
         print('totalUncategorizedExpensesActual: $totalUncategorizedExpensesActual');
 
         await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
-        final totalExpensesDifference = await plannedPersonalBudgetScreen.getValueTotalPlanned(
-            'readOnly', 'Total Expenses', 3, tester);
+        final totalExpensesDifference =
+            await plannedPersonalBudgetScreen.getValue('readOnly', 'Total Expenses', 3, tester);
         print('totalExpensesDifference: $totalExpensesDifference');
 
         await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
