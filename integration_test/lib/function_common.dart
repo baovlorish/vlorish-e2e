@@ -144,6 +144,17 @@ int totalSpentSum(
   return sumTotalSpent;
 }
 
+int totalValue(String value) {
+  final valueToNumber = currencyStringToNumber(value);
+  var sumValue = 0;
+  sumValue += valueToNumber;
+  return sumValue;
+}
+
+int calculateValueDifference(String valuePlanned, String valueActual) {
+  return currencyStringToNumber(valuePlanned) - currencyStringToNumber(valueActual);
+}
+
 String getMonthAtYear(int month) {
   switch (month) {
     case 0:

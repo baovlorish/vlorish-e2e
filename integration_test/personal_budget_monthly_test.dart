@@ -270,6 +270,131 @@ void main() async {
 
       try {
         await htLogdDirect(
+            'BAR_T261 Check that the category total sum is shown by columns in "Year" column',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        final columnValue = await plannedPersonalBudgetScreen.getValue(
+            'readOnly', 'CATEGORY', monthNames.length, tester);
+        await plannedPersonalBudgetScreen.verifyShowHeadingOfTheMonth(
+            columnValue, 'YEAR', monthNames.length, btnPlanned, tester);
+
+        for (var i = 0; i < mainCategoryList.length; i++) {
+          await personalBudgetScreen.clickBudgetTab(getMonthAtYear(1), tester);
+          var totalValueRow = 0;
+          for (var j = 1; j < monthNames.length; j++) {
+            if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+              final columnValue = await plannedPersonalBudgetScreen.getValue(
+                  'readOnly', mainCategoryList[i], j, tester);
+              totalValueRow += currencyStringToNumber(columnValue);
+            } else {
+              final columnValue = await plannedPersonalBudgetScreen.getValue(
+                  '', mainCategoryList[i], j - 1, tester);
+              totalValueRow += currencyStringToNumber(columnValue);
+            }
+          }
+          final sumTotalValue = '\$' + formatNumberToValue(totalValueRow);
+          if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+            final valueInYear = await plannedPersonalBudgetScreen.getValue(
+                'readOnly', mainCategoryList[i], monthNames.length, tester);
+            await plannedPersonalBudgetScreen.verifyShowValueYearColumn(
+                valueInYear, sumTotalValue, mainCategoryList[i], btnPlanned, tester);
+          } else {
+            final valueInYear = await plannedPersonalBudgetScreen.getValue(
+                '', mainCategoryList[i], monthNames.length - 1, tester);
+            await plannedPersonalBudgetScreen.verifyShowValueYearColumn(
+                valueInYear, sumTotalValue, mainCategoryList[i], btnPlanned, tester);
+          }
+        }
+
+        await htLogd(
+            tester,
+            'BAR_T261 Check that the category total sum is shown by columns in "Year" column',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR_T261 Check that the category total sum is shown by columns in "Year" column',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T256 Check that the "Difference" table shows user the difference between the actual and planned amount',
+            '',
+            'STARTED');
+        await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+
+        for (var i = 0; i < mainCategoryList.length; i++) {
+          var valueOfPlanned = <String>[];
+          var valueOfActual = <String>[];
+
+          for (var j = 1; j < monthNames.length; j++) {
+            if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+              final getValuePlanned = await plannedPersonalBudgetScreen.getValue(
+                  'readOnly', mainCategoryList[i], j, tester);
+              valueOfPlanned.add(getValuePlanned);
+            } else {
+              final getValuePlanned = await plannedPersonalBudgetScreen.getValue(
+                  '', mainCategoryList[i], j - 1, tester);
+              valueOfPlanned.add(getValuePlanned);
+            }
+          }
+
+          await personalBudgetScreen.clickBudgetTab(btnActual, tester);
+          for (var j = 1; j < monthNames.length; j++) {
+            if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+              final getValueActual = await plannedPersonalBudgetScreen.getValue(
+                  'readOnly', mainCategoryList[i], j, tester);
+              valueOfActual.add(getValueActual);
+            } else {
+              final getValueActual = await plannedPersonalBudgetScreen.getValue(
+                  '', mainCategoryList[i], j - 1, tester);
+              valueOfActual.add(getValueActual);
+            }
+          }
+
+          await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
+          for (var j = 1; j < monthNames.length; j++) {
+            if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+              final getValueDifference = await plannedPersonalBudgetScreen.getValue(
+                  'readOnly', mainCategoryList[i], j, tester);
+              final valueMatcher =
+                  calculateValueDifference(valueOfPlanned[j - 1], valueOfActual[j - 1]);
+              final valueVerify = '\$' + formatNumberToValue(valueMatcher);
+              calculateValueDifference(valueOfPlanned[j - 1], valueOfActual[j - 1]).toString();
+              await plannedPersonalBudgetScreen.verifyValueBetweenActualAndPlanned(
+                  getValueDifference, valueVerify, mainCategoryList[i], tester);
+            } else {
+              final getValueDifference = await plannedPersonalBudgetScreen.getValue(
+                  '', mainCategoryList[i], j - 1, tester);
+              final valueMatcher =
+                  calculateValueDifference(valueOfPlanned[j - 1], valueOfActual[j - 1]);
+              final valueVerify = '\$' + formatNumberToValue(valueMatcher);
+              await plannedPersonalBudgetScreen.verifyValueBetweenActualAndPlanned(
+                  getValueDifference, valueVerify, mainCategoryList[i], tester);
+            }
+          }
+          await personalBudgetScreen.clickBudgetTab(btnPlanned, tester);
+        }
+
+        await htLogd(
+            tester,
+            'BAR_T256 Check that the "Difference" table shows user the difference between the actual and planned amount',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR_T256 Check that the "Difference" table shows user the difference between the actual and planned amount',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
             'BAR_T247 Check that user cannot change Actual sum manually', '', 'STARTED');
         await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
         await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);

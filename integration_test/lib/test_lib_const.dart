@@ -46,14 +46,7 @@ const incomeSubCategoryList = [
   'Loan Received',
   'Uncategorized Income'
 ];
-const housingSubCategoryList = [
-  'Housing',
-  'Mortgage',
-  'Rent',
-  'Utilities',
-  'Home Repairs',
-  'Home Services'
-];
+const housingSubCategoryList = ['Mortgage', 'Rent', 'Utilities', 'Home Repairs', 'Home Services'];
 const debtPaymentsSubCategoryList = [
   'Credit Cards',
   'Student Loans',

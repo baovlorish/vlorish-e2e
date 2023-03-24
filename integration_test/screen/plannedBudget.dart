@@ -527,4 +527,24 @@ class PlannedBudgetScreenTest {
             context +
             'The value in the $monthDisplay column of $pageName\'s $nameRow is non-null and contains the \$ character is visible'));
   }
+
+  Future<void> verifyShowValueYearColumn(
+      String valueActual, String valueMatcher, String nameRow, String pageName, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await htExpect(tester, valueActual, equals(valueMatcher),
+        reason: ('Verify-' +
+            context +
+            'Category total sum is shown by columns in "Year" column of $pageName\'s $nameRow is visible'));
+  }
+
+  Future<void> verifyValueBetweenActualAndPlanned(
+      String valueActual, String valueMatcher, String nameRow, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await htExpect(tester, valueActual, equals(valueMatcher),
+        reason: ('Verify-' +
+            context +
+            '"Difference" table shows the difference between the actual and planned amount on the $nameRow row'));
+  }
 }

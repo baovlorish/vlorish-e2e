@@ -81,29 +81,25 @@ class BudgetScreenTest {
   }
 
   Future<void> verifyAccountsTransactionsPage(WidgetTester tester, {String context = ''}) async {
-    await tester.pump(const Duration(seconds: 5));
-    print('Verify Accounts Transactions Page');
+    await tester.pump(const Duration(seconds: 10));
+    final title = find.widgetWithText(Label, 'Accounts & Transactions');
+    expect(title, findsOneWidget);
+    tester.printToConsole('Verify- Accounts & Transactions Title is visible, Passed');
+
     final manageTxt = find.text('Manage accounts');
-    print('Verify Accounts Transactions Page-------1');
     expect(manageTxt, findsOneWidget);
-    print('Verify Accounts Transactions Page-------2');
-    await htExpect(tester, manageTxt, findsOneWidget,
-        reason: ('Verify-' + context + '- Text Accounts & Transactions Title is visible'));
-    print('Verify Accounts Transactions Page-----------2');
+    tester.printToConsole('Verify- Manage accounts Button is visible, Passed');
+
     final labelTopMerchants = find.widgetWithText(Label, 'Top merchants');
-    // final scrollable = find.byType(Scrollable);
-
-    // await tester.scrollUntilVisible(
-    //   labelTopMerchants,
-    //   100, // offset from top
-    //   scrollable: scrollable,
-    // );
-
     expect(labelTopMerchants, findsOneWidget);
-    await htExpect(tester, labelTopMerchants, findsOneWidget,
-        reason: ('Verify-' + context + '- Text Top Merchants is visible'));
+    tester.printToConsole('Verify- Top merchants text is visible, Passed');
 
+    final labelTopTransactions = find.widgetWithText(Label, 'Top Transactions');
+    print('labelTopTransactions: -----------------$labelTopTransactions');
+    expect(labelTopTransactions, findsOneWidget);
+    tester.printToConsole('Verify- Top Transactions text is visible, Passed');
     await tester.pump();
+    await tester.pumpAndSettle(const Duration(seconds: 5));
   }
 
   Future<void> verifyDebtsPage(WidgetTester tester, {String context = ''}) async {
