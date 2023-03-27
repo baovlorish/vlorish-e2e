@@ -49,7 +49,7 @@ void main() async {
         await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
         for (var i = 0; i < subCategoryInputList.length; i++) {
           await plannedPersonalBudgetScreen.getAndVerifyValueCurrentMonthCategory(
-              btnPlanned, subCategoryInputList[i], subCategoryInputDetailList[i], tester);
+              btnDifference, subCategoryInputList[i], subCategoryInputDetailList[i], tester);
         }
 
         await htLogd(

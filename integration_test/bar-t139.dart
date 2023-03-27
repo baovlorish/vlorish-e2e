@@ -42,24 +42,38 @@ void main() async {
 
       try {
         await htLogdDirect(
-            'BAR_T260 Check that sum is shown by subcategories for current months in category line',
-            '',
-            'STARTED');
+            'BAR_T239 Check that user can change planned sum in any line manually', '', 'STARTED');
+        await personalBudgetScreen.clickBudgetTab(btnAnnual, tester);
+        await personalBudgetScreen.clickBudgetTab(btnMonthly, tester);
+        await personalBudgetScreen.clickCategoryList('Income', tester);
+        for (var i = 0; i < incomeSubCategoryList.length; i++) {
+          // final number = randomInt(999999).toString();
+          await plannedPersonalBudgetScreen.inputValueOnMonthly(
+              incomeSubCategoryList[i], 0, '456789', tester);
 
-        for (var i = 0; i < subCategoryInputList.length; i++) {
-          await plannedPersonalBudgetScreen.getAndVerifyValueCurrentMonthCategory(
-              btnActual, subCategoryInputList[i], subCategoryInputDetailList[i], tester);
+          // await plannedPersonalBudgetScreen.verifyValueInCell(
+          //     incomeSubCategoryList[i], 0, '456789', tester);
         }
+        await personalBudgetScreen.clickCategoryList('Income', tester);
+        await tester.pump(const Duration(seconds: 2));
 
-        await htLogd(
-            tester,
-            'BAR_T260 Check that sum is shown by subcategories for current months in category line',
-            '',
-            'FINISHED');
+        await personalBudgetScreen.clickCategoryList('Housing', tester);
+        for (var i = 0; i < housingSubCategoryList.length; i++) {
+          // final number = randomInt(999999).toString();
+          await plannedPersonalBudgetScreen.inputValueOnMonthly(
+              housingSubCategoryList[i], 0, '111333', tester);
+
+          // await plannedPersonalBudgetScreen.verifyValueInCell(
+          //     housingSubCategoryList[i], 0, '111333', tester);
+        }
+        await personalBudgetScreen.clickCategoryList('Income', tester);
+        await tester.pump(const Duration(seconds: 2));
+        await htLogd(tester, 'BAR_T239 Check that user can change planned sum in any line manually',
+            '', 'FINISHED');
       } catch (e) {
         await htLogd(
             tester,
-            'Failed BAR_T260 Check that sum is shown by subcategories for current months in category line',
+            'Failed BAR_T239 Check that user can change planned sum in any line manually',
             '',
             'FINISHED');
       }

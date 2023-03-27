@@ -417,19 +417,18 @@ class PlannedBudgetScreenTest {
       matching: find.byType(TextFormField),
     );
 
-    final textFormFields = tester.widgetList(textFormFieldFinder).cast<TextFormField>();
-    final count = textFormFields.length;
-    await tester.tap(textFormFieldFinder.at(indexCell), buttons: kPrimaryButton | kSecondaryButton);
-    await tester.pump(const Duration(seconds: 2));
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
-    await tester.pump(const Duration(seconds: 2));
-    await tester.tap(textFormFieldFinder.at(indexCell), buttons: kPrimaryButton | kSecondaryButton);
-    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.tap(textFormFieldFinder.at(indexCell));
+    await tester.pump(const Duration(seconds: 5));
+    if (valueInput != '') {
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
+      await tester.pump(const Duration(seconds: 5));
+      await tester.tap(textFormFieldFinder.at(indexCell));
+      await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+    }
+    await tester.pumpAndSettle(const Duration(seconds: 5));
     await tester.sendKeyDownEvent(LogicalKeyboardKey.tab);
-
-    await tester.pump(const Duration(seconds: 2));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.pumpAndSettle(const Duration(seconds: 5));
   }
 
   Future<void> inputValueInCell(

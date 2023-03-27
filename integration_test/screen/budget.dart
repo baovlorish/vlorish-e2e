@@ -275,19 +275,31 @@ class BudgetScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> verifyPlannedActualTabSelector(String strTab, bool isSelected, WidgetTester tester,
+  Future<void> verifyPlannedActualTabSelector(
+      String selectedButton, bool isSelected, WidgetTester tester,
       {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 5));
 
-    final inkWellFinder = find.widgetWithText(CustomMaterialInkWell, strTab).first;
-    CustomMaterialInkWell inkWell = tester.widget(inkWellFinder);
+    final selectedMaterial = find.ancestor(
+      of: find.text(selectedButton),
+      matching: find.byType(Material),
+    );
+    final selectedMaterials = tester.widgetList<Material>(selectedMaterial);
 
     if (isSelected == true) {
-      await htExpect(tester, inkWell.type, InkWellType.Purple,
-          reason: ('Verify-' + context + strTab + ' tab is selected'));
+      await htExpect(
+        tester,
+        selectedMaterials.elementAt(0).color,
+        equals(const Color(0xff781752)),
+        reason: ('Verify-' + context + selectedButton + ' IS Selected'),
+      );
     } else {
-      await htExpect(tester, inkWell.type, InkWellType.White,
-          reason: ('Verify-' + context + strTab + ' tab is NOT selected'));
+      await htExpect(
+        tester,
+        selectedMaterials.elementAt(0).color,
+        equals(const Color(0xffc9a2b9)),
+        reason: ('Verify-' + context + selectedButton + ' NOT is Selected'),
+      );
     }
     await tester.pumpAndSettle();
   }
