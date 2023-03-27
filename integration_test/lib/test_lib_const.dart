@@ -61,7 +61,6 @@ const debtPaymentsSubCategoryList = [
 const transportationSubCategoryList = [
   'Gas',
   'Auto insurance',
-  'Uber',
   'Public Transportation',
   'Auto Repairs',
   'Other Auto Expenses'
@@ -218,3 +217,45 @@ const mainCategoryList = [
   'Free Cash',
   'Total Cash Reserves'
 ];
+
+const subCategoryInputList = [
+  'Income',
+  'Housing',
+  'Debt Payments',
+  'Transportation',
+  'Living Expenses',
+  'Lifestyle Expenses',
+  'Kids',
+  'Giving',
+  'Taxes',
+  'Other Expenses',
+  'Investments'
+];
+
+List<dynamic> subCategoryInputDetailList = [
+  incomeSubCategoryList,
+  housingSubCategoryList,
+  debtPaymentsSubCategoryList,
+  transportationSubCategoryList,
+  livingExpensesSubCategoryList,
+  lifestyleExpensesSubCategoryList,
+  kidsSubCategoryList,
+  givingSubCategoryList,
+  taxesSubCategoryList,
+  otherExpensesSubCategoryList,
+  investmentsSubCategoryList
+];
+
+// final List<Map<String, dynamic>> subCategoryInputList = [
+//   {'id': 'Income', 'subCategory': incomeSubCategoryList},
+//   {'id': 'Housing', 'subCategory': housingSubCategoryList},
+//   {'id': 'Debt Payments', 'subCategory': debtPaymentsSubCategoryList},
+//   {'id': 'Transportation', 'subCategory': transportationSubCategoryList},
+//   {'id': 'Living Expenses', 'subCategory': livingExpensesSubCategoryList},
+//   {'id': 'Lifestyle Expenses', 'subCategory': lifestyleExpensesSubCategoryList},
+//   {'id': 'Kids', 'subCategory': kidsSubCategoryList},
+//   {'id': 'Giving', 'subCategory': givingSubCategoryList},
+//   {'id': 'Taxes', 'subCategory': taxesSubCategoryList},
+//   {'id': 'Other Expenses', 'subCategory': otherExpensesSubCategoryList},
+//   {'id': 'Investments', 'subCategory': investmentsSubCategoryList},
+// ];

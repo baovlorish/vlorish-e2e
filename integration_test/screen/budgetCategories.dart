@@ -79,8 +79,6 @@ class BudgetCategoryScreenTest {
         reason: ('Verify-' + context + 'Gas text is visible'));
     await htExpect(tester, find.text('Auto insurance'), findsOneWidget,
         reason: ('Verify-' + context + 'Auto insurance text is visible'));
-    await htExpect(tester, find.text('Uber'), findsOneWidget,
-        reason: ('Verify-' + context + 'Uber text is visible'));
     await htExpect(tester, find.text('Public Transportation'), findsOneWidget,
         reason: ('Verify-' + context + 'Public Transportation text is visible'));
     await htExpect(tester, find.text('Auto Repairs'), findsOneWidget,

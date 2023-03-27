@@ -81,6 +81,7 @@ class PlannedBudgetScreenTest {
     );
 
     await tapSomething(tester, categoryFinder, addContext(context, 'Click on btn $categoryName'));
+    await tester.pump();
     await tester.pumpAndSettle();
   }
 
@@ -319,6 +320,16 @@ class PlannedBudgetScreenTest {
         reason: ('Verify-' + context + 'Can NOT input $valueTotalAfter in cell'));
   }
 
+  Future<void> verifyTotalValueCurrentMonth(
+      String valueTotalBefore, String valueTotalAfter, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await htExpect(tester, valueTotalBefore, equals(valueTotalAfter),
+        reason: ('Verify-' +
+            context +
+            'sum is shown by subcategories for current months in category line'));
+  }
+
   Future<void> verifyDashboardContains4Blocks(
       String dashboardTitle, String dashboardValue, WidgetTester tester,
       {String context = ''}) async {
@@ -505,6 +516,7 @@ class PlannedBudgetScreenTest {
     cellTextValue = cellTextWidget.data ?? '';
 
     await tester.pump(const Duration(seconds: 2));
+    print('cellTextValue: -----------$cellTextValue');
     return cellTextValue;
   }
 
@@ -547,4 +559,84 @@ class PlannedBudgetScreenTest {
             context +
             '"Difference" table shows the difference between the actual and planned amount on the $nameRow row'));
   }
+
+  Future<void> getAndVerifyValueAllCategory(int begin, int limit, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    for (var i = begin; i < limit; i++) {
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      final btnBackIcon = find.text(getMonthAtYear(1));
+      await tapSomething(
+          tester, btnBackIcon, addContext(context, 'Click on ' + getMonthAtYear(1) + ' tab'));
+      await tester.pump();
+      await tester.pumpAndSettle();
+
+      for (var j = 1; j < monthNames.length; j++) {
+        if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+          final columnValue = await getValue('readOnly', mainCategoryList[i], j, tester);
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+          await htExpect(tester, columnValue, contains('\$'),
+              reason: ('Verify-' +
+                  context +
+                  'The value in the ${getMonthAtYear(j)} column of ${mainCategoryList[i]} is non-null and contains the \$ character is visible'));
+        } else {
+          print('object AAAAAAAAA');
+          final columnValue = await getValue('', mainCategoryList[i], j - 1, tester);
+          print('BBBBBBBBBBB : $columnValue');
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+          await htExpect(tester, columnValue, contains('\$'),
+              reason: ('Verify-' +
+                  context +
+                  'The value in the ${getMonthAtYear(j)} column of ${mainCategoryList[i]} is non-null and contains the \$ character is visible'));
+        }
+      }
+    }
+  }
+
+  Future<void> getAndVerifyValueCurrentMonthCategory(
+      String pageName, String categoryName, List<String> subCategoryName, WidgetTester tester,
+      {String context = '', Finder? rowFinder}) async {
+    final currentMonth = getCurrentMonth();
+    final currentMonthIndex = monthNames.indexOf('$currentMonth');
+    await clickCategoryList(categoryName, tester);
+
+    final getValueCategory = await getValue('', categoryName, currentMonthIndex - 1, tester);
+
+    var sumValueSub = 0;
+    for (var i = 0; i < subCategoryName.length; i++) {
+      if (pageName == 'Planned') {
+        print('pageName = Planned');
+        final cellValue = await getValueInCell(subCategoryName[i], currentMonthIndex - 1, tester);
+        sumValueSub += currencyStringToNumber(cellValue);
+      } else {
+        print('pageName != Planned');
+        final cellValue = await getValue('readOnly', subCategoryName[i], currentMonthIndex, tester);
+        sumValueSub += currencyStringToNumber(cellValue);
+      }
+    }
+    final sumTotalValue = '\$' + formatNumberToValue(sumValueSub);
+    await verifyTotalValueCurrentMonth(getValueCategory, sumTotalValue, tester);
+    await clickCategoryList(categoryName, tester);
+  }
+
+  // Future<void> getAndVerifyValue(int begin, int limit, WidgetTester tester,
+  //     {String context = '', Finder? rowFinder}) async {
+  //   for (var i = begin; i < limit; i++) {
+  //     await tester.tap(find.text(getMonthAtYear(1)));
+  //     for (var j = 1; j < monthNames.length; j++) {
+  //       if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
+  //         final columnValue = getValue('readOnly', mainCategoryList[i], j, tester);
+  //         await htExpect(tester, columnValue, contains('\$'),
+  //             reason: ('Verify-' +
+  //                 context +
+  //                 'The value in the ${getMonthAtYear(j)} column of ${mainCategoryList[i]} is non-null and contains the \$ character is visible'));
+  //       } else {
+  //         final columnValue = getValue('', mainCategoryList[i], j - 1, tester);
+  //         await htExpect(tester, columnValue, contains('\$'),
+  //             reason: ('Verify-' +
+  //                 context +
+  //                 'The value in the ${getMonthAtYear(j)} column of ${mainCategoryList[i]} is non-null and contains the \$ character is visible'));
+  //       }
+  //     }
+  //   }
+  // }
 }

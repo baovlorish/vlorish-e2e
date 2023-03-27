@@ -56,6 +56,11 @@ int getDateNow() {
   return date.year;
 }
 
+String getCurrentMonth() {
+  final now = DateFormat.MMM().format(DateTime.now());
+  return now;
+}
+
 int getCurrentYear() {
   final now = DateTime.now();
   return now.year;

@@ -5,6 +5,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/city_field_with_suggestion.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen.dart';
 import 'package:burgundy_budgeting_app/ui/screen/profile_overview/profile_overview_page.dart';
@@ -380,7 +381,7 @@ class ProfileScreenTest {
     await tester.enterText(typeAheadFinder, searchCityName);
     await tester.pumpAndSettle(const Duration(seconds: 10));
 
-    final suggestionFinder = find.text(selectSuggestionCityName);
+    final suggestionFinder = find.byType(TextFieldWithSuggestion).first;
     await tester.tap(suggestionFinder);
     await tester.pumpAndSettle(const Duration(seconds: 10));
   }

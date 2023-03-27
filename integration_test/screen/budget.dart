@@ -187,8 +187,9 @@ class BudgetScreenTest {
 
   Future<void> clickBudgetTab(String str, WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    final btnBackIcon = find.text(str);
-    await tapSomething(tester, btnBackIcon, addContext(context, 'Click on ' + str + ' tab'));
+    final btnFinder = find.text(str);
+    await tapSomething(tester, btnFinder, addContext(context, 'Click on ' + str + ' tab'));
+    await tester.pump();
     await tester.pumpAndSettle();
   }
 
