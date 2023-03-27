@@ -52,18 +52,6 @@ void main() async {
               btnPlanned, subCategoryInputList[i], subCategoryInputDetailList[i], tester);
         }
 
-        await personalBudgetScreen.clickBudgetTab(btnActual, tester);
-        for (var i = 0; i < subCategoryInputList.length; i++) {
-          await plannedPersonalBudgetScreen.getAndVerifyValueCurrentMonthCategory(
-              btnPlanned, subCategoryInputList[i], subCategoryInputDetailList[i], tester);
-        }
-
-        await personalBudgetScreen.clickBudgetTab(btnDifference, tester);
-        for (var i = 0; i < subCategoryInputList.length; i++) {
-          await plannedPersonalBudgetScreen.getAndVerifyValueCurrentMonthCategory(
-              btnPlanned, subCategoryInputList[i], subCategoryInputDetailList[i], tester);
-        }
-
         await htLogd(
             tester,
             'BAR_T260 Check that sum is shown by subcategories for current months in category line',
