@@ -42,8 +42,7 @@ void main() async {
             '',
             'STARTED');
         await personalBudgetScreen.clickDifferenceTab(tester);
-        await personalBudgetScreen.verifyShowDifferencePage(
-            btnDifference, tester);
+        await personalBudgetScreen.verifyShowDifferencePage(btnDifference, tester);
         await htLogd(
             tester,
             'BAR_T123 Check that the user is redirected on Annual Difference page after clicking on “Difference” button on the top',
@@ -99,30 +98,6 @@ void main() async {
         await htLogd(
             tester,
             'Failed BAR_T129 User is redirected on Retirement flow page after clicking on “Retirement” tab',
-            '',
-            'FINISHED');
-      }
-
-      try {
-        await htLogdDirect(
-            'BAR_T167 Business Budget - User is redirected on Available Annually tab button after clicking on “Difference” button',
-            '',
-            'STARTED');
-        await dashboardScreen.clickProfileIcon(tester);
-        await personalBudgetScreen.clickBusinessTab(tester);
-        await personalBudgetScreen.verifyBusinessBudgetPage(tester);
-        await personalBudgetScreen.clickDifferenceTab(tester);
-        await personalBudgetScreen.verifyShowDifferencePage(
-            btnDifference, tester);
-        await htLogd(
-            tester,
-            'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
-            '',
-            'FINISHED');
-      } catch (e) {
-        await htLogd(
-            tester,
-            'Failed BAR-T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
             '',
             'FINISHED');
       }

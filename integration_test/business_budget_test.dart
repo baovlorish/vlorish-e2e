@@ -30,25 +30,18 @@ void main() async {
       context = context ?? '';
 
       await dashboardScreen.clickLogoText();
-      await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester,
-          context: context);
+      await signInScreen.inputEmailAndPassword(emailLogin, passLogin, tester, context: context);
       await signInScreen.clickLoginButton(tester, context: context);
       await businessBudgetScreen.verifyPersonalBudgetPage(tester);
 
       try {
         await htLogdDirect(
-            'BAR_T163 Check List of Categories on Budget Business Annual page',
-            '',
-            'STARTED');
+            'BAR_T163 Check List of Categories on Budget Business Annual page', '', 'STARTED');
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickCategoryArrowIcon(tester);
-        await businessBudgetCategoryScreen
-            .verifyBusinessListOfCategories(tester);
-        await htLogd(
-            tester,
-            'BAR_T163 Check List of Categories on Budget Business Annual page',
-            '',
+        await businessBudgetCategoryScreen.verifyBusinessListOfCategories(tester);
+        await htLogd(tester, 'BAR_T163 Check List of Categories on Budget Business Annual page', '',
             'FINISHED');
       } catch (e) {
         await htLogd(
@@ -57,31 +50,6 @@ void main() async {
             '',
             'FINISHED');
       }
-
-      // try {
-      //   await htLogdDirect(
-      //       'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
-      //       '',
-      //       'STARTED');
-      //   await businessBudgetScreen.clickPersonalTab(tester);
-      //   await businessBudgetScreen.verifyPersonalBudgetPage(tester);
-      //   await businessBudgetScreen.clickBusinessTab(tester);
-      //   await businessBudgetScreen.verifyBusinessBudgetPage(tester);
-      //   await businessBudgetScreen.clickBudgetTab(btnDifference, tester);
-      //   await businessBudgetScreen.verifyShowDifferencePage(
-      //       btnDifference, tester);
-      //   await htLogd(
-      //       tester,
-      //       'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
-      //       '',
-      //       'FINISHED');
-      // } catch (e) {
-      //   await htLogd(
-      //       tester,
-      //       'Failed BAR-T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
-      //       '',
-      //       'FINISHED');
-      // }
 
       try {
         await htLogdDirect(
@@ -278,8 +246,7 @@ void main() async {
       }
 
       try {
-        await htLogdDirect(
-            'BAR_T178 User is able to hide/unhide categories', '', 'STARTED');
+        await htLogdDirect('BAR_T178 User is able to hide/unhide categories', '', 'STARTED');
         await businessBudgetScreen.clickPersonalTab(tester);
         await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
@@ -289,14 +256,10 @@ void main() async {
         await businessBudgetScreen.verifyShowBusinessCategories(tester);
         await businessBudgetScreen.clickCategoryArrowIcon(tester);
         await businessBudgetScreen.verifyHideBusinessCategories(tester);
-        await htLogd(tester, 'BAR_T178 User is able to hide/unhide categories',
-            '', 'FINISHED');
+        await htLogd(tester, 'BAR_T178 User is able to hide/unhide categories', '', 'FINISHED');
       } catch (e) {
         await htLogd(
-            tester,
-            'Failed BAR-T178 User is able to hide/unhide categories',
-            '',
-            'FINISHED');
+            tester, 'Failed BAR-T178 User is able to hide/unhide categories', '', 'FINISHED');
       }
 
       try {
@@ -308,16 +271,13 @@ void main() async {
         await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
-        await businessBudgetScreen.verifyYearOnBudgetAnnual(
-            currentYear, tester);
+        await businessBudgetScreen.verifyYearOnBudgetAnnual(currentYear, tester);
         await businessBudgetScreen.clickRightArrowBtn(tester);
         await businessBudgetScreen.verifyYearOnBudgetAnnual(nextYear, tester);
         await businessBudgetScreen.clickLeftArrowBtn(tester);
-        await businessBudgetScreen.verifyYearOnBudgetAnnual(
-            currentYear, tester);
+        await businessBudgetScreen.verifyYearOnBudgetAnnual(currentYear, tester);
         await businessBudgetScreen.clickLeftArrowBtn(tester);
-        await businessBudgetScreen.verifyYearOnBudgetAnnual(
-            previousYear, tester);
+        await businessBudgetScreen.verifyYearOnBudgetAnnual(previousYear, tester);
         await htLogd(
             tester,
             'BAR_T181 Check that user is able to decreasing or  increasing years on Budget Business Annual',
@@ -337,7 +297,6 @@ void main() async {
             '',
             'STARTED');
         await businessBudgetScreen.clickPersonalTab(tester);
-        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
         await businessBudgetScreen.clickBusinessTab(tester);
         await businessBudgetScreen.verifyBusinessBudgetPage(tester);
         await businessBudgetScreen.clickMonthly(tester);
@@ -351,6 +310,72 @@ void main() async {
         await htLogd(
             tester,
             'Failed BAR-T165 User is redirected on Budget Monthly flow page after clicking on “Monthly” button',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T272 Check that Owner draw row presents below Net Income row', '', 'STARTED');
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.clickBusinessTab(tester);
+        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        await businessBudgetScreen.verifyOwnerdrawAppearsBelowNetIncome(tester);
+        await htLogd(tester, 'BAR_T272 Check that Owner draw row presents below Net Income row', '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T272 Check that Owner draw row presents below Net Income row',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
+            '',
+            'STARTED');
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.verifyPersonalBudgetPage(tester);
+        await businessBudgetScreen.clickBusinessTab(tester);
+        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        await businessBudgetScreen.clickBudgetTab(btnDifference, tester);
+        await businessBudgetScreen.verifyShowDifferencePage(btnDifference, tester);
+        await htLogd(
+            tester,
+            'BAR_T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T167 User is redirected on Available Annually tab button after clicking on “Difference” button',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'BAR_T271 Check that Owner draw values show with the same font color (red) as the “Total Expenses” on both monthly and annual business pages',
+            '',
+            'STARTED');
+        await businessBudgetScreen.clickPersonalTab(tester);
+        await businessBudgetScreen.clickBusinessTab(tester);
+        await businessBudgetScreen.verifyBusinessBudgetPage(tester);
+        await businessBudgetScreen.verifyFontColorCategory(tester);
+        await businessBudgetScreen.clickMonthly(tester);
+        await businessBudgetScreen.verifyFontColorCategory(tester);
+
+        await htLogd(
+            tester,
+            'BAR_T271 Check that Owner draw values show with the same font color (red) as the “Total Expenses” on both monthly and annual business pages',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed BAR-T271 Check that Owner draw values show with the same font color (red) as the “Total Expenses” on both monthly and annual business pages',
             '',
             'FINISHED');
       }

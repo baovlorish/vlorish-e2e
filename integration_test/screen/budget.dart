@@ -7,6 +7,8 @@ import 'package:burgundy_budgeting_app/ui/atomic/molecula/side_menu_button_item.
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/table_body_cell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/toggling_cell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/period_selector.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/organizm/toggling_rows_table.dart';
+import 'package:burgundy_budgeting_app/ui/screen/budget/budget_annual_view.dart';
 import 'package:flutter/material.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
@@ -51,6 +53,7 @@ class BudgetScreenTest {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     final btnForgotPass = find.text(btnMonthly).first;
     await tapSomething(tester, btnForgotPass, addContext(context, 'Click on btn Monthly'));
+    await tester.pump();
     await tester.pumpAndSettle();
   }
 
@@ -179,6 +182,7 @@ class BudgetScreenTest {
   }
 
   Future<void> clickBusinessTab(WidgetTester tester, {String context = ''}) async {
+    await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle(const Duration(seconds: 10));
     final btnName = find.text(btnBusiness).first;
     await tapSomething(tester, btnName, addContext(context, 'Click on btn Business Budget'));
@@ -285,6 +289,7 @@ class BudgetScreenTest {
       matching: find.byType(Material),
     );
     final selectedMaterials = tester.widgetList<Material>(selectedMaterial);
+    await tester.pumpAndSettle(const Duration(seconds: 5));
 
     if (isSelected == true) {
       await htExpect(
@@ -463,6 +468,63 @@ class BudgetScreenTest {
     );
 
     await tapSomething(tester, categoryFinder, addContext(context, 'Click on btn $categoryName'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifyFontColorCategory(WidgetTester tester, {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+
+    final totalExpensesText = find.text('Total Expenses');
+    final ownerDrawText = find.text('Owner Draw');
+
+    final totalExpensesTextStyle = tester.widget<Text>(totalExpensesText).style;
+    final ownerDrawTextStyle = tester.widget<Text>(ownerDrawText).style;
+
+    await htExpect(tester, totalExpensesTextStyle?.color, equals(const Color(0xffff876c)),
+        reason: ('Verify-' + context + 'Total Expenses text have font color Red is visible'));
+    expect(ownerDrawTextStyle?.color, equals(const Color(0xffff876c)));
+    await htExpect(tester, ownerDrawTextStyle?.color, equals(const Color(0xffff876c)),
+        reason: ('Verify-' + context + 'Owner Draw have font color Red is visible'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> verifyOwnerdrawAppearsBelowNetIncome(WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+
+    final budgetAnnualViewFinder = find.byType(BudgetAnnualView);
+
+    final sizeBoxList = find
+        .descendant(
+          of: budgetAnnualViewFinder,
+          matching: find.byType(SizedBox),
+        )
+        .evaluate()
+        .map((element) => element.widget as SizedBox)
+        .toList();
+
+    final netIncomeIndex = sizeBoxList.indexWhere((element) =>
+        element.child is TogglingRowsTable &&
+        find
+            .descendant(
+              of: find.byWidget(element),
+              matching: find.text('Net Income'),
+            )
+            .evaluate()
+            .isNotEmpty);
+
+    final ownerDrawIndex = sizeBoxList.indexWhere((element) =>
+        element.child is TogglingRowsTable &&
+        find
+            .descendant(
+              of: find.byWidget(element),
+              matching: find.text('Owner Draw'),
+            )
+            .evaluate()
+            .isNotEmpty);
+
+    await htExpect(tester, ownerDrawIndex, greaterThan(netIncomeIndex),
+        reason: ('Verify-' + context + 'Owner draw row presents below Net Income row is visible'));
     await tester.pumpAndSettle();
   }
 }

@@ -379,10 +379,21 @@ class ProfileScreenTest {
     final typeAheadFinder = find.byType(TypeAheadFormField);
     await tester.tap(typeAheadFinder);
     await tester.enterText(typeAheadFinder, searchCityName);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle(const Duration(seconds: 10));
 
-    final suggestionFinder = find.byType(TextFieldWithSuggestion).first;
-    await tester.tap(suggestionFinder);
+    // final suggestionFinder = find.text(selectSuggestionCityName).last;
+    // await tester.tap(suggestionFinder);
+    final widget = find.text(selectSuggestionCityName);
+    final widgetBounds = tester.getRect(widget);
+    final widgetCenter = Offset(
+      widgetBounds.left + widgetBounds.width / 2,
+      widgetBounds.top + widgetBounds.height / 2,
+    );
+    await tester.tapAt(widgetCenter);
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle(const Duration(seconds: 10));
   }
 }

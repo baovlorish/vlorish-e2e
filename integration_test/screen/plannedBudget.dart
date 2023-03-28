@@ -414,21 +414,28 @@ class PlannedBudgetScreenTest {
 
     final textFormFieldFinder = find.descendant(
       of: sizedBoxFinder,
-      matching: find.byType(TextFormField),
+      matching: find.byType(TextField),
     );
+    final textFormFields = tester.widgetList(textFormFieldFinder).cast<TextFormField>();
+    final count = textFormFields.length;
 
     await tester.tap(textFormFieldFinder.at(indexCell));
     await tester.pump(const Duration(seconds: 5));
-    if (valueInput != '') {
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
-      await tester.pump(const Duration(seconds: 5));
-      await tester.tap(textFormFieldFinder.at(indexCell));
-      await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.backspace);
+    await tester.pump();
+    await tester.tap(textFormFieldFinder.at(indexCell));
+    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    if (indexCell != count - 1) {
+      await tester.tap(textFormFieldFinder.at(indexCell + 1));
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+    } else {
+      await tester.tap(textFormFieldFinder.at(indexCell - 1));
       await tester.pumpAndSettle(const Duration(seconds: 5));
     }
-    await tester.pumpAndSettle(const Duration(seconds: 5));
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.tab);
-    await tester.pumpAndSettle(const Duration(seconds: 5));
+    // await tester.pumpAndSettle(const Duration(seconds: 5));
+    // await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
+    // await tester.pumpAndSettle(const Duration(seconds: 5));
   }
 
   Future<void> inputValueInCell(
@@ -638,4 +645,102 @@ class PlannedBudgetScreenTest {
   //     }
   //   }
   // }
+
+  Future<void> input1(String rowName, int indexCell, String valueInput, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextField),
+    );
+
+    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
+    await tester.pump(const Duration(seconds: 5));
+  }
+
+  Future<void> input2(String rowName, int indexCell, String valueInput, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextField),
+    );
+
+    await tester.tap(textFormFieldFinder.at(indexCell));
+    await tester.pump(const Duration(seconds: 5));
+    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
+    await tester.pump(const Duration(seconds: 5));
+  }
+
+  Future<void> input3(String rowName, int indexCell, String valueInput, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextFormField),
+    );
+    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
+    await tester.pump(const Duration(seconds: 5));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
+  }
+
+  Future<void> input4(String rowName, int indexCell, String valueInput, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final rowFinder = find.descendant(
+      of: find.byType(TableBodyCell),
+      matching: find.text(rowName),
+    );
+
+    final sizedBoxFinder = find.ancestor(
+      of: rowFinder,
+      matching: find.byType(SizedBox),
+    );
+
+    final textFormFieldFinder = find.descendant(
+      of: sizedBoxFinder,
+      matching: find.byType(TextFormField),
+    );
+
+    await tester.tap(textFormFieldFinder.at(indexCell));
+    await tester.pump(const Duration(seconds: 5));
+    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+  }
 }
