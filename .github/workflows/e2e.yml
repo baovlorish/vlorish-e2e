@@ -35,10 +35,10 @@ jobs:
       - name: Start Chrome
         run: chromedriver --port=4444 &
       
-      - name: Run Sign In Testsuite
+      - name: Run Sign In 1 Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test.dart -d chrome | ./integration_test/testout.sh
       
-      - name: Run Sign In Testsuite
+      - name: Run Sign In 2 Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signin_test_t69-80-52.dart -d chrome | ./integration_test/testout.sh
       
       - name: Run Sign Up Testsuite
@@ -53,20 +53,20 @@ jobs:
       - name: Run Profile Detail Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/profile_detail_test.dart -d chrome |./integration_test/testout.sh
       
-      - name: Run Personal Budget Testsuite
+      - name: Run Personal Budget 1 Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test.dart -d chrome |./integration_test/testout.sh
       
-      - name: Run Personal Budget Testsuite
+      - name: Run Personal Budget 2 Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_test_1.dart -d chrome |./integration_test/testout.sh
       
-      - name: Run Personal Budget Testsuite
+      - name: Run Personal Budget 3 Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_planned_test_Bar_T260.dart -d chrome |./integration_test/testout.sh
       
-      - name: Run Personal Budget Testsuite
+      - name: Run Personal Budget 4 Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_actual_test_Bar_T260.dart -d chrome |./integration_test/testout.sh
       
-      - name: Run Personal Budget Testsuite
-        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_actual_test_Bar_T260.dart -d chrome |./integration_test/testout.sh
+      - name: Run Personal Budget 5 Testsuite
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/personal_budget_difference_test_Bar_T260.dart -d chrome |./integration_test/testout.sh
       
       - name: Run Planned Personal Budget Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/planned_personal_budget_test.dart -d chrome |./integration_test/testout.sh
@@ -76,6 +76,9 @@ jobs:
        
       - name: Run Business Budget Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/business_budget_test.dart -d chrome |./integration_test/testout.sh
+      
+      - name: Run Goals Testsuite
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/goals_test.dart -d chrome |./integration_test/testout.sh
       
       - name: Read file contents
         id: read_file

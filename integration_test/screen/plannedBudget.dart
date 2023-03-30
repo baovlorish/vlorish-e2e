@@ -82,7 +82,7 @@ class PlannedBudgetScreenTest {
 
     await tapSomething(tester, categoryFinder, addContext(context, 'Click on btn $categoryName'));
     await tester.pump();
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
   Future<void> verifyUpdateTotalPlanned(
@@ -433,9 +433,6 @@ class PlannedBudgetScreenTest {
       await tester.tap(textFormFieldFinder.at(indexCell - 1));
       await tester.pumpAndSettle(const Duration(seconds: 5));
     }
-    // await tester.pumpAndSettle(const Duration(seconds: 5));
-    // await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
-    // await tester.pumpAndSettle(const Duration(seconds: 5));
   }
 
   Future<void> inputValueInCell(
@@ -622,125 +619,5 @@ class PlannedBudgetScreenTest {
     final sumTotalValue = '\$' + formatNumberToValue(sumValueSub);
     await verifyTotalValueCurrentMonth(getValueCategory, sumTotalValue, tester);
     await clickCategoryList(categoryName, tester);
-  }
-
-  // Future<void> getAndVerifyValue(int begin, int limit, WidgetTester tester,
-  //     {String context = '', Finder? rowFinder}) async {
-  //   for (var i = begin; i < limit; i++) {
-  //     await tester.tap(find.text(getMonthAtYear(1)));
-  //     for (var j = 1; j < monthNames.length; j++) {
-  //       if (i == 10 || i == 11 || i == 12 || i == 14 || i == 15) {
-  //         final columnValue = getValue('readOnly', mainCategoryList[i], j, tester);
-  //         await htExpect(tester, columnValue, contains('\$'),
-  //             reason: ('Verify-' +
-  //                 context +
-  //                 'The value in the ${getMonthAtYear(j)} column of ${mainCategoryList[i]} is non-null and contains the \$ character is visible'));
-  //       } else {
-  //         final columnValue = getValue('', mainCategoryList[i], j - 1, tester);
-  //         await htExpect(tester, columnValue, contains('\$'),
-  //             reason: ('Verify-' +
-  //                 context +
-  //                 'The value in the ${getMonthAtYear(j)} column of ${mainCategoryList[i]} is non-null and contains the \$ character is visible'));
-  //       }
-  //     }
-  //   }
-  // }
-
-  Future<void> input1(String rowName, int indexCell, String valueInput, WidgetTester tester,
-      {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final rowFinder = find.descendant(
-      of: find.byType(TableBodyCell),
-      matching: find.text(rowName),
-    );
-
-    final sizedBoxFinder = find.ancestor(
-      of: rowFinder,
-      matching: find.byType(SizedBox),
-    );
-
-    final textFormFieldFinder = find.descendant(
-      of: sizedBoxFinder,
-      matching: find.byType(TextField),
-    );
-
-    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
-    await tester.pumpAndSettle(const Duration(seconds: 5));
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
-    await tester.pump(const Duration(seconds: 5));
-  }
-
-  Future<void> input2(String rowName, int indexCell, String valueInput, WidgetTester tester,
-      {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final rowFinder = find.descendant(
-      of: find.byType(TableBodyCell),
-      matching: find.text(rowName),
-    );
-
-    final sizedBoxFinder = find.ancestor(
-      of: rowFinder,
-      matching: find.byType(SizedBox),
-    );
-
-    final textFormFieldFinder = find.descendant(
-      of: sizedBoxFinder,
-      matching: find.byType(TextField),
-    );
-
-    await tester.tap(textFormFieldFinder.at(indexCell));
-    await tester.pump(const Duration(seconds: 5));
-    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
-    await tester.pumpAndSettle(const Duration(seconds: 5));
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
-    await tester.pump(const Duration(seconds: 5));
-  }
-
-  Future<void> input3(String rowName, int indexCell, String valueInput, WidgetTester tester,
-      {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final rowFinder = find.descendant(
-      of: find.byType(TableBodyCell),
-      matching: find.text(rowName),
-    );
-
-    final sizedBoxFinder = find.ancestor(
-      of: rowFinder,
-      matching: find.byType(SizedBox),
-    );
-
-    final textFormFieldFinder = find.descendant(
-      of: sizedBoxFinder,
-      matching: find.byType(TextFormField),
-    );
-    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
-    await tester.pump(const Duration(seconds: 5));
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
-  }
-
-  Future<void> input4(String rowName, int indexCell, String valueInput, WidgetTester tester,
-      {String context = ''}) async {
-    await tester.pumpAndSettle();
-    final rowFinder = find.descendant(
-      of: find.byType(TableBodyCell),
-      matching: find.text(rowName),
-    );
-
-    final sizedBoxFinder = find.ancestor(
-      of: rowFinder,
-      matching: find.byType(SizedBox),
-    );
-
-    final textFormFieldFinder = find.descendant(
-      of: sizedBoxFinder,
-      matching: find.byType(TextFormField),
-    );
-
-    await tester.tap(textFormFieldFinder.at(indexCell));
-    await tester.pump(const Duration(seconds: 5));
-    await tester.enterText(textFormFieldFinder.at(indexCell), valueInput);
-    await tester.pumpAndSettle(const Duration(seconds: 5));
-    await tester.sendKeyDownEvent(LogicalKeyboardKey.enter);
-    await tester.pumpAndSettle(const Duration(seconds: 5));
   }
 }
