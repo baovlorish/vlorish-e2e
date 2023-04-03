@@ -23,9 +23,13 @@ class AppBarItem extends StatefulWidget {
 
   final bool usesAlignedMenu;
 
+  final Color? iconColor;
+  final Offset? offset;
+
   const AppBarItem({
     this.isSelected = false,
     required this.iconUrl,
+    this.iconColor,
     this.onTap,
     this.hoverMenuWidget,
     this.showMenuOnHover = false,
@@ -36,6 +40,7 @@ class AppBarItem extends StatefulWidget {
     this.modalAlignment = Alignment.topLeft,
     this.anchorAlignment = Alignment.bottomLeft,
     this.usesAlignedMenu = false,
+    this.offset,
   });
 
   @override
@@ -62,7 +67,7 @@ class _AppBarItemState extends State<AppBarItem> {
                 isItemFocused = true;
                 if (widget.hoverMenuWidget != null) {
                   if (!isMenuVisible) {
-                    showMenu('menu${widget.iconUrl}');
+                    showMenu('menu${widget.iconUrl}', offset: widget.offset);
                   }
                 }
               }
@@ -90,30 +95,26 @@ class _AppBarItemState extends State<AppBarItem> {
               },
         child: Padding(
           key: UniqueKey(),
-          padding: EdgeInsets.symmetric(
-              horizontal:
-                  widget.isSmall ? widget.minPadding : widget.maxPadding),
+          padding: EdgeInsets.symmetric(horizontal: widget.isSmall ? widget.minPadding : widget.maxPadding),
           child: Center(
             child: CustomMaterialInkWell(
               border: CircleBorder(),
-              onTap: !widget.showMenuOnHover
-                  ? () {
+              onTapDown: !widget.showMenuOnHover
+                  ? (event) {
                       if (widget.hoverMenuWidget != null) {
                         if (!isMenuVisible) {
-                          showMenu('menu${widget.iconUrl}');
+                          showMenu('menu${widget.iconUrl}', offset: Offset(0, event.globalPosition.dy + 40));
                         }
                       }
                       widget.onTap != null ? widget.onTap!() : null;
                     }
-                  : widget.onTap,
+                  : (_) => widget.onTap,
               type: InkWellType.White,
               child: Container(
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: widget.isSelected
-                      ? CustomColorScheme.menuBackgroundActive
-                      : Colors.transparent,
+                  color: widget.isSelected ? CustomColorScheme.menuBackgroundActive : Colors.transparent,
                   borderRadius: BorderRadius.circular(22),
                 ),
                 child: Stack(
@@ -122,7 +123,7 @@ class _AppBarItemState extends State<AppBarItem> {
                       child: ImageIcon(
                         AssetImage(widget.iconUrl),
                         size: 24,
-                        color: Color.fromRGBO(253, 248, 253, 1),
+                        color: widget.iconColor ?? Color.fromRGBO(253, 248, 253, 1),
                       ),
                     ),
                     if (widget.notificationCount != null)
@@ -134,8 +135,7 @@ class _AppBarItemState extends State<AppBarItem> {
                                 padding: EdgeInsets.all(3),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: CustomColorScheme
-                                      .inputErrorBorder,
+                                  color: CustomColorScheme.inputErrorBorder,
                                 ),
                                 child: Label(
                                   text: notificationLabelText,
@@ -162,7 +162,7 @@ class _AppBarItemState extends State<AppBarItem> {
     removeModal();
   }
 
-  void showMenu(String tag) {
+  void showMenu(String tag, {Offset? offset}) {
     isMenuVisible = true;
     var menuItem = MouseRegion(
       onEnter: (_) {
@@ -189,7 +189,7 @@ class _AppBarItemState extends State<AppBarItem> {
               barrierDismissible: !widget.showMenuOnHover,
               alignment: Alignment.topRight,
               tag: tag,
-              offset: Offset(0, 76),
+              offset: offset ?? Offset(0, 76),
               child: menuItem,
             )
           : ModalEntry.anchored(

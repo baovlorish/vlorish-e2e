@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:burgundy_budgeting_app/domain/model/request/setup_bank_type_request.dart';
 import 'package:burgundy_budgeting_app/domain/repository/accounts_transactions_repository.dart';
 import 'package:burgundy_budgeting_app/domain/repository/networth_repository.dart';

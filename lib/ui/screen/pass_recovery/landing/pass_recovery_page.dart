@@ -11,8 +11,9 @@ class PassRecoveryPage {
   static void initRoute(FluroRouter router, AuthContractor authContractor) {
     var handler = Handler(
       handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+        var email = params['email']?[0];
         return BlocProvider<PassRecoveryCubit>(
-          create: (_) => PassRecoveryCubit(authContractor.authRepository),
+          create: (_) => PassRecoveryCubit(authContractor.authRepository, email: email),
           child: PassRecoveryLayout(),
         );
       },

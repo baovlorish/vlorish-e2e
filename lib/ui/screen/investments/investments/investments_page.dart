@@ -1,4 +1,5 @@
 import 'package:burgundy_budgeting_app/core/di_provider.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/new_show_dialog.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/add_account_from_plaid_popup.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_page.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen_cubit.dart';
@@ -60,8 +61,8 @@ class InvestmentsPage {
                       onSuccessCallback:
                           (List<BankAccount> bankAccounts) async {
                         if (bankAccounts.isNotEmpty) {
-                          await showDialog(
-                            context: context,
+                          await newShowDialog(
+                            context,
                             barrierDismissible: false,
                             builder: (_) {
                               return BlocProvider<InvestmentsCubit>.value(

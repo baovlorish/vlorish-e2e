@@ -1,85 +1,72 @@
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_radio_button.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/molecula/city_field_with_suggestion.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/text_field_with_suggestion.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/dropdown_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/molecula/label_button_item.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/two_buttons_alert_dialog.dart';
+import 'package:burgundy_budgeting_app/utils/extensions.dart';
 import 'package:burgundy_budgeting_app/utils/form_validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AddManualAccountPopup extends AlertDialog {
+typedef _AddAccountFunction = Future<String?> Function({
+  required String name,
+  required int usageType,
+  required int accountType,
+  String? businessName,
+});
+
+class AddManualAccountPopup extends StatefulWidget {
   final bool isStandardSubscription;
-
-  AddManualAccountPopup(
-    BuildContext context, {
-    required Future<String?> Function({
-      required String name,
-      required int usageType,
-      required int accountType,
-      String? businessName,
-    })
-        addAccountFunction,
-    required List<String> businessNameList,
-    required this.isStandardSubscription,
-  }) : super(
-          content: Container(
-            width: 600,
-            height: isStandardSubscription ? 400 : 470,
-            padding: EdgeInsets.all(16),
-            child: _AddManualAccountItem(
-              isStandardSubscription: isStandardSubscription,
-              addAccountFunction: addAccountFunction,
-              businessNameList: businessNameList,
-            ),
-          ),
-        );
-}
-
-class _AddManualAccountItem extends StatefulWidget {
-  final Future<String?> Function({
-    required String name,
-    required int usageType,
-    required int accountType,
-    String? businessName,
-  }) addAccountFunction;
-
   final List<String> businessNameList;
-  final bool isStandardSubscription;
+  final _AddAccountFunction addAccountFunction;
 
-  const _AddManualAccountItem({
-    Key? key,
-    required this.addAccountFunction,
+  const AddManualAccountPopup(
+    BuildContext context, {
     required this.businessNameList,
     required this.isStandardSubscription,
-  }) : super(key: key);
+    required this.addAccountFunction,
+  });
 
   @override
-  __AddManualAccountItemState createState() => __AddManualAccountItemState();
+  State<StatefulWidget> createState() => _AddManualAccountItemState();
 }
 
-class __AddManualAccountItemState extends State<_AddManualAccountItem> {
+class _AddManualAccountItemState extends State<AddManualAccountPopup> {
   late final List<String> _personalAccountTypes;
   late final List<String> _businessAccountTypes;
+  // todo: (andreyK) use this for investment account as description
+  // Set up your new brokerage account, retirement account or personal asset
 
-  String _createAccountNameValue = '';
-  int _usageType = 0;
-  int _chosenAccountType = 0;
+  static const noUsageTypeSelected = 0;
+  static const personalUsageType = 1;
+  static const businessUsageType = 2;
+
+  static const fieldWidth = 315.0;
+  static const paddingSize = 30.0;
+  static const popupWidth = fieldWidth + paddingSize + fieldWidth + 1; // for some reason it overflows for 1px
+
+  var _createAccountNameValue = '';
+  var _usageType = noUsageTypeSelected;
+  int? _chosenAccountType;
   String? businessName;
   String? errorText;
 
-  bool isValid(String _createAccountNameValue, int _usageType,
-          String? businessName) =>
+  bool get isValid =>
       _createAccountNameValue.isNotEmpty &&
-      _usageType != 0 &&
-      (businessName != null || _usageType == 1);
+      _usageType != noUsageTypeSelected &&
+      _chosenAccountType != null &&
+      (businessName != null || _usageType == personalUsageType);
+
+  bool get isPersonalType => _usageType == personalUsageType;
+
+  bool get isBusinessType => _usageType == businessUsageType;
 
   @override
   void initState() {
     // added for https://itomych.atlassian.net/browse/BAR-2988
-    if (widget.isStandardSubscription) _usageType = 1;
+    if (widget.isStandardSubscription) _usageType = personalUsageType;
     super.initState();
   }
 
@@ -110,168 +97,129 @@ class __AddManualAccountItemState extends State<_AddManualAccountItem> {
     ];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Label(
-            type: LabelType.Header3,
-            text: AppLocalizations.of(context)!.addAccount,
-          ),
-        ),
-        SizedBox(height: 24),
-        if (!widget.isStandardSubscription)
-          Row(
+
+  void onAddAccountButtonPressed() async {
+    if (!isValid) return;
+    errorText = await widget.addAccountFunction(
+      usageType: _usageType,
+      accountType: _chosenAccountType!,
+      name: _createAccountNameValue,
+      businessName: businessName,
+    );
+
+    if (!mounted) return;
+    setState(() {
+      if (errorText == null) Navigator.pop(context);
+    });
+  }
+
+  final constrains = BoxConstraints(maxWidth: fieldWidth);
+
+  Widget typeAndAccountNameColumn() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Label(text: AppLocalizations.of(context)!.chooseAccountType.isRequired, type: LabelType.GeneralNew),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Label(
-                      text: AppLocalizations.of(context)!.chooseAccountType,
-                      type: LabelType.General),
-                  SizedBox(
-                    height: 10,
+                  CustomRadioButtonNew(
+                    title: AppLocalizations.of(context)!.personal,
+                    value: personalUsageType,
+                    groupValue: _usageType,
+                    onTap: () => setState(() {
+                      _chosenAccountType = null;
+                      _usageType = personalUsageType;
+                    }),
                   ),
-                  Row(
-                    children: [
-                      CustomRadioButton(
-                        title: AppLocalizations.of(context)!.personal,
-                        value: 1,
-                        groupValue: _usageType,
-                        onTap: () => setState(() {
-                          _usageType = 1;
-                        }),
-                      ),
-                      SizedBox(width: 24),
-                      CustomRadioButton(
-                        title: AppLocalizations.of(context)!.business,
-                        value: 2,
-                        groupValue: _usageType,
-                        onTap: () => setState(() {
-                          _usageType = 2;
-                        }),
-                      ),
-                    ],
+                  SizedBox(width: 15),
+                  CustomRadioButtonNew(
+                    title: AppLocalizations.of(context)!.business,
+                    value: businessUsageType,
+                    groupValue: _usageType,
+                    onTap: () => setState(() {
+                      _chosenAccountType = null;
+                      _usageType = businessUsageType;
+                    }),
                   ),
                 ],
               ),
-              SizedBox(width: 8),
-              if (_usageType != 2) Spacer(),
-              if (_usageType == 2)
-                Expanded(
-                  child: TextFieldWithSuggestion<String>(
-                      search: (value) => widget.businessNameList
-                          .where((element) => element.contains(value))
-                          .toList(),
-                      hideOnEmpty: true,
-                      maxSymbols: 15,
-                      onSelectedModel: (value) {
-                        businessName = value;
-                        setState(() {});
-                      },
-                      shouldEraseOnFocus: false,
-                      onSaved: (value) {
-                        businessName = value;
-                        setState(() {});
-                      },
-                      hintText: AppLocalizations.of(context)!.enterBusinessName,
-                      label: AppLocalizations.of(context)!.businessName),
-                ),
             ],
           ),
-        SizedBox(height: 28),
-        (_usageType == 1)
-            ? DropdownItem<int>(
-                key: Key('personal'),
-                enabled: _usageType != 0,
-                labelText: AppLocalizations.of(context)!.chooseCategory,
-                items: _personalAccountTypes,
-                hintText: '',
-                initialValue: 0,
-                validateFunction:
-                    FormValidators.accountCategoryValidateFunction,
-                callback: (value) {
-                  setState(() {
-                    _chosenAccountType = value;
-                  });
-                },
-              )
-            : DropdownItem<int>(
-                key: Key('business'),
-                enabled: _usageType != 0,
-                labelText: AppLocalizations.of(context)!.chooseCategory,
-                items: _businessAccountTypes,
-                hintText: '',
-                initialValue: 0,
-                validateFunction:
-                    FormValidators.accountCategoryValidateFunction,
-                callback: (value) {
-                  setState(() {
-                    _chosenAccountType = value;
-                  });
-                },
-              ),
-        SizedBox(height: 24),
-        InputItem(
-          labelText: AppLocalizations.of(context)!.createAccountName,
-          validateFunction: FormValidators.accountNameValidateFunction,
-          hintText: AppLocalizations.of(context)!.accountName,
-          textInputFormatters: [LengthLimitingTextInputFormatter(20)],
-          errorText: errorText,
-          onChanged: (value) {
-            setState(() {
-              _createAccountNameValue = value;
-            });
-          },
-        ),
-        SizedBox(height: 20),
-        Row(
-          children: [
-            Expanded(
-              child: Center(
-                child: LabelButtonItem(
-                  label: Label(
-                    text: AppLocalizations.of(context)!.cancel,
-                    type: LabelType.LargeButton,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+          SizedBox(height: paddingSize),
+          ConstrainedBox(
+            constraints: constrains,
+            child: InputItem(
+              labelText: AppLocalizations.of(context)!.createAccountName.isRequired,
+              validateFunction: FormValidators.accountNameValidateFunction,
+              hintText: AppLocalizations.of(context)!.addAccountName,
+              textInputFormatters: [LengthLimitingTextInputFormatter(20)],
+              errorText: errorText,
+              onChanged: (value) => setState(() => _createAccountNameValue = value),
+            ),
+          ),
+        ],
+      );
+
+  Widget categoryAndBusinessNameColumn() => Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ConstrainedBox(
+            constraints: constrains,
+            child: DropdownItem<int>(
+              key: Key(isPersonalType ? 'personal' : 'business'),
+              enabled: _usageType != noUsageTypeSelected,
+              labelText: AppLocalizations.of(context)!.chooseCategory.isRequired,
+              items: isPersonalType ? _personalAccountTypes : _businessAccountTypes,
+              hintText: AppLocalizations.of(context)!.select,
+              validateFunction: FormValidators.accountCategoryValidateFunction,
+              callback: (value) => setState(() => _chosenAccountType = value),
+            ),
+          ),
+          SizedBox(height: paddingSize),
+          if (isBusinessType)
+            ConstrainedBox(
+              constraints: constrains,
+              child: SingleChildScrollView(
+                child: TextFieldWithSuggestion<String>(
+                  search: (value) => widget.businessNameList.where((element) => element.contains(value)).toList(),
+                  hideOnEmpty: true,
+                  maxSymbols: 15,
+                  shouldEraseOnFocus: false,
+                  onSelectedModel: (value) => setState(() => businessName = value),
+                  onSaved: (value) => setState(() => businessName = value),
+                  hintText: AppLocalizations.of(context)!.addBusinessName,
+                  label: AppLocalizations.of(context)!.businessName.isRequired,
                 ),
               ),
             ),
-            Expanded(
-              key: UniqueKey(),
-              child: ButtonItem(
-                context,
-                text: AppLocalizations.of(context)!.addAccount,
-                buttonType: ButtonType.LargeText,
-                enabled:
-                    isValid(_createAccountNameValue, _usageType, businessName),
-                onPressed: () async {
-                  if (isValid(
-                      _createAccountNameValue, _usageType, businessName)) {
-                    errorText = await widget.addAccountFunction(
-                      usageType: _usageType,
-                      accountType: _chosenAccountType,
-                      name: _createAccountNameValue,
-                      businessName: businessName,
-                    );
-                    if (mounted) {
-                      setState(() {});
-                      if (errorText == null) {
-                        Navigator.pop(context);
-                      }
-                    }
-                  }
-                },
-              ),
-            ),
-          ],
+        ],
+      );
+
+  @override
+  Widget build(BuildContext context) => TwoButtonDialogNew(
+        title: AppLocalizations.of(context)!.addAccount,
+        description: AppLocalizations.of(context)!.setUpYourNewBankAccountCreditCardOrLoanAccount,
+        rightButtonParams: ButtonParams(AppLocalizations.of(context)!.cancel),
+        leftButtonParams: ButtonParams(
+          AppLocalizations.of(context)!.createAccount,
+          isEnabled: isValid,
+          onPressed: onAddAccountButtonPressed,
         ),
-      ],
-    );
-  }
+        child: SizedBox(
+          width: popupWidth,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              typeAndAccountNameColumn(),
+              SizedBox(width: paddingSize),
+              categoryAndBusinessNameColumn(),
+            ],
+          ),
+        ),
+      );
 }

@@ -24,6 +24,8 @@ class CustomColorScheme {
 
   static Color get sideColumnBackGround => const Color.fromRGBO(120, 23, 82, 1);
 
+  static Color get authBackGround => const Color.fromRGBO(109, 79, 140, 1);
+
   static Color get textLink => const Color.fromRGBO(120, 23, 82, 1);
 
   static Color get text => const Color.fromRGBO(33, 33, 33, 1);

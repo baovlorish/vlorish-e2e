@@ -87,8 +87,8 @@ class _HomeScreenMenuState extends State<HomeScreenMenu> {
           context,
           order: 3,
           isSmall: true,
-          isSelected:
-              widget.currentTab == Tabs.BudgetPersonal || widget.currentTab == Tabs.BudgetBusiness,
+          isSelected: widget.currentTab == Tabs.BudgetPersonal ||
+              widget.currentTab == Tabs.BudgetBusiness,
           assetUrl: 'assets/images/icons/active.png',
           onPressed: () {
             if (!(widget.currentTab == Tabs.BudgetPersonal)) {

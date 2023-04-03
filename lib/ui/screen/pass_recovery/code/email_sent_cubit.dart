@@ -3,6 +3,7 @@ import 'package:burgundy_budgeting_app/core/navigator_manager.dart';
 import 'package:burgundy_budgeting_app/domain/repository/auth_repository.dart';
 import 'package:burgundy_budgeting_app/ui/screen/auth/signin/signin_page.dart';
 import 'package:burgundy_budgeting_app/ui/screen/pass_recovery/landing/pass_recovery_page.dart';
+import 'package:burgundy_budgeting_app/ui/screen/pass_recovery/password_is_set/pasword_is_set_page.dart';
 import 'package:burgundy_budgeting_app/utils/logger.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -17,8 +18,7 @@ class RecoveryMailCodeCubit extends Cubit<RecoveryMailCodeState> {
   final Logger logger = getLogger('Recovery Mail Code Cubit');
   final AuthRepository authRepository;
 
-  RecoveryMailCodeCubit(this.authRepository)
-      : super(RecoveryMailCodeInitial()) {
+  RecoveryMailCodeCubit(this.authRepository) : super(RecoveryMailCodeInitial()) {
     logger.i('Mail Code Page');
   }
 
@@ -30,13 +30,23 @@ class RecoveryMailCodeCubit extends Cubit<RecoveryMailCodeState> {
     );
   }
 
-  Future<void> setNewPass(
-      BuildContext context, String code, String newPass) async {
+  void navigateToPassRecovery(BuildContext context, String email) {
+    NavigatorManager.navigateTo(context, PassRecoveryPage.routeName,
+        transition: TransitionType.material, params: {'email': Uri.encodeComponent(email)});
+  }
+
+  void navigateToPassSuccess(BuildContext context) => NavigatorManager.navigateTo(
+        context,
+        PasswordSetSuccessPage.routeName,
+        transition: TransitionType.material,
+      );
+
+  Future<void> setNewPass(BuildContext context, String code, String newPass) async {
     emit(RecoveryMailCodeLoading());
     try {
       var passChanged = await authRepository.confirmPassword(code, newPass);
       if (passChanged) {
-        navigateToSigninPage(context);
+        navigateToPassSuccess(context);
       }
     } on CognitoClientException catch (e) {
       emit(RecoveryMailErrorState(e.message!));
@@ -79,4 +89,7 @@ class RecoveryMailCodeCubit extends Cubit<RecoveryMailCodeState> {
       emit(RecoveryMailCodeInitial());
     }
   }
+
+  void changeIsReadyForVerification(bool isReady) =>
+      emit(isReady ? RecoveryMailCodeReady() : RecoveryMailCodeInitial());
 }

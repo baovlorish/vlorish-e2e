@@ -1,4 +1,3 @@
-import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_tooltip.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
@@ -152,24 +151,6 @@ class _PasswordValidationWidgetState extends State<PasswordValidationWidget> {
               widget.onChanged(currentValue);
               setState(() {});
             },
-          ),
-        ),
-        AnimatedOpacity(
-          curve: _animationCurve,
-          opacity: isError ? 1 : 0,
-          duration: _animationDuration,
-          child: Align(
-            alignment: Alignment.topRight,
-            child: isError
-                ? CustomTooltip(
-                    color: CustomColorScheme.inputErrorBorder,
-                    message: AppLocalizations.of(context)!.invalidPasswordError,
-                    child: Icon(
-                      Icons.info,
-                      color: CustomColorScheme.inputErrorBorder,
-                    ),
-                  )
-                : SizedBox(),
           ),
         ),
       ],

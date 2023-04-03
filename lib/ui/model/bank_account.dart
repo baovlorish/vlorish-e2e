@@ -30,6 +30,8 @@ class BankAccount extends Account {
   final int dataAcquisitionStart;
   final String? businessName;
 
+  bool get isUSD => currency == 'USD';
+
   BankAccount({
     required this.bankName,
     required this.id,

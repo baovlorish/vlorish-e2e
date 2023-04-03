@@ -33,29 +33,28 @@ class ApiUserServiceImpl extends ApiUserService {
 
   ApiUserServiceImpl(this.httpManager) : super(httpManager);
 
+  ///documentation API v.1
+  ///https://www.notion.so/API-versioning-88818d094b354a429d2c0c2755eed1e9?pvs=4#64765bef26e54e69a15a8709d6011383
+
   @override
-  Future<Response<dynamic>> addPersonalDataSignUp(
-      AddPersonalDataSignUpRequest query) async {
-    return await httpManager.dio.post(
-      personalInfoEndpoint,
-      data: query.toJson(),
-    );
+  Future<Response<dynamic>> addPersonalDataSignUp(AddPersonalDataSignUpRequest query) async {
+    //TODO: (viacheslav) remove, when change the registration
+    return await httpManager.dio
+        .post(personalInfoEndpoint, data: query.toJson(), options: Options(headers: {'Api-Version': '1'}));
   }
 
   @override
   Future<Response> addEmploymentSignUp(AddEmploymentSignUpRequest query) async {
-    return await httpManager.dio.post(
-      employmentEndpoint,
-      data: query.toJson(),
-    );
+    //TODO: (viacheslav) remove, when change the registration
+    return await httpManager.dio
+        .post(employmentEndpoint, data: query.toJson(), options: Options(headers: {'Api-Version': '1'}));
   }
 
   @override
   Future<Response> addExperienceSignUp(AddExperienceSignUpRequest query) async {
-    return await httpManager.dio.post(
-      experienceEndpoint,
-      data: query.toJson(),
-    );
+    //TODO: (viacheslav) remove, when change the registration
+    return await httpManager.dio
+        .post(experienceEndpoint, data: query.toJson(), options: Options(headers: {'Api-Version': '1'}));
   }
 
   @override
@@ -107,9 +106,7 @@ class ApiUserServiceImpl extends ApiUserService {
     );
     logger.i('Send photo response=$response');
     logger.i('Send photo response data=${response.data}');
-    if (response.data != null &&
-        response.data['imageUrl'] != null &&
-        response.data['imageUrl'].toString().isNotEmpty) {
+    if (response.data != null && response.data['imageUrl'] != null && response.data['imageUrl'].toString().isNotEmpty) {
       logger.i('Image URL=${response.data['imageUrl']}');
     }
 
@@ -146,12 +143,9 @@ class ApiUserServiceImpl extends ApiUserService {
 
   @override
   Future<Response> confirmUserEmail(String email, String code) async {
-    return await httpManager.dio.post(
-      confirmEmailEndpoint,
-      data: {
-        'email': email,
-        'confirmationCode': code,
-      }
-    );
+    return await httpManager.dio.post(confirmEmailEndpoint, data: {
+      'email': email,
+      'confirmationCode': code,
+    });
   }
 }

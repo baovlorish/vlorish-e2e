@@ -19,8 +19,7 @@ class HttpManager {
 
   Dio get dioCitySearch {
     var dioCitySearch = Dio();
-    dioCitySearch.options.baseUrl =
-        ApiClient.ENV_GEO_CREDENTIALS['ApiUrl']!;
+    dioCitySearch.options.baseUrl = ApiClient.ENV_GEO_CREDENTIALS['ApiUrl']!;
     dioCitySearch.options.connectTimeout = 20000;
     dioCitySearch.options.receiveTimeout = 20000;
     dioCitySearch.options.responseType = ResponseType.json;

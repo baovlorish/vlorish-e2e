@@ -1,6 +1,7 @@
 import 'package:burgundy_budgeting_app/core/navigator_manager.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_loading_indicator.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/version_two_color_scheme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/navigation_line_widget.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_appbar.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen_cubit.dart';
@@ -37,12 +38,16 @@ class HomeScreen extends StatefulWidget {
   final Tabs? currentTab;
   final String title;
   final Widget? headerWidget;
+  final Widget? newHeaderWidget;
+  final bool showNewBackgroundColor;
 
   const HomeScreen({
     required this.bodyWidget,
     this.currentTab,
     required this.title,
     this.headerWidget,
+    this.newHeaderWidget,
+    this.showNewBackgroundColor = false,
   });
 
   @override
@@ -77,33 +82,26 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }
         return Scaffold(
-          appBar: HomeAppBar(
-            context,
-            isSmall: isSmall,
-            currentTab: widget.currentTab,
-            loginRequiringInstitutions: (state is HomeScreenLoaded)
-                ? state.user.getLoginRequiringInstitutionsAsString()
-                : '',
-            initials: (state is HomeScreenLoaded)
-                ? homeScreenCubit.getInitials()
-                : null,
-            imageUrl: (state is HomeScreenLoaded) ? state.user.imageUrl : null,
-            remainedTransactionRefreshCount: (state is HomeScreenLoaded)
-                ? state.user.remainedTransactionRefreshCount
-                : 0,
-            hasConfiguredAccounts: (state is HomeScreenLoaded)
-                ? state.user.hasConfiguredBankAccounts
-                : false,
-            hasInstitutionAccounts: (state is HomeScreenLoaded)
-                ? state.user.hasInstitutionAccounts
-                : false,
-            unreadNotificationCount: (state is HomeScreenLoaded)
-                ? state.user.unreadNotificationCount
-                : 0,
-            homeScreenCubit: homeScreenCubit,
-          ),
-          backgroundColor: CustomColorScheme.homeBodyWidgetBackground,
-          body: Title(
+          appBar: widget.title == 'Manage accounts' //TODO: (viacheslav) remove
+              ? null
+              : HomeAppBar(
+                  context,
+                  isSmall: isSmall,
+                  currentTab: widget.currentTab,
+                  loginRequiringInstitutions:
+                      (state is HomeScreenLoaded) ? state.user.getLoginRequiringInstitutionsAsString() : '',
+                  initials: (state is HomeScreenLoaded) ? homeScreenCubit.getInitials() : null,
+                  imageUrl: (state is HomeScreenLoaded) ? state.user.imageUrl : null,
+                  remainedTransactionRefreshCount:
+                      (state is HomeScreenLoaded) ? state.user.remainedTransactionRefreshCount : 0,
+                  hasConfiguredAccounts: (state is HomeScreenLoaded) ? state.user.hasConfiguredBankAccounts : false,
+                  hasInstitutionAccounts: (state is HomeScreenLoaded) ? state.user.hasInstitutionAccounts : false,
+                  unreadNotificationCount: (state is HomeScreenLoaded) ? state.user.unreadNotificationCount : 0,
+                  homeScreenCubit: homeScreenCubit,
+                ),
+          backgroundColor: widget.showNewBackgroundColor //TODO: (viacheslav) remove old background
+              ? VersionTwoColorScheme.GreyBackground
+              : CustomColorScheme.homeBodyWidgetBackground,          body: Title(
             title: widget.title,
             color: CustomColorScheme.generalBackground,
             child: GestureDetector(
@@ -124,13 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             callback: () {
                               homeScreenCubit.stopForeignSession();
                               homeScreenCubit // navigation to the current page
-                                  .navigateTo(
-                                      ModalRoute.of(context)!.settings.name!,
-                                      context);
+                                  .navigateTo(ModalRoute.of(context)!.settings.name!, context);
                             },
                             lastName: currentForeignSession.lastName,
                             firstName: currentForeignSession.firstName,
                           ),
+                        if (widget.newHeaderWidget != null) widget.newHeaderWidget!,
                         if (widget.headerWidget != null)
                           Padding(
                             padding: EdgeInsets.fromLTRB(
@@ -139,11 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               16.0,
                               0.0,
                             ),
-                            child: widget.headerWidget,
+                            child: widget.headerWidget!,
                           ),
-                        state is HomeScreenLoading
-                            ? CustomLoadingIndicator()
-                            : widget.bodyWidget,
+                        state is HomeScreenLoading ? CustomLoadingIndicator() : widget.bodyWidget,
                       ],
                     ),
                   ),

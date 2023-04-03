@@ -659,3 +659,18 @@ extension Calculation on DateTime {
     return DateTime(year, month, days);
   }
 }
+
+extension IsFieldRequired on String {
+  String get isRequired => '$this*';
+}
+
+
+extension MaterialStatesGetters on Set<MaterialState> {
+  bool get hasDisabled => contains(MaterialState.disabled);
+
+  bool get hasHovered => contains(MaterialState.hovered);
+}
+
+extension HalfTransparent on Color {
+  Color get halfTransparent => withOpacity(0.5);
+}

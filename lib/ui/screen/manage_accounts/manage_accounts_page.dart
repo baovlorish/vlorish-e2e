@@ -1,4 +1,5 @@
 import 'package:burgundy_budgeting_app/core/di_provider.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/new_show_dialog.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/organizm/add_account_from_plaid_popup.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_page.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen_cubit.dart';
@@ -58,9 +59,8 @@ class ManageAccountsPage {
                             businessNameList = await manageAccountsCubitInstance
                                 .businessNameList();
                           }
-
-                          await showDialog(//todo: add to invest page
-                            context: context,
+                          await newShowDialog(
+                            context,
                             barrierDismissible: false,
                             builder: (_) {
                               return BlocProvider<ManageAccountsCubit>.value(

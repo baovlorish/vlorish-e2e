@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 enum Environment { DEVELOP, STAGE, PROD }
 
 class ApiClient {
-  static final String DEVELOP = 'https://vlorish-dev-api.itomy.ch';
+  static final String DEVELOP = 'https://dev-2-api.vlorish.com';
   static final String STAGE = 'https://stage-api.vlorish.com';
   static final String PROD = 'https://api.vlorish.com';
 
@@ -45,7 +45,7 @@ class ApiClient {
   static String _getEnvBaseUrl(Environment buildEnvironment) {
     switch (buildEnvironment) {
       case Environment.DEVELOP:
-        return 'https://develop-vlorish.itomy.ch/#/';
+        return 'https://dev-2.vlorish.com/#/';
       case Environment.STAGE:
         return 'https://stage-vlorish.itomy.ch/#/';
       case Environment.PROD:
@@ -60,11 +60,10 @@ class ApiClient {
     switch (buildEnvironment) {
       case Environment.DEVELOP:
         return {
-          'userPoolId': 'us-east-2_ss7TjXqZJ',
-          'clientId': '7prqokk80kc31usqnladdlogfa',
-          'redirectURL': 'https://develop-vlorish.itomy.ch/signin_google_code',
-          'cognitoPoolUrl':
-              'https://bargundy-dev.auth.us-east-2.amazoncognito.com',
+          'userPoolId': 'us-west-2_FRlc2aV8i',
+          'clientId': '3u6eumumtl3rlrcksde6mtnu7g',
+          'redirectURL': 'https://dev-2-api.vlorish.com/signin_google_code',
+          'cognitoPoolUrl': 'https://dev-2.auth.ap-south-1.amazoncognito.com',
         };
       case Environment.STAGE:
         return {
@@ -93,7 +92,7 @@ class ApiClient {
       case Environment.STAGE:
         return 'pk_test_51IgcvgCJRO5yQGHaMqOJqGlsmBIiWQIO5g7XFovkON7zKJ2uvm2pvkgkcsNOTnf7TzcuUyNov7PVXKBc76JEPmDx00unY1ikhZ';
       case Environment.DEVELOP:
-        return 'pk_test_51IsW5bBQTlMsvYJg3pKLuEXLepAfMkIxB5J37Lvdw5iAYsRVCbd53P720Z87D1DUoBWtXNInlmvyL0ub8salXu0P00Aw2NdCjK';
+        return 'pk_test_51IgcvgCJRO5yQGHaMqOJqGlsmBIiWQIO5g7XFovkON7zKJ2uvm2pvkgkcsNOTnf7TzcuUyNov7PVXKBc76JEPmDx00unY1ikhZ';
       case Environment.PROD:
         return 'pk_live_51IgcvgCJRO5yQGHajxVsyzKlqspHeIjbHKZGTj6FCGAgWsm6Lyq39WIUrJdBsYMbTjdeFQRIL5LFteWxRlFWJvUh00XM4nA8QH';
     }

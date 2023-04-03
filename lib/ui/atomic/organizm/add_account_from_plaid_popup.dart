@@ -1,11 +1,8 @@
 import 'package:burgundy_budgeting_app/domain/repository/accounts_transactions_repository.dart';
 import 'package:burgundy_budgeting_app/domain/repository/networth_repository.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/add_account_from_plaid_popup_item.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/error_alert_dialog.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/molecula/label_button_item.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/two_buttons_alert_dialog.dart';
 import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
 import 'package:burgundy_budgeting_app/ui/screen/auth/signup/add_card/add_account_popup/add_account_popup_cubit.dart';
 import 'package:burgundy_budgeting_app/ui/screen/auth/signup/add_card/add_account_popup/add_account_popup_state.dart';
@@ -14,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class AddAccountFromPlaidPopup extends AlertDialog {
+class AddAccountFromPlaidPopup extends StatelessWidget {
   final bool showCancelOption;
   final bool showItemsValidation;
   final bool browserBackButtonDismissible;
@@ -22,60 +19,45 @@ class AddAccountFromPlaidPopup extends AlertDialog {
   final VoidCallback? onCancel;
   final List<String> businessNameList;
 
-  AddAccountFromPlaidPopup({
+  final List<BankAccount> bankAccounts;
+  final AccountsTransactionsRepository plaidRepository;
+  final NetWorthRepository netWorthRepository;
+
+  final VoidCallback onSuccessCallback;
+
+  const AddAccountFromPlaidPopup({
+    required this.bankAccounts,
+    required this.businessNameList,
+    required this.plaidRepository,
+    required this.netWorthRepository,
+    required this.onSuccessCallback,
     this.showCancelOption = false,
     this.showItemsValidation = true,
     this.browserBackButtonDismissible = true,
     this.isStandardSubscription = false,
-    required List<BankAccount> bankAccounts,
-    required this.businessNameList,
-    required AccountsTransactionsRepository plaidRepository,
-    required NetWorthRepository netWorthRepository,
-    required Function() onSuccessCallback,
     this.onCancel,
-  }) : super(
-          content: WillPopScope(
-            onWillPop: () async => browserBackButtonDismissible,
-            child: BlocProvider<AddAccountPopupCubit>(
-              create: (_) =>
-                  AddAccountPopupCubit(plaidRepository, netWorthRepository),
-              child: Container(
-                width: 600,
-                height: 800,
-                child: BlocConsumer<AddAccountPopupCubit, AddAccountPopupState>(
-                    listener: (context, state) {
-                  if (state is AddAccountPopupGeneralErrorState) {
-                    showDialog(
-                      context: context,
-                      builder: (_context) {
-                        return ErrorAlertDialog(
-                          _context,
-                          message: state.errorMessage,
-                        );
-                      },
-                    );
-                  }
-                }, builder: (_context, state) {
-                  return _InnerContent(
-                    showCancelOption: showCancelOption,
-                    onCancel: onCancel,
-                    bankAccounts: bankAccounts,
-                    businessNameList: businessNameList,
-                    showValidation: showItemsValidation,
-                    state: state,
-                    onSuccessCallback: onSuccessCallback,
-                    showUsingType: !isStandardSubscription,
-                  );
-                }),
-              ),
-            ),
+  });
+
+  @override
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () async => browserBackButtonDismissible,
+        child: BlocProvider<AddAccountPopupCubit>(
+          create: (_) => AddAccountPopupCubit(plaidRepository, netWorthRepository),
+          child: _InnerContent(
+            showCancelOption: showCancelOption,
+            onCancel: onCancel,
+            bankAccounts: bankAccounts,
+            businessNameList: businessNameList,
+            showValidation: showItemsValidation,
+            onSuccessCallback: onSuccessCallback,
+            showUsingType: !isStandardSubscription,
           ),
-        );
+        ),
+      );
 }
 
 class _InnerContent extends StatefulWidget {
   final List<BankAccount> bankAccounts;
-  final AddAccountPopupState state;
   final bool showValidation;
   final bool showUsingType;
   final bool showCancelOption;
@@ -83,15 +65,14 @@ class _InnerContent extends StatefulWidget {
   final List<String> businessNameList;
   final Function() onSuccessCallback;
 
-  _InnerContent({
+  const _InnerContent({
     required this.showCancelOption,
     required this.showValidation,
     required this.showUsingType,
     required this.bankAccounts,
-    required this.state,
     required this.onSuccessCallback,
-    this.onCancel,
     required this.businessNameList,
+    this.onCancel,
   });
 
   @override
@@ -99,122 +80,83 @@ class _InnerContent extends StatefulWidget {
 }
 
 class __InnerContentState extends State<_InnerContent> {
-  final _items = <AddAccountFromPlaidPopupItem>[];
-  List<AddPlaidAccountError>? errors;
-  late final addAccountPopupCubit =
-      BlocProvider.of<AddAccountPopupCubit>(context);
+  final constraints = BoxConstraints(maxWidth: 600);
+
+  final itemsListViewConstraints = BoxConstraints(maxHeight: 400);
+
+  static const spacerPadding = EdgeInsets.only(bottom: 30.0);
 
   @override
-  Widget build(BuildContext context) {
-    if (widget.state is AddAccountPopupAccountErrorState) {
-      errors = (widget.state as AddAccountPopupAccountErrorState).errors;
-    } else {
-      errors = [];
-    }
+  void initState() {
+    super.initState();
 
-    _items.clear();
-    for (var i in widget.bankAccounts) {
-      _items.add(
-        AddAccountFromPlaidPopupItem(
-          bankAccount: i,
-          key: Key(i.id),
-          showValidIndicator: widget.showValidation,
-          showDivider: widget.bankAccounts.last != i,
-          businessNameList: widget.businessNameList,
-          onValid: (BankAccount account) {
-            addAccountPopupCubit.validateAccount(account, widget.bankAccounts);
-          },
-          error: errors?.firstWhereOrNull((element) => element.id == i.id),
-          onNotValid: (BankAccount account) {
-            addAccountPopupCubit.unvalidateAccount(
-                account, widget.bankAccounts);
-          },
-          showUsageType: widget.showUsingType,
-        ),
-      );
-    }
-
-    return Column(
-      key: widget.key,
-      children: [
-        Center(
-          child: Label(
-            type: LabelType.Header3,
-            text: AppLocalizations.of(context)!.addAccount,
+    final len = widget.bankAccounts.length;
+    items = [
+      for (var i = 0; i < len; i++)
+        Padding(
+          padding: widget.bankAccounts[i].id != widget.bankAccounts.last.id ? spacerPadding : EdgeInsets.zero,
+          child: AddAccountFromPlaidPopupItem(
+            number: i + 1,
+            bankAccount: widget.bankAccounts[i],
+            key: Key(widget.bankAccounts[i].id),
+            showValidIndicator: widget.showValidation,
+            businessNameList: widget.businessNameList,
+            onValid: (account) => addAccountPopupCubit.validateAccount(account, widget.bankAccounts),
+            error: errors?.firstWhereOrNull((element) => element.id == widget.bankAccounts[i].id),
+            onNotValid: (account) => addAccountPopupCubit.unvalidateAccount(account, widget.bankAccounts),
+            showUsageType: widget.showUsingType,
           ),
         ),
-        SizedBox(height: 23),
-        Expanded(
-          child: SingleChildScrollView(
+    ];
+  }
+
+  late final List<Widget> items;
+  List<AddPlaidAccountError>? errors;
+  late final addAccountPopupCubit = BlocProvider.of<AddAccountPopupCubit>(context);
+
+  @override
+  Widget build(BuildContext context) => BlocConsumer<AddAccountPopupCubit, AddAccountPopupState>(
+        listener: (context, state) {
+          errors = state is! AddAccountPopupAccountErrorState ? [] : state.errors;
+          if (state is AddAccountPopupGeneralErrorState) {
+            showDialog(
+              context: context,
+              builder: (_context) => ErrorAlertDialog(_context, message: state.errorMessage),
+            );
+          }
+        },
+        builder: (context, state) => ConstrainedBox(
+          constraints: constraints,
+          child: TwoButtonDialogNew(
+            title: AppLocalizations.of(context)!.linkAccounts,
+            description: AppLocalizations.of(context)!.setUpYourNewBrokerageAccountRetirementAccountOrPersonalAsset,
+            leftButtonParams: ButtonParams(
+              AppLocalizations.of(context)!.addAccount,
+              isEnabled: state is AddAccountPopupValidateState ? state.isValid : false,
+              onPressed: () async {
+                errors = await addAccountPopupCubit.sendPlaidAccountsDataToBacked(
+                  isExistingAccounts: widget.bankAccounts.first.usageType != 0,
+                  onSuccessCallback: widget.onSuccessCallback,
+                );
+                if (errors?.isNotEmpty ?? false) addAccountPopupCubit.unvalidateAccountsWithErrors(errors!);
+              },
+            ),
+            rightButtonParams: ButtonParams(
+              AppLocalizations.of(context)!.cancel,
+              onPressed: widget.onCancel?.call,
+            ),
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: Column(
-                children: _items,
+              child: ConstrainedBox(
+                constraints: itemsListViewConstraints,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: items,
+                  ),
+                ),
               ),
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 30,
-            horizontal: 40,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              if (widget.showCancelOption)
-                LabelButtonItem(
-                  label: Label(
-                    text:
-                        AppLocalizations.of(context)!.skipAllAndConfigureLater,
-                    type: LabelType.Button,
-                    color: CustomColorScheme.text,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    if (widget.onCancel != null) {
-                      widget.onCancel!();
-                    }
-                  },
-                ),
-              if (widget.showCancelOption)
-                SizedBox(
-                  width: 70,
-                ),
-              Expanded(
-                key: UniqueKey(),
-                child: ButtonItem(
-                  context,
-                  text: AppLocalizations.of(context)!.addAccount,
-                  buttonType: ButtonType.LargeText,
-                  enabled: (widget.state is AddAccountPopupValidateState)
-                      ? (widget.state as AddAccountPopupValidateState).isValid
-                      : false,
-                  onPressed: () async {
-                    if ((widget.state is AddAccountPopupValidateState)
-                        ? (widget.state as AddAccountPopupValidateState).isValid
-                        : false) {
-                      errors = await addAccountPopupCubit
-                          .sendPlaidAccountsDataToBacked(
-                              onSuccessCallback: () {
-                                // FixMe: fix issue with "Looking up a deactivated widget's ancestor is unsafe" error when pressing button multiple times
-                                Navigator.pop(context);
-                                widget.onSuccessCallback();
-                              },
-                              isExistingAccounts:
-                                  widget.bankAccounts.first.usageType != 0);
-                      if (errors != null && errors!.isNotEmpty) {
-                        addAccountPopupCubit
-                            .unvalidateAccountsWithErrors(errors!);
-                      }
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+      );
 }

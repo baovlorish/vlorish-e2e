@@ -1,6 +1,8 @@
+import 'package:burgundy_budgeting_app/ui/atomic/atom/colored_button.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/version_two_color_scheme.dart';
 import 'package:burgundy_budgeting_app/ui/model/account.dart';
 import 'package:burgundy_budgeting_app/ui/model/bank_account.dart';
 import 'package:burgundy_budgeting_app/ui/model/manual_account.dart';
@@ -44,6 +46,12 @@ class _CardWidgetState extends State<CardWidget> {
     data = CardWidgetData(widget.account, context);
   }
 
+  ImageIcon get removeIcon => ImageIcon(
+    AssetImage('assets/images/icons/remove_accounts_icon.png'),
+    color: VersionTwoColorScheme.Black,
+    size: 14,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -53,26 +61,19 @@ class _CardWidgetState extends State<CardWidget> {
         decoration: BoxDecoration(
           color: data.backgroundColor,
           borderRadius: BorderRadius.circular(4.0),
-          border: Border.all(
-              color: widget.isSelected
-                  ? CustomColorScheme.mainDarkBackground
-                  : data.borderColor),
+          border: Border.all(color: widget.isSelected ? CustomColorScheme.mainDarkBackground : data.borderColor),
           boxShadow: [
             BoxShadow(
               blurRadius: 5,
               offset: Offset(2.5, 2.5),
-              color: widget.isSelected
-                  ? CustomColorScheme.clipElementInactive
-                  : Colors.transparent,
+              color: widget.isSelected ? CustomColorScheme.clipElementInactive : Colors.transparent,
             )
           ],
         ),
         child: CustomMaterialInkWell(
           borderRadius: BorderRadius.circular(4),
           type: (data.isPersonal) ? InkWellType.Purple : InkWellType.Grey,
-          onTap: widget.onCardTap != null
-              ? () => widget.onCardTap?.call(widget.account.id)
-              : null,
+          onTap: widget.onCardTap?.call(widget.account.id),
           child: Container(
             padding: EdgeInsets.all(16),
             height: 165,
@@ -111,9 +112,7 @@ class _CardWidgetState extends State<CardWidget> {
                   ],
                 ),
                 Label(
-                  text: data.isWithoutType
-                      ? AppLocalizations.of(context)!.unconfiguredAccount
-                      : widget.account.name,
+                  text: data.isWithoutType ? AppLocalizations.of(context)!.unconfiguredAccount : widget.account.name,
                   color: data.textColor,
                   type: LabelType.GeneralBold,
                 ),
@@ -128,8 +127,7 @@ class _CardWidgetState extends State<CardWidget> {
                     ),
                     if (!data.isManual)
                       Label(
-                        text:
-                            '**** ${(widget.account as BankAccount).lastFourDigits}',
+                        text: '**** ${(widget.account as BankAccount).lastFourDigits}',
                         color: data.textColor,
                         fontSize: 12,
                         type: LabelType.General,
@@ -137,15 +135,11 @@ class _CardWidgetState extends State<CardWidget> {
                   ],
                 ),
                 Label(
-                  text: data.isWithoutType
-                      ? ''
-                      : widget.account.balance
-                          .toInt()
-                          .formattedWithDecorativeElementsString(),
+                  text:
+                      data.isWithoutType ? '' : widget.account.balance.toInt().formattedWithDecorativeElementsString(),
                   color: data.textColor,
                   type: LabelType.GeneralBold,
                 ),
-                // todo: use button items instead of containers
                 widget.showMuteButton
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,29 +147,6 @@ class _CardWidgetState extends State<CardWidget> {
                           SizedBox(),
                           Row(
                             children: [
-                              if (data.isManual)
-                                CustomMaterialInkWell(
-                                  type:
-                                      (data.isPersonal && !data.account.isMuted)
-                                          ? InkWellType.White
-                                          : InkWellType.Purple,
-                                  borderRadius: BorderRadius.circular(4),
-                                  onTap: () => widget.deleteCallBack?.call(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: ImageIcon(
-                                      AssetImage(
-                                          'assets/images/icons/delete.png'),
-                                      color:
-                                          CustomColorScheme.mainDarkBackground,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ),
-                              // ),
-                              SizedBox(
-                                width: 12,
-                              ),
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
@@ -186,8 +157,7 @@ class _CardWidgetState extends State<CardWidget> {
                                 child: CustomMaterialInkWell(
                                   borderRadius: BorderRadius.circular(4),
                                   materialColor: data.muteButtonBackgroundColor,
-                                  type: (data.isWithoutType ||
-                                          data.account.isMuted)
+                                  type: (data.isWithoutType || data.account.isMuted)
                                       ? InkWellType.Purple
                                       : InkWellType.White,
                                   onTap: () {
@@ -206,16 +176,23 @@ class _CardWidgetState extends State<CardWidget> {
                                     ),
                                   ),
                                 ),
-                                // ),
                               ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              if (data.isManual)
+                                NewOutlinedButton(
+                                  onPressed: () => widget.deleteCallBack?.call(),
+                                  buttonStyle: ColoredButtonStyle.Purple,
+                                  onlyIcon: true,
+                                  child: removeIcon,
+                                ),
                             ],
                           ),
                         ],
                       )
                     : Label(
-                        text: data.isManual
-                            ? ''
-                            : (widget.account as BankAccount).bankName,
+                        text: data.isManual ? '' : (widget.account as BankAccount).bankName,
                         type: LabelType.General,
                         fontSize: 12,
                         color: data.iconColor,
@@ -242,13 +219,10 @@ class CardWidgetData {
 
   bool get isManual => account is ManualAccount;
 
-  String get sourceTypeText => isManual
-      ? AppLocalizations.of(context)!.manual
-      : AppLocalizations.of(context)!.plaid;
+  String get sourceTypeText => isManual ? AppLocalizations.of(context)!.manual : AppLocalizations.of(context)!.plaid;
 
-  String get usageTypeText => isPersonal
-      ? AppLocalizations.of(context)!.personal
-      : AppLocalizations.of(context)!.business;
+  String get usageTypeText =>
+      isPersonal ? AppLocalizations.of(context)!.personal : AppLocalizations.of(context)!.business;
 
   String get muteButtonText => isWithoutType
       ? AppLocalizations.of(context)!.setType
@@ -256,9 +230,7 @@ class CardWidgetData {
           ? AppLocalizations.of(context)!.unmute
           : AppLocalizations.of(context)!.mute;
 
-  String get iconUrl => isPersonal
-      ? 'assets/images/icons/ic_personal.png'
-      : 'assets/images/icons/ic_business.png';
+  String get iconUrl => isPersonal ? 'assets/images/icons/ic_personal.png' : 'assets/images/icons/ic_business.png';
 
   Color get textColor => isWithoutType
       ? CustomColorScheme.inputBorder
@@ -286,9 +258,7 @@ class CardWidgetData {
               ? CustomColorScheme.clipElementInactive
               : CustomColorScheme.tableBorder;
 
-  Color get iconColor => account.isMuted
-      ? CustomColorScheme.clipElementInactive
-      : CustomColorScheme.mainDarkBackground;
+  Color get iconColor => account.isMuted ? CustomColorScheme.clipElementInactive : CustomColorScheme.mainDarkBackground;
 
   Color get muteButtonBackgroundColor => isWithoutType
       ? CustomColorScheme.tableWhiteText
@@ -302,7 +272,6 @@ class CardWidgetData {
           ? CustomColorScheme.mainDarkBackground
           : CustomColorScheme.tableWhiteText;
 
-  Color get muteButtonBorderColor => isWithoutType
-      ? CustomColorScheme.cardBorder
-      : CustomColorScheme.mainDarkBackground;
+  Color get muteButtonBorderColor =>
+      isWithoutType ? CustomColorScheme.cardBorder : CustomColorScheme.mainDarkBackground;
 }

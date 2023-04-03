@@ -1,4 +1,5 @@
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/version_two_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,6 +12,17 @@ class CustomTextStyle {
           color: CustomColorScheme.text,
         ),
         letterSpacing: 1);
+  }
+
+  static TextStyle HeaderNewTextStyle(BuildContext context) {
+    return GoogleFonts.inter(
+      textStyle: TextStyle(
+        fontWeight: FontWeight.normal,
+        fontSize: 40,
+        color: VersionTwoColorScheme.Black,
+      ),
+      letterSpacing: 1,
+    );
   }
 
   static TextStyle HeaderBoldTextStyle(BuildContext context) {
@@ -33,6 +45,17 @@ class CustomTextStyle {
         letterSpacing: 1);
   }
 
+  static TextStyle NewHeader3TextStyle(BuildContext context) {
+    return GoogleFonts.inter(
+      textStyle: TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 26,
+        color: VersionTwoColorScheme.Black,
+      ),
+      letterSpacing: 1,
+    );
+  }
+
   static TextStyle Header3TextStyle(BuildContext context) {
     return GoogleFonts.workSans(
         textStyle: TextStyle(
@@ -43,6 +66,17 @@ class CustomTextStyle {
         letterSpacing: 1);
   }
 
+  static TextStyle Header3NewTextStyle(BuildContext context) {
+    return GoogleFonts.inter(
+        textStyle: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+          color: VersionTwoColorScheme.Black,
+        ),
+      );
+  }
+
+
   static TextStyle LabelTextStyle(BuildContext context) {
     return GoogleFonts.workSans(
       textStyle: TextStyle(
@@ -52,6 +86,14 @@ class CustomTextStyle {
       ),
     );
   }
+
+  static TextStyle LabelNewTextStyle(BuildContext context) => GoogleFonts.inter(
+        textStyle: TextStyle(
+          fontWeight: FontWeight.w400,
+          fontSize: 16,
+          color: CustomColorScheme.text,
+        ),
+      );
 
   static TextStyle DropDownTextStyle(BuildContext context) {
     return GoogleFonts.roboto(
@@ -157,6 +199,16 @@ class CustomTextStyle {
     );
   }
 
+  static TextStyle HintNewTextStyle(BuildContext context) {
+    return GoogleFonts.inter(
+      textStyle: TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 15,
+        color: VersionTwoColorScheme.Grey,
+      ),
+    );
+  }
+
   static TextStyle HintLargeBoldStyle(BuildContext context) {
     return GoogleFonts.workSans(
       textStyle: TextStyle(
@@ -183,6 +235,16 @@ class CustomTextStyle {
           fontWeight: FontWeight.w600,
           fontSize: 20,
           color: CustomColorScheme.text,
+        ),
+        letterSpacing: 1);
+  }
+
+  static TextStyle NewLargeTextStyle(BuildContext context) {
+    return GoogleFonts.inter(
+        textStyle: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 20,
+          color: VersionTwoColorScheme.Black,
         ),
         letterSpacing: 1);
   }
@@ -253,6 +315,16 @@ class CustomTextStyle {
         fontWeight: FontWeight.w400,
         fontSize: 12,
         color: CustomColorScheme.textHint,
+      ),
+    );
+  }
+
+  static TextStyle NewSmallTextStyle(BuildContext context) {
+    return GoogleFonts.inter(
+      textStyle: TextStyle(
+        fontWeight: FontWeight.w400,
+        fontSize: 12,
+        color: VersionTwoColorScheme.Black,
       ),
     );
   }

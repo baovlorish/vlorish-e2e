@@ -57,8 +57,7 @@ class SignupAddCardCubit extends Cubit<SignupAddCardState> {
     }
   }
 
-  void onPlaidPopupSuccessClose(
-      BuildContext context, List<BankAccount> bankAccounts, bool isStandard) async {
+  void onPlaidPopupSuccessClose(BuildContext context, List<BankAccount> bankAccounts, bool isStandard) async {
     emit(LoadedAddCardState());
     var isDismissible = role != null && role!.isCoach;
     await showDialog(
@@ -78,19 +77,17 @@ class SignupAddCardCubit extends Cubit<SignupAddCardState> {
           bankAccounts: bankAccounts,
           plaidRepository: repository,
           netWorthRepository: netWorthRepository,
-          onSuccessCallback: () async {
-            NavigatorManager.navigateTo(
+          onSuccessCallback: () => NavigatorManager.navigateTo(
               context,
               BudgetPersonalPage.routeName,
               transition: TransitionType.material,
-            );
-          },
+            ),
         );
       },
     );
   }
 
-  Future<void> updateUserData() async{
+  Future<void> updateUserData() async {
     await userRepository.updateUserData();
   }
 

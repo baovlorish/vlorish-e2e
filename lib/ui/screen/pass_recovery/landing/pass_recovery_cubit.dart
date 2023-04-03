@@ -14,13 +14,14 @@ import 'package:logger/logger.dart';
 class PassRecoveryCubit extends Cubit<PassRecoveryState> with HydratedMixin {
   final AuthRepository authRepository;
   final Logger logger = getLogger('PassRecoveryCubit');
+  final String? email;
 
-  PassRecoveryCubit(
-    this.authRepository,
-  ) : super(PassRecoveryInitial()) {
+  PassRecoveryCubit(this.authRepository, {this.email}) : super(PassRecoveryInitial()) {
     logger.i('Pass Recovery page');
     hydrate();
   }
+
+  String get getEmail => email ?? '';
 
   void navigateToSigninPage(BuildContext context) {
     NavigatorManager.navigateTo(

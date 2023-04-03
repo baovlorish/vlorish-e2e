@@ -1,7 +1,7 @@
 import 'package:burgundy_budgeting_app/ui/atomic/atom/label.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/molecula/city_field_with_suggestion.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/molecula/text_field_with_suggestion.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/dropdown_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/editable_table_body_cell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';

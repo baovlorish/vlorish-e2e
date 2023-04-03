@@ -46,6 +46,8 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../ui/screen/pass_recovery/password_is_set/pasword_is_set_page.dart';
+
 class NavigatorManager with DiProvider {
   static FluroRouter router = FluroRouter();
   static final NavigatorManager singleton = NavigatorManager._internal();
@@ -67,6 +69,7 @@ class NavigatorManager with DiProvider {
     SigninPage.initRoute(router, this, this);
     SigninGoogleCodePage.initRoute(router, this);
     PassRecoveryPage.initRoute(router, this);
+    PasswordSetSuccessPage.initRoute(router, this);
 //    SplashScreen.initRoute(router, this);
     SignupLandingPage.initRoute(router, this);
     SignupPasswordPage.initRoute(router, this);

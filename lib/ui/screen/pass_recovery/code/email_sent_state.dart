@@ -11,12 +11,20 @@ class RecoveryMailCodeInitial extends RecoveryMailCodeState {
   List<Object> get props => [];
 }
 
+class RecoveryMailCodeReady extends RecoveryMailCodeState {
+  RecoveryMailCodeReady();
+
+  @override
+  List<Object> get props => [];
+}
+
 class RecoveryMailCodeLoading extends RecoveryMailCodeState {
   RecoveryMailCodeLoading();
 
   @override
   List<Object> get props => [];
 }
+
 
 class RecoveryMailSuccessState extends RecoveryMailCodeState {
   final String message;

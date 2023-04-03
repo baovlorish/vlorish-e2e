@@ -1,5 +1,6 @@
 import 'package:burgundy_budgeting_app/core/di_provider.dart';
 import 'package:burgundy_budgeting_app/domain/model/response/index_funds_response.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/new_show_dialog.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_page.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen_cubit.dart';
 import 'package:burgundy_budgeting_app/ui/screen/investments/add_investment/add_investment_cubit.dart';
@@ -55,8 +56,8 @@ class EditInvestmentPage {
                     return InvestmentsLayout(
                       onSuccessCallback:
                           (List<BankAccount> bankAccounts) async {
-                        await showDialog(
-                          context: context,
+                        await newShowDialog(
+                          context,
                           barrierDismissible: false,
                           builder: (_) {
                             return BlocProvider<InvestmentsCubit>.value(

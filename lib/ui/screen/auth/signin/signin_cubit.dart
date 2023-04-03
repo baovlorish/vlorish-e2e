@@ -32,6 +32,7 @@ class SigninCubit extends Cubit<SigninState> {
       role = checkEmail.role;
       if (checkEmail.isRegistered) {
         var isLoginSuccessful = await authRepository.login(login, password);
+        emit(SigninInitial());
         if (isLoginSuccessful) {
           NavigatorManager.navigateTo(context, BudgetPersonalPage.routeName);
         }

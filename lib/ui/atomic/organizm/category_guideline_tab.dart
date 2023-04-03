@@ -110,7 +110,7 @@ class _PersonalCategoryGuidelineWidgetState
     AppLocalizations.of(context)!.furnitureDecor:
         AppLocalizations.of(context)!.categoryDescriptionHouseFurnitureDecor,
     AppLocalizations.of(context)!.householdBasics:
-        AppLocalizations.of(context)!.categoryDescriptionHouseholdBasics,
+        AppLocalizations.of(context)!.categoryDescriptionHouseHelp,
     AppLocalizations.of(context)!.personalCare:
         AppLocalizations.of(context)!.categoryDescriptionPersonalCare,
     AppLocalizations.of(context)!.personalDevelopment:

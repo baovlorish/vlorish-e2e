@@ -24,10 +24,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AuthScreen extends StatelessWidget with DiProvider {
   final Image logo = Image.asset(
-    'assets/images/logo_white_full.png',
-    height: 60,
+    'assets/images/2.0x/logo_word_white_full.png',
+    height: 40,
     fit: BoxFit.fitHeight,
   );
+
+  final Image leftArt = Image.asset('assets/images/background_popart_left.png');
+
+  final Image rightArt = Image.asset('assets/images/background_popart_right_bottom.png');
 
   final String title;
   final Widget centerWidget;
@@ -57,86 +61,82 @@ class AuthScreen extends StatelessWidget with DiProvider {
       });
     }
     return Scaffold(
+      backgroundColor: CustomColorScheme.authBackGround,
       body: Title(
         key: ObjectKey(role),
         color: Colors.white,
         title: title,
         child: BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(authRepository, userRepository,
-              fetchUserData: (leftSideColumnWidgetIndex == 1 ||
-                  leftSideColumnWidgetIndex == 2)),
-          child: Builder(
-            builder: (context) {
-              return Container(
-                height: double.infinity,
-                decoration: BoxDecoration(
-                  color: CustomColorScheme.blockBackground,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 400,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('assets/images/logo_bg.png'),
-                            alignment: Alignment(1, 0.9)),
-                        color: CustomColorScheme.sideColumnBackGround,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(32),
-                            child: CustomMaterialInkWell(
-                                type: InkWellType.White,
-                                borderRadius: BorderRadius.circular(8),
-                                onTap: () {
-                                  NavigatorManager.navigateTo(
-                                      context, SigninPage.routeName,
-                                      transition: TransitionType.material);
-                                },
-                                child: logo),
-                          ),
-                          BlocBuilder<AuthCubit, AuthState>(
-                            builder: (context, state) {
-                              return _leftSideColumnWidget(
-                                  leftSideColumnWidgetIndex,
-                                  state,
-                                  availableIndex,
-                                  context);
-                            }
-                          ),
-                        ],
-                      ),
-                    ),
-                    Flexible(
-                      child: Padding(
-                        padding: const EdgeInsets.all(50.0),
-                        child: Column(
-                          children: [
-                            Align(
-                                alignment: Alignment.topRight,
-                                child: showDefaultSignupTopWidget
-                                    ? _defaultSignupTopWidget(context)
-                                    : topRightWidget),
-                            Expanded(child: Center(child: centerWidget)),
-                          ],
+              fetchUserData: (leftSideColumnWidgetIndex == 1 || leftSideColumnWidgetIndex == 2)),
+          child: Stack(children: [
+            Align(alignment: Alignment.centerLeft, child: leftArt),
+            Align(alignment: Alignment.bottomRight, child: rightArt),
+            Builder(builder: (context) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 32, left: 48, right: 48),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: CustomMaterialInkWell(
+                              type: InkWellType.White,
+                              borderRadius: BorderRadius.circular(8),
+                              onTap: () {
+                                NavigatorManager.navigateTo(context, SigninPage.routeName,
+                                    transition: TransitionType.material);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: logo,
+                              )),
                         ),
-                      ),
+                        Flexible(
+                            child: showDefaultSignupTopWidget
+                                ? _defaultSignupTopWidget(context)
+                                : topRightWidget ?? SizedBox()),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (leftSideColumnWidgetIndex != 0)
+                          Container(
+                            width: 400,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                BlocBuilder<AuthCubit, AuthState>(builder: (context, state) {
+                                  return _leftSideColumnWidget(
+                                      leftSideColumnWidgetIndex, state, availableIndex, context);
+                                }),
+                              ],
+                            ),
+                          ),
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.all(50.0),
+                            child: Center(child: centerWidget),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               );
-            }
-          ),
+            }),
+          ]),
         ),
       ),
     );
   }
 
-  Widget _leftSideColumnWidget(int currentIndex, AuthState state,
-      int availableScreenIndex, BuildContext context) {
+  Widget _leftSideColumnWidget(
+      int currentIndex, AuthState state, int availableScreenIndex, BuildContext context) {
     if (currentIndex == 0) {
       return SizedBox();
     } else {
@@ -145,22 +145,14 @@ class AuthScreen extends StatelessWidget with DiProvider {
         availableIndex = state.availableStep!;
       }
       var buttonDataMap = {
-        AppLocalizations.of(context)!.passwordRouteButtonText:
-            SignupPasswordPage.routeName,
-        AppLocalizations.of(context)!.mailCodeRouteButtonText:
-            SignupMailCodePage.routeName,
-        AppLocalizations.of(context)!.personalDataRouteButtonText:
-            SignupPersonalDataPage.routeName,
-        AppLocalizations.of(context)!.employmentRouteButtonText:
-            SignupEmploymentPage.routeName,
-        AppLocalizations.of(context)!.experienceRouteButtonText:
-            SignupExperiencePage.routeName,
+        AppLocalizations.of(context)!.passwordRouteButtonText: SignupPasswordPage.routeName,
+        AppLocalizations.of(context)!.mailCodeRouteButtonText: SignupMailCodePage.routeName,
+        AppLocalizations.of(context)!.personalDataRouteButtonText: SignupPersonalDataPage.routeName,
+        AppLocalizations.of(context)!.employmentRouteButtonText: SignupEmploymentPage.routeName,
+        AppLocalizations.of(context)!.experienceRouteButtonText: SignupExperiencePage.routeName,
+        if (!role.isPartner) AppLocalizations.of(context)!.subscription: SubscriptionPage.routeName,
         if (!role.isPartner)
-          AppLocalizations.of(context)!.subscription:
-              SubscriptionPage.routeName,
-        if (!role.isPartner)
-          AppLocalizations.of(context)!.addCardRouteButtonText:
-              SignupAddCardPage.routeName,
+          AppLocalizations.of(context)!.addCardRouteButtonText: SignupAddCardPage.routeName,
       };
       return Expanded(
         key: UniqueKey(),
@@ -182,8 +174,7 @@ class AuthScreen extends StatelessWidget with DiProvider {
                           // empty callback on current item to show item as InkWell but not reload page
                           index == currentIndex - 1
                               ? () {}
-                              : index < availableIndex &&
-                                      isLeftSideColumnButtonsActive
+                              : index < availableIndex && isLeftSideColumnButtonsActive
                                   ? () {
                                       NavigatorManager.navigateTo(
                                         context,
@@ -198,9 +189,7 @@ class AuthScreen extends StatelessWidget with DiProvider {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
-                          color: index == currentIndex - 1
-                              ? Colors.white12
-                              : Colors.transparent,
+                          color: index == currentIndex - 1 ? Colors.white12 : Colors.transparent,
                         ),
                         child: Row(
                           children: [
@@ -209,8 +198,7 @@ class AuthScreen extends StatelessWidget with DiProvider {
                               width: 32.0,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                    color: CustomColorScheme.authColumnEmpty),
+                                border: Border.all(color: CustomColorScheme.authColumnEmpty),
                                 color: index < availableIndex
                                     ? CustomColorScheme.blockBackground
                                     : Colors.transparent,
@@ -219,10 +207,8 @@ class AuthScreen extends StatelessWidget with DiProvider {
                                 child: Text(
                                   (index + 1).toString(),
                                   style: index < availableIndex
-                                      ? CustomTextStyle.AuthNumberTextStyle(
-                                          context)
-                                      : CustomTextStyle
-                                          .AuthNumberEmptyTextStyle(context),
+                                      ? CustomTextStyle.AuthNumberTextStyle(context)
+                                      : CustomTextStyle.AuthNumberEmptyTextStyle(context),
                                 ),
                               ),
                             ),
@@ -232,10 +218,8 @@ class AuthScreen extends StatelessWidget with DiProvider {
                             Text(
                               buttonDataMap.keys.toList()[index],
                               style: index < availableIndex
-                                  ? CustomTextStyle.AuthColumnFilledTextStyle(
-                                      context)
-                                  : CustomTextStyle.AuthColumnEmptyTextStyle(
-                                      context),
+                                  ? CustomTextStyle.AuthColumnFilledTextStyle(context)
+                                  : CustomTextStyle.AuthColumnEmptyTextStyle(context),
                             ),
                           ],
                         ),

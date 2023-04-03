@@ -1,13 +1,12 @@
 import 'dart:ui';
 
-import 'package:burgundy_budgeting_app/ui/atomic/atom/back_button.dart';
-import 'package:burgundy_budgeting_app/ui/atomic/template/home_screen/home_screen.dart';
-import 'package:burgundy_budgeting_app/ui/screen/category_management/category_management_cubit.dart';
+import 'package:burgundy_budgeting_app/ui/atomic/atom/custom_inkwell.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/appbar_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/atom/avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:url_launcher/url_launcher.dart';
+// ignore: avoid_relative_lib_imports
 import '../lib/test_lib_common.dart';
 import 'dart:html' as html;
 
@@ -18,8 +17,9 @@ class DashboardScreenTest {
 
   Future<void> clickLogoText() async {
     await tester.pumpAndSettle();
-    final iconText = find.byType(Image).first;
-    await tester.tap(iconText);
+    final logoFinder =
+        find.descendant(of: find.byType(CustomMaterialInkWell), matching: find.byType(Image));
+    await tester.tap(logoFinder);
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 

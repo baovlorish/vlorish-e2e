@@ -125,7 +125,7 @@ class _SignupMailCodeLayoutState extends State<SignupMailCodeLayout> {
                         type: LabelType.General,
                       ),
                       Label(
-                        text: "$email ",
+                        text: '$email ',
                         type: LabelType.GeneralBold,
                       ),
                       Label(
