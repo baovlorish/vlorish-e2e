@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/button_item.dart';
 import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +15,16 @@ final passwordText = 'Password';
 final forgotPasswordText = 'Forgot Password';
 final signinBtn = 'Sign-in';
 final signupBtn = 'Sign-up';
-final errMsgInvalidEmail =
+final invalidEmailErorMsg =
     'Please enter a valid email address. Valid email address example: nameofthemail@mail.com';
-final errMsgUnregisteredEmail =
+final unregisteredEmailErrorMsg =
     'There is no user with such an email. Please check if the email is correct and try again';
+final emptyEmailMsg = 'Please, enter your email';
+final emptyPasswordMsg = 'Please enter your password';
+final incorrectPasswordErrMsg =
+    'The password is incorrect. Please check the password and try again';
+final wrongPasswordFomatErrMsg =
+    'Password should contain at least 8 characters, max 128 characters and should contain at least: 1 special char, 1 number, 1 uppercase, 1 lowercase';
 
 class SignInScreenTest {
   const SignInScreenTest(this.tester);
@@ -165,6 +172,15 @@ class SignInScreenTest {
     await htExpect(tester, input.obscureText, true,
         reason: ('Verify-' + context + '-' + 'Password show text is NOT visible'));
     await tester.pumpAndSettle();
+  }
+
+  Future<void> verifyMessageErrorIsVisible(String msg, WidgetTester tester,
+      {String context = ''}) async {
+    final text = tester.widget<Text>(find.text(msg));
+    expect(text.style?.color, CustomColorScheme.inputErrorBorder);
+    await htExpect(tester, text.style?.color, CustomColorScheme.inputErrorBorder,
+        reason: ('Verify-' + context + '-' + msg + ' error is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
 //------------

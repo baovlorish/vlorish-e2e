@@ -36,7 +36,7 @@ void main() async {
         await signInScreen.verifyViewIcon(true, tester);
         await signInScreen.clickForgotPassword(tester);
         await passwordRecoveryScreen.verifyShowPasswordRecoveryPage(tester);
-        await passwordRecoveryScreen.clickCancelButton(tester);
+        await passwordRecoveryScreen.clickButton(cancelBtn, tester);
         await signInScreen.clickSignupBtn(tester);
         await signUpScreen.verifyShowSignupPage(tester);
         await signUpScreen.clickSignInButton(tester);
@@ -81,13 +81,13 @@ void main() async {
         final ranomtext = getRandomCharacter(10);
         await signInScreen.inputEmail(ranomtext, tester);
         await signInScreen.clickSignInButton(tester);
-        await signInScreen.verifyErrorMessage(errMsgInvalidEmail, tester);
+        await signInScreen.verifyErrorMessage(invalidEmailErorMsg, tester);
         await dashboardScreen.clickLogoText();
         final ranomEmail = getRandomCharacter(10) + '@gmail.com';
         await signInScreen.inputEmail(ranomEmail, tester);
         await signInScreen.inputPassword(passLogin, tester);
         await signInScreen.clickSignInButton(tester);
-        await signInScreen.verifyErrorMessage(errMsgUnregisteredEmail, tester);
+        await signInScreen.verifyErrorMessage(unregisteredEmailErrorMsg, tester);
         await htLogd(
             tester,
             'TC01-003 Vlorish Displays Error Message for Invalid/Unregistered Email Input',
@@ -121,6 +121,115 @@ void main() async {
         await htLogd(
             tester,
             'Failed TC01-010 Verify that user is redirected to “Personal budget” when user successfully sign-in',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'TC01-005 Vlorish Displays Error Message for Incorrect Email Format Input',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmail('baoq+1@', tester);
+        await signInScreen.inputPassword(passLogin, tester);
+        await signInScreen.clickSignInButton(tester);
+        await signInScreen.verifyErrorMessage(invalidEmailErorMsg, tester);
+        await htLogd(
+            tester,
+            'TC01-005 Vlorish Displays Error Message for Incorrect Email Format Input',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed TC01-005 Vlorish Displays Error Message for Incorrect Email Format Input',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'TC01-004 Vlorish Displays Error Messages for Empty Email and Password Fields on Sign-In',
+            '',
+            'STARTED');
+
+        await dashboardScreen.clickLogoText();
+        await signInScreen.clickSignInButton(tester);
+        await signInScreen.verifyErrorMessage(emptyEmailMsg, tester);
+        await signInScreen.verifyErrorMessage(emptyPasswordMsg, tester);
+
+        await signInScreen.inputEmail(emailLogin, tester);
+        await signInScreen.clickSignInButton(tester);
+        await signInScreen.verifyErrorMessage(emptyPasswordMsg, tester);
+
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputPassword(passLogin, tester);
+        await signInScreen.clickSignInButton(tester);
+        await signInScreen.verifyErrorMessage(emptyEmailMsg, tester);
+
+        await htLogd(
+            tester,
+            'TC01-004 Vlorish Displays Error Messages for Empty Email and Password Fields on Sign-In',
+            '',
+            'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed TC01-004 Vlorish Displays Error Messages for Empty Email and Password Fields on Sign-Int',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'TC01-006 Vlorish Displays Error Message for Nonexistent Email Input', '', 'STARTED');
+
+        final nonexistentEmail = (getRandomCharacter(10) + '@gmail.com').toLowerCase();
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmail(nonexistentEmail, tester);
+        await signInScreen.inputPassword(passLogin, tester);
+        await signInScreen.clickSignInButton(tester);
+        await signInScreen.verifyErrorMessage(unregisteredEmailErrorMsg, tester);
+        await htLogd(tester, 'TC01-006 Vlorish Displays Error Message for Nonexistent Email Input',
+            '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed TC01-006 Vlorish Displays Error Message for Nonexistent Email Input',
+            '',
+            'FINISHED');
+      }
+
+      try {
+        await htLogdDirect(
+            'TC01-007 Vlorish Displays Error Message for Nonexistent Email Input', '', 'STARTED');
+
+        final incorrectPassword = passLogin + getRandomCharacter(3);
+        final wrongPassword = getRandomCharacter(6);
+        await dashboardScreen.clickLogoText();
+        await signInScreen.inputEmail(emailLogin, tester);
+        await signInScreen.inputPassword(incorrectPassword, tester);
+        await signInScreen.clickSignInButton(tester);
+        await signInScreen.verifyErrorMessage(incorrectPasswordErrMsg, tester);
+
+        await signInScreen.inputEmail(emailLogin, tester);
+        await signInScreen.inputPassword(wrongPassword, tester);
+        await signInScreen.clickSignInButton(tester);
+        await signInScreen.verifyErrorMessage(wrongPasswordFomatErrMsg, tester);
+
+        await signInScreen.inputEmail(emailLogin, tester);
+        await signInScreen.inputPassword(wrongPassword, tester);
+        await signInScreen.clickSignInButton(tester);
+        await signInScreen.verifyErrorMessage(wrongPasswordFomatErrMsg, tester);
+
+        await htLogd(tester, 'TC01-007 Vlorish Displays Error Message for Nonexistent Email Input',
+            '', 'FINISHED');
+      } catch (e) {
+        await htLogd(
+            tester,
+            'Failed TC01-007 Vlorish Displays Error Message for Nonexistent Email Input',
             '',
             'FINISHED');
       }

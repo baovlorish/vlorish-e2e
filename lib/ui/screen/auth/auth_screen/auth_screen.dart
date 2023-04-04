@@ -135,8 +135,7 @@ class AuthScreen extends StatelessWidget with DiProvider {
     );
   }
 
-  Widget _leftSideColumnWidget(
-      int currentIndex, AuthState state, int availableScreenIndex, BuildContext context) {
+  Widget _leftSideColumnWidget(int currentIndex, AuthState state, int availableScreenIndex, BuildContext context) {
     if (currentIndex == 0) {
       return SizedBox();
     } else {
@@ -151,8 +150,7 @@ class AuthScreen extends StatelessWidget with DiProvider {
         AppLocalizations.of(context)!.employmentRouteButtonText: SignupEmploymentPage.routeName,
         AppLocalizations.of(context)!.experienceRouteButtonText: SignupExperiencePage.routeName,
         if (!role.isPartner) AppLocalizations.of(context)!.subscription: SubscriptionPage.routeName,
-        if (!role.isPartner)
-          AppLocalizations.of(context)!.addCardRouteButtonText: SignupAddCardPage.routeName,
+        if (!role.isPartner) AppLocalizations.of(context)!.addCardRouteButtonText: SignupAddCardPage.routeName,
       };
       return Expanded(
         key: UniqueKey(),
@@ -179,10 +177,7 @@ class AuthScreen extends StatelessWidget with DiProvider {
                                       NavigatorManager.navigateTo(
                                         context,
                                         buttonDataMap.values.toList()[index],
-                                        params: {
-                                          'type': 'returned',
-                                          'role': role.mappedValue.toString()
-                                        },
+                                        params: {'type': 'returned', 'role': role.mappedValue.toString()},
                                       );
                                     }
                                   : null,
@@ -199,9 +194,7 @@ class AuthScreen extends StatelessWidget with DiProvider {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(color: CustomColorScheme.authColumnEmpty),
-                                color: index < availableIndex
-                                    ? CustomColorScheme.blockBackground
-                                    : Colors.transparent,
+                                color: index < availableIndex ? CustomColorScheme.blockBackground : Colors.transparent,
                               ),
                               child: Center(
                                 child: Text(

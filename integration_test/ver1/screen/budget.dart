@@ -28,7 +28,7 @@ class BudgetScreenTest {
   final WidgetTester tester;
 
   Future<void> verifyPersonalBudgetPage(WidgetTester tester, {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 45));
+    await tester.pumpAndSettle(const Duration(seconds: 25));
     await htExpect(tester, find.text('Personal Budget'), findsOneWidget,
         reason: ('Verify-' + context + '-' + 'Personal Budget Title is visible'));
     await htExpect(tester, find.text('Annual'), findsOneWidget,

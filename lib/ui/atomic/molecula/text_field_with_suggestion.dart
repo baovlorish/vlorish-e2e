@@ -6,6 +6,7 @@ import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+
 // todo: (andreyK/viacheslavB) refactor with InputDecorationMixin or with DropdownItem
 class TextFieldWithSuggestion<T> extends StatefulWidget {
   final T? model;

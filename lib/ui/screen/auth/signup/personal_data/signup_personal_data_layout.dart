@@ -198,12 +198,10 @@ class _SignupPersonalDataLayoutState extends State<SignupPersonalDataLayout> {
                     model: cityModel,
                     label: AppLocalizations.of(context)!.city,
                     errorMessageEmpty: AppLocalizations.of(context)!.cityEmpty,
-                    errorMessageInvalid:
-                        AppLocalizations.of(context)!.invalidCity,
+                    errorMessageInvalid: AppLocalizations.of(context)!.invalidCity,
                     hintText: AppLocalizations.of(context)!.cityNamePlaceholder,
                     focusNode: cityNode,
-                    search: (value) =>
-                        signupPersonalDataCubit.searchCity(value),
+                    search: (value) => signupPersonalDataCubit.searchCity(value),
                     onSelectedModel: (model) {
                       cityModel = model;
                       nextButtonNode.requestFocus();
@@ -219,8 +217,7 @@ class _SignupPersonalDataLayoutState extends State<SignupPersonalDataLayout> {
                     text: AppLocalizations.of(context)!.next,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        signupPersonalDataCubit.navigateToEmploymentPage(
-                            context,
+                        signupPersonalDataCubit.navigateToEmploymentPage(context,
                             model: PersonalDataModel(
                               lastName: lastName,
                               firstName: firstName,

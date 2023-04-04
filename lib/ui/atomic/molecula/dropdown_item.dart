@@ -7,15 +7,15 @@ import 'package:burgundy_budgeting_app/utils/extensions.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
-class DropdownItem<ValueType> extends StatefulWidget {
+class DropdownItem<T> extends StatefulWidget {
   final String? labelText;
   final String? errorText;
   final String hintText;
   final List<String> items;
-  final List<ValueType>? itemKeys;
-  final String? Function<ValueType>(ValueType?, BuildContext)? validateFunction;
+  final List<T>? itemKeys;
+  final String? Function<T>(T?, BuildContext)? validateFunction;
   final Function callback;
-  final ValueType? initialValue;
+  final T? initialValue;
   final bool enabled;
 
   // todo: (andreyK) remove unneeded params
@@ -48,7 +48,7 @@ class DropdownItem<ValueType> extends StatefulWidget {
   State<StatefulWidget> createState() => _DropdownItemState();
 }
 
-class _DropdownItemState<ValueType> extends State<DropdownItem<ValueType>> with InputDecorationMixin {
+class _DropdownItemState<T> extends State<DropdownItem<T>> with InputDecorationMixin {
   bool get showLabel => !widget.isSmall && widget.labelText != null;
 
   bool get showTooltip => widget.tooltipText != null;
@@ -57,79 +57,88 @@ class _DropdownItemState<ValueType> extends State<DropdownItem<ValueType>> with 
 
   late final items = getItems(widget.items);
 
-  @override
-  Widget build(BuildContext context) => Column(
-        key: widget.key,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (showLabel)
-            Row(
-              children: [
-                Label(text: widget.labelText!, type: LabelType.GeneralNew),
-                SizedBox(width: 8),
-                if (showTooltip) HintWidget(hint: widget.tooltipText!)
-              ],
-            ),
-          if (!widget.isSmall && widget.labelText != null) SizedBox(height: 10),
-          DropdownButtonFormField2(
-            alignment: AlignmentDirectional.centerStart,
-            autofocus: widget.autofocus,
-            focusNode: widget.focusNode,
-            value: widget.initialValue,
-            menuItemStyleData: MenuItemStyleData(
-              padding: InputDecorationMixin.contentPadding,
-              overlayColor: MaterialStateProperty.resolveWith(
-                (states) {
-                  if (states.hasHovered) return VersionTwoColorScheme.PinkBackground;
-                  return VersionTwoColorScheme.White;
-                },
-              ),
-            ),
-            dropdownStyleData: DropdownStyleData(
-              scrollPadding: EdgeInsets.zero,
-              padding: EdgeInsets.zero,
-              offset: dropdownMenuOffset,
-              decoration: BoxDecoration(
-                color: VersionTwoColorScheme.White,
-                borderRadius: borderRadius,
-              ),
-            ),
-            iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down), iconSize: 28),
-            items: items,
-            style: CustomTextStyle.DropDownTextStyle(context),
-            isExpanded: true,
-            selectedItemBuilder: (BuildContext context) =>
-                widget.items.map<Widget>((text) => Text(text, overflow: TextOverflow.ellipsis)).toList(),
-            validator: (ValueType? value) => widget.validateFunction?.call(value, context),
-            onChanged: !widget.enabled
-                ? null
-                : (ValueType? value) => setState(
-                      () {
-                        if (value != null) widget.callback(value);
-                      },
-                    ),
-            decoration: InputDecoration(
-              errorText: widget.errorText,
-              contentPadding: InputDecorationMixin.contentPadding,
-              fillColor: fillColor,
-              filled: true,
-              focusColor: focusColor,
-              border: border,
-              enabledBorder: enabledBorder,
-              focusedBorder: focusedBorder,
-              errorBorder: errorBorder,
-              focusedErrorBorder: focusedErrorBorder,
-              errorMaxLines: 3,
-              errorStyle: errorStyle(context),
-              hintText: widget.hintText,
-              hintStyle: hintStyle(context),
-            ),
-          ),
-        ],
-      );
+  late var selectedValue = widget.initialValue;
 
-  List<DropdownMenuItem<ValueType>> getItems(List<String> values) {
-    var keys = widget.itemKeys ?? List.generate(values.length, (index) => index as ValueType);
+  void onChanged(T? value) {
+    if (value == null) return;
+    setState(() {
+      selectedValue = value;
+      isValid = true;
+      widget.callback(value);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => MouseRegion(
+    onEnter: (_) => setState(() => isHovered = true),
+    onExit: (_) => setState(() => isHovered = false),
+    child: Column(
+          key: widget.key,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (showLabel)
+              Row(
+                children: [
+                  Label(text: widget.labelText!, type: LabelType.GeneralNew),
+                  SizedBox(width: 8),
+                  if (showTooltip) HintWidget(hint: widget.tooltipText!)
+                ],
+              ),
+            if (!widget.isSmall && widget.labelText != null) SizedBox(height: 10),
+            DropdownButtonFormField2<T>(
+              alignment: AlignmentDirectional.centerStart,
+              autofocus: widget.autofocus,
+              focusNode: widget.focusNode,
+              value: widget.initialValue,
+              menuItemStyleData: MenuItemStyleData(
+                padding: InputDecorationMixin.contentPadding,
+                overlayColor: MaterialStateProperty.resolveWith(
+                  (states) {
+                    if (states.hasHovered) return VersionTwoColorScheme.PinkBackground;
+                    return VersionTwoColorScheme.White;
+                  },
+                ),
+              ),
+              dropdownStyleData: DropdownStyleData(
+                scrollPadding: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
+                offset: dropdownMenuOffset,
+                decoration: BoxDecoration(
+                  color: VersionTwoColorScheme.White,
+                  borderRadius: borderRadius,
+                ),
+              ),
+              iconStyleData: IconStyleData(icon: Icon(Icons.keyboard_arrow_down), iconSize: 28),
+              items: items,
+              style: CustomTextStyle.DropDownTextStyle(context),
+              isExpanded: true,
+              selectedItemBuilder: (_) =>
+                  widget.items.map<Widget>((text) => Text(text, overflow: TextOverflow.ellipsis)).toList(),
+              validator: (T? value) => widget.validateFunction?.call(value, context),
+              onChanged: onChanged,
+              decoration: InputDecoration(
+                errorText: widget.errorText,
+                contentPadding: InputDecorationMixin.contentPadding,
+                fillColor: fillColor,
+                filled: true,
+                focusColor: focusColor,
+                border: border,
+                enabledBorder: enabledBorder,
+                focusedBorder: focusedBorder,
+                errorBorder: errorBorder,
+                focusedErrorBorder: focusedErrorBorder,
+                errorMaxLines: 3,
+                errorStyle: errorStyle(context),
+                hintText: widget.hintText,
+                hintStyle: hintStyle(context),
+              ),
+            ),
+          ],
+        ),
+  );
+
+  List<DropdownMenuItem<T>> getItems(List<String> values) {
+    var keys = widget.itemKeys ?? List.generate(values.length, (index) => index as T);
     return List.generate(
       keys.length,
       (index) => DropdownMenuItem(

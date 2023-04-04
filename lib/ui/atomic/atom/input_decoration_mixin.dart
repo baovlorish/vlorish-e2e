@@ -3,11 +3,19 @@ import 'package:burgundy_budgeting_app/ui/atomic/atom/version_two_color_scheme.d
 import 'package:flutter/material.dart';
 
 mixin InputDecorationMixin {
-  late final border = OutlineInputBorder(borderSide: BorderSide(color: borderColor), borderRadius: borderRadius);
-  late final enabledBorder = OutlineInputBorder(borderSide: BorderSide(color: borderColor), borderRadius: borderRadius);
-  late final focusedBorder = OutlineInputBorder(borderSide: BorderSide(color: hoverColor), borderRadius: borderRadius);
-  late final errorBorder = OutlineInputBorder(borderSide: BorderSide(color: errorColor), borderRadius: borderRadius);
-  late final focusedErrorBorder =
+  OutlineInputBorder get border =>
+      OutlineInputBorder(borderSide: BorderSide(color: borderColor), borderRadius: borderRadius);
+
+  OutlineInputBorder get enabledBorder =>
+      OutlineInputBorder(borderSide: BorderSide(color: borderColor), borderRadius: borderRadius);
+
+  OutlineInputBorder get focusedBorder =>
+      OutlineInputBorder(borderSide: BorderSide(color: hoverColor), borderRadius: borderRadius);
+
+  OutlineInputBorder get errorBorder =>
+      OutlineInputBorder(borderSide: BorderSide(color: errorColor), borderRadius: borderRadius);
+
+  OutlineInputBorder get focusedErrorBorder =>
       OutlineInputBorder(borderSide: BorderSide(color: errorColor), borderRadius: borderRadius);
 
   final defaultBorderColor = VersionTwoColorScheme.Grey;
@@ -23,8 +31,8 @@ mixin InputDecorationMixin {
   final focusColor = Colors.transparent;
 
   Color get borderColor {
-    if (isValid) return completedBorderColor;
     if (isHovered) return hoverColor;
+    if (isValid) return completedBorderColor;
     return defaultBorderColor;
   }
 
