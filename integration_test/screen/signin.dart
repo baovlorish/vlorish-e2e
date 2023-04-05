@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_relative_lib_imports
+
 import 'dart:math';
 
 import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
@@ -6,7 +8,6 @@ import 'package:burgundy_budgeting_app/ui/atomic/molecula/input_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// ignore: avoid_relative_lib_imports
 import '../lib/test_lib_common.dart';
 
 final letSignInText = 'Let’s sign-in';
@@ -162,6 +163,7 @@ class SignInScreenTest {
     expect(input.obscureText, false);
     await htExpect(tester, find.text(pass), findsOneWidget,
         reason: ('Verify-' + context + '-' + 'Password show text is visible'));
+    await tester.pumpAndSettle();
   }
 
   Future<void> verifyPasswordHidden(String pass, WidgetTester tester, {String context = ''}) async {
@@ -217,17 +219,6 @@ class SignInScreenTest {
     await writeSomething(tester, password, passUser, addContext(context, "Input password"));
     await tester.pumpAndSettle();
   }
-
-  // Future<void> verifySignInPage(WidgetTester tester, {String context = ""}) async {
-  //   await tester.pumpAndSettle();
-  //   await htExpect(tester, find.widgetWithText(ButtonItem, 'Sign-in'), findsOneWidget,
-  //       reason: ("Verify-" + context + "-" + 'Sign-in text is visible'));
-  //   await tester.ensureVisible(find.widgetWithText(ButtonItem, 'Sign-in'));
-  //   final email = find.byType(InputItem).first;
-  //   final password = find.byType(InputItem).last;
-  //   await tapSomething(tester, email, addContext(context, "Email is available"));
-  //   await tapSomething(tester, password, addContext(context, "password is available"));
-  // }
 
   Future<void> clickLoginButton(WidgetTester tester, {String context = ""}) async {
     final btnSubmit = find.text('Sign-in').first;
