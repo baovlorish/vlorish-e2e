@@ -111,7 +111,7 @@ void main() async {
         await dashboardScreen.clickLogoText();
         await signInScreen.clickSignupBtn(tester);
         await signUpScreen.clickButton('Next', tester);
-        await signUpScreen.verifyShowText('Please enter your email', tester);
+        await signUpScreen.verifyShowText('Please, enter your email', tester);
 
         await htLogd(
             tester,
