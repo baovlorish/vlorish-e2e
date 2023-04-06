@@ -1,14 +1,14 @@
 name:  E2E Test
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       testBranch:
-#         description: "Which branch to checkout and run test"
-#         required: false
-#         default: master
-#   schedule:
-#     - cron: "0 0 * * 1-5"
-on: [push]
+on:
+  workflow_dispatch:
+    inputs:
+      testBranch:
+        description: "Which branch to checkout and run test"
+        required: false
+        default: master
+  schedule:
+    - cron: "0 0 * * 1-5"
+# on: [push]
 
 jobs:
   run-e2e:
@@ -42,8 +42,8 @@ jobs:
       - name: Run Password Recovery Testsuite
         run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/passwordRecovery_test.dart -d chrome | ./integration_test/testout.sh
       
-      # - name: Run Sign Up Testsuite
-      #   run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signup_test.dart -d chrome |./integration_test/testout.sh
+      - name: Run Sign Up Testsuite
+        run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/signup_test.dart -d chrome |./integration_test/testout.sh
       
       # - name: Run Forgot Password Testsuite
       #   run: xvfb-run --auto-servernum flutter drive --driver test_driver/integration_test_driver.dart --target integration_test/forgot_password_test.dart -d chrome |./integration_test/testout.sh

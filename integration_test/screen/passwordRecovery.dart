@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_field_initializers_in_const_classes, avoid_relative_lib_imports
 
-import 'package:burgundy_budgeting_app/ui/atomic/atom/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import '../lib/test_lib_common.dart';
@@ -18,12 +17,12 @@ final recoverMyPasswordBtn = 'Recover my password';
 final saveMyNewPasswordBtn = 'Save my new password';
 final newPasswordText = 'New password';
 final confirmNewPasswordText = 'Confirm your new password';
-final confirmpasswordText = 'Confirm password';
+final confirmpasswordText = 'Confirm Password';
 final cancelBtn = 'Cancel';
 final continueBtn = 'Continue';
 final backBtn = 'Back';
-final resentBtn = 'Resent';
-final didNotGetCodeDescription = "Didn't get the code?";
+final resendBtn = 'Resend';
+final didNotGetCodeDescription = "Didn't get the code? ";
 final success = 'Success!';
 final codeWasSentToYourEmail = 'Code was sent to your email';
 final emailDoesntExistErrorMsg =
@@ -46,11 +45,14 @@ class PasswordRecoveryScreenTest {
         reason: ('Verify-' + context + '-' + '$passwordRecoveryTitle title is visible'));
     await htExpect(tester, find.text(passwordRecoveryDescription), findsOneWidget,
         reason: ('Verify-' + context + '-' + '$passwordRecoveryDescription is visible'));
-    final emailfinder = find.descendant(of: find.text('Email'), matching: find.byType(TextField));
-    final emailInput = tester.firstWidget<TextField>(emailfinder);
-    expect(emailInput.obscureText, false);
-    await htExpect(tester, emailInput, findsOneWidget,
+
+    final emailInputfinder = find.descendant(
+        of: find.ancestor(of: find.text('Email'), matching: find.byType(InputItem)),
+        matching: find.byType(TextFormField));
+    await htExpect(tester, emailInputfinder, findsOneWidget,
         reason: ('Verify-' + context + '-' + 'Email input field is visible'));
+    final btnText = find.text(recoverMyPasswordBtn);
+    print('btnText  -- $btnText');
     await htExpect(tester, find.text(recoverMyPasswordBtn), findsOneWidget,
         reason: ('Verify-' + context + '-' + '$recoverMyPasswordBtn button is visible'));
     await tester.pumpAndSettle();
@@ -72,28 +74,28 @@ class PasswordRecoveryScreenTest {
   }
 
   Future<void> inputConfirmCodeEmail(WidgetTester tester, {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 10));
-
+    await tester.pumpAndSettle();
+    await inputNewPassword('', tester);
     // Tap on the center of the OTPTextField widget
-    final otpFieldRect = tester.getRect(find.byType(OTPTextField));
-    final otpFieldCenter = otpFieldRect.center;
-    await tester.tapAt(otpFieldCenter);
+    // final otpFieldRect = tester.getRect(find.byType(OTPTextField));
+    // final otpFieldCenter = otpFieldRect.center;
+    // await tester.tapAt(otpFieldCenter);
 
     // Check if another widget is obscuring the OTPTextField widget
-    final hitTestResult = tester.hitTestOnBinding(otpFieldCenter);
-    for (final hitTestEntry in hitTestResult.path) {
-      print('Hit: ${hitTestEntry.target.runtimeType}');
-    }
+    // final hitTestResult = tester.hitTestOnBinding(otpFieldCenter);
+    // for (final hitTestEntry in hitTestResult.path) {
+    //   print('Hit: ${hitTestEntry.target.runtimeType}');
+    // }
     // Check if another widget is obscuring the OTPTextField widget
     // await tester.scrollUntilVisible(otpField, 100);
 
-    await tester.pumpAndSettle(const Duration(seconds: 10));
+    // await tester.pumpAndSettle(const Duration(seconds: 10));
 
     // final code = find.byType(OTPTextField);
     // // find.descendant(of: find.byType(OTPTextField), matching: find.byType(AnimatedContainer));
     // tester.printToConsole('code: -------- $code');
     // await tester.tap(code);
-    await tester.pumpAndSettle(const Duration(seconds: 10));
+    // await tester.pumpAndSettle(const Duration(seconds: 10));
     await tester.enterText(find.byType(OTPTextField), '123456');
     // await writeSomething(
     //     tester, code, getRandomNumber(6), addContext(context, 'Input code set new password'));
@@ -122,26 +124,53 @@ class PasswordRecoveryScreenTest {
     await tester.pumpAndSettle();
   }
 
-  Future<void> verifyPasswordShow(String pass, WidgetTester tester, {String context = ''}) async {
-    final finder = find.byType(TextField).last;
-    final input = tester.firstWidget<TextField>(finder);
-    expect(input.obscureText, false);
-    await htExpect(tester, find.text(pass), findsOneWidget,
+  Future<void> verifyPasswordShow(String inputName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final inputFinder = find.descendant(
+        of: find.ancestor(of: find.text(inputName), matching: find.byType(InputItem)),
+        matching: find.byType(TextFormField));
+    final textFieldFinder = find.descendant(
+      of: inputFinder,
+      matching: find.byType(TextField),
+    );
+    final textField = tester.firstWidget<TextField>(textFieldFinder);
+    expect(textField.obscureText, false);
+    await htExpect(tester, textField.obscureText, isFalse,
         reason: ('Verify-' + context + '-' + 'Password show text is visible'));
   }
 
-  Future<void> verifyPasswordHidden(String pass, WidgetTester tester, {String context = ''}) async {
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    final finder = find.byType(TextField).last;
-    final input = tester.firstWidget<TextField>(finder);
-    expect(input.obscureText, true);
-    await htExpect(tester, input.obscureText, true,
+  Future<void> verifyPasswordHidden(String inputName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    final inputFinder = find.descendant(
+        of: find.ancestor(of: find.text(inputName), matching: find.byType(InputItem)),
+        matching: find.byType(TextFormField));
+    final textFieldFinder = find.descendant(
+      of: inputFinder,
+      matching: find.byType(TextField),
+    );
+    final textField = tester.firstWidget<TextField>(textFieldFinder);
+    expect(textField.obscureText, true);
+    await htExpect(tester, textField.obscureText, isTrue,
         reason: ('Verify-' + context + '-' + 'Password show text is NOT visible'));
     await tester.pumpAndSettle();
   }
 
+  Future<void> verifyShowInputField(String inputName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    final textFormFieldFinder = find.descendant(
+        of: find.ancestor(of: find.text(inputName), matching: find.byType(InputItem)),
+        matching: find.byType(TextFormField));
+
+    await htExpect(tester, textFormFieldFinder, findsOneWidget,
+        reason: ('Verify-' + context + '-' + '$inputName input field is visible'));
+  }
+
   Future<void> verifyShowVerifyAndSetPasswordPage(WidgetTester tester,
       {String context = ''}) async {
+    await tester.pumpAndSettle();
     await htExpect(tester, find.text(verifyAndSetPasswordTitle), findsOneWidget,
         reason: ('Verify-' + context + '-' + '$verifyAndSetPasswordTitle title is visible'));
     await htExpect(tester, find.text(verifyAndSetPasswordDescription), findsOneWidget,
@@ -150,22 +179,12 @@ class PasswordRecoveryScreenTest {
         reason: ('Verify-' + context + '-' + 'OTP code is visible'));
     await htExpect(tester, find.text(didNotGetCodeDescription), findsOneWidget,
         reason: ('Verify-' + context + '-' + '$didNotGetCodeDescription text is visible'));
-    await htExpect(tester, find.text(resentBtn), findsOneWidget,
-        reason: ('Verify-' + context + '-' + '$resentBtn button is visible'));
-    final newpasswordfinder =
-        find.descendant(of: find.text(newPasswordText), matching: find.byType(TextField));
-    final newpasswordInput = tester.firstWidget<TextField>(newpasswordfinder);
-    expect(newpasswordInput.obscureText, false);
-    await htExpect(tester, newpasswordInput, findsOneWidget,
-        reason: ('Verify-' + context + '-' + '$newPasswordText input field is visible'));
-    final confirmNewpasswordfinder =
-        find.descendant(of: find.text(confirmNewPasswordText), matching: find.byType(TextField));
-    final confirmNewpasswordInput = tester.firstWidget<TextField>(confirmNewpasswordfinder);
-    expect(confirmNewpasswordInput.obscureText, false);
-    await htExpect(tester, confirmNewpasswordInput, findsOneWidget,
-        reason: ('Verify-' + context + '-' + '$confirmNewPasswordText input field is visible'));
-    await htExpect(tester, find.text(recoverMyPasswordBtn), findsOneWidget,
-        reason: ('Verify-' + context + '-' + '$recoverMyPasswordBtn button is visible'));
+    await htExpect(tester, find.text(resendBtn), findsOneWidget,
+        reason: ('Verify-' + context + '-' + '$resendBtn button is visible'));
+    await verifyShowInputField(newPasswordText, tester);
+    await verifyShowInputField(confirmNewPasswordText, tester);
+    await htExpect(tester, find.text(saveMyNewPasswordBtn), findsOneWidget,
+        reason: ('Verify-' + context + '-' + '$saveMyNewPasswordBtn button is visible'));
     await htExpect(tester, find.text(backBtn), findsOneWidget,
         reason: ('Verify-' + context + '-' + '$backBtn button is visible'));
     await tester.pumpAndSettle();
@@ -173,7 +192,9 @@ class PasswordRecoveryScreenTest {
 
   Future<void> verifyMessageForPasswordIsVisible(String msg, WidgetTester tester,
       {String context = ''}) async {
+    await tester.pumpAndSettle();
     final text = tester.widget<Text>(find.text(msg));
+    print(text.style?.color);
     expect(text.style?.color, equals(const Color(0xff62b999)));
     await htExpect(tester, text.style?.color, equals(const Color(0xff62b999)),
         reason: ('Verify-' + context + '$msg text is green is visible'));
@@ -183,9 +204,27 @@ class PasswordRecoveryScreenTest {
   Future<void> verifyMessageErrorIsVisible(String msg, WidgetTester tester,
       {String context = ''}) async {
     final text = tester.widget<Text>(find.text(msg));
+    print(text.style?.color);
+
     expect(text.style?.color, equals(const Color(0xffbb1639)));
     await htExpect(tester, text.style?.color, equals(const Color(0xffbb1639)),
         reason: ('Verify-' + context + '$msg error text is red is visible'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  Future<void> clickEyePassword(String forInputName, WidgetTester tester,
+      {String context = ''}) async {
+    await tester.pumpAndSettle();
+    late final Finder eyeIcon;
+    switch (forInputName) {
+      case 'New password':
+        eyeIcon = find.byType(IconButton).first;
+        break;
+      case 'Confirm your new password':
+        eyeIcon = find.byType(IconButton).last;
+        break;
+    }
+    await tapSomething(tester, eyeIcon, addContext(context, 'Click on Eye'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 }

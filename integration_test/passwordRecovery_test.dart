@@ -5,16 +5,12 @@ import 'lib/function_common.dart';
 import 'lib/test_lib_const.dart';
 import 'screen/signin.dart';
 import 'screen/passwordRecovery.dart';
-import 'screen/signup.dart';
-import 'screen/budget.dart';
 import 'screen/dashboard.dart';
 
 const String testDescription = 'SignIn';
 void main() async {
   SignInScreenTest signInScreen;
   PasswordRecoveryScreenTest passwordRecoveryScreen;
-  SignUpScreenTest signUpScreen;
-  BudgetScreenTest personalBudgetScreen;
   DashboardScreenTest dashboardScreen;
   await htTestInit(description: testDescription);
   group('Authentication Test', () {
@@ -22,8 +18,6 @@ void main() async {
       await app.main();
       signInScreen = SignInScreenTest(tester);
       passwordRecoveryScreen = PasswordRecoveryScreenTest(tester);
-      signUpScreen = SignUpScreenTest(tester);
-      personalBudgetScreen = BudgetScreenTest(tester);
       dashboardScreen = DashboardScreenTest(tester);
       context = context ?? '';
 
@@ -99,7 +93,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickLogoText();
         await signInScreen.clickForgotPassword(tester);
-        await passwordRecoveryScreen.inputEmail(emailLogin, tester);
+        await passwordRecoveryScreen.inputEmail('baoq+4@vlorish.com', tester);
         await passwordRecoveryScreen.clickButton(recoverMyPasswordBtn, tester);
         await passwordRecoveryScreen.verifyShowVerifyAndSetPasswordPage(tester);
         await htLogd(
@@ -122,7 +116,7 @@ void main() async {
             'STARTED');
         await dashboardScreen.clickLogoText();
         await signInScreen.clickForgotPassword(tester);
-        await passwordRecoveryScreen.inputEmail(emailLogin, tester);
+        await passwordRecoveryScreen.inputEmail('baoq+4@vlorish.com', tester);
         await passwordRecoveryScreen.clickButton(recoverMyPasswordBtn, tester);
         await passwordRecoveryScreen.clickButton(saveMyNewPasswordBtn, tester);
         await passwordRecoveryScreen.verifyShowMessage(confirmpasswordText, tester);
@@ -130,19 +124,30 @@ void main() async {
         await passwordRecoveryScreen.inputNewPassword('Ab', tester);
         await passwordRecoveryScreen.verifyMessageForPasswordIsVisible(
             containsBothLowerAndUpperCaseLettersMsg, tester);
-        await passwordRecoveryScreen.inputNewPassword('Ab12\$', tester);
+        await passwordRecoveryScreen.inputNewPassword('Ab12!@#', tester);
         await passwordRecoveryScreen.verifyMessageForPasswordIsVisible(
             containsAtLeastOneNumberAndASymbolMsg, tester);
-        await passwordRecoveryScreen.inputNewPassword('Ab12\$cd', tester);
+        await passwordRecoveryScreen.inputNewPassword('Ab12!@#c', tester);
         await passwordRecoveryScreen.verifyMessageForPasswordIsVisible(
             containsAtLeast8CharactersMsg, tester);
-        await passwordRecoveryScreen.verifyMessageForPasswordIsVisible(
-            containsAtLeast8CharactersMsg, tester);
+        await passwordRecoveryScreen.verifyPasswordHidden(newPasswordText, tester);
+        await passwordRecoveryScreen.clickEyePassword(newPasswordText, tester);
+        await passwordRecoveryScreen.verifyPasswordShow(newPasswordText, tester);
 
         await passwordRecoveryScreen.inputConfirmYourNewPassword(getRandomCharacter(10), tester);
         await passwordRecoveryScreen.clickButton(saveMyNewPasswordBtn, tester);
         await passwordRecoveryScreen.verifyShowMessage(passwordDontMatchMsg, tester);
+        await passwordRecoveryScreen.inputConfirmYourNewPassword('', tester);
+        await passwordRecoveryScreen.clickButton(saveMyNewPasswordBtn, tester);
+        await passwordRecoveryScreen.verifyShowMessage(confirmpasswordText, tester);
 
+        await passwordRecoveryScreen.inputNewPassword(getRandomNumber(4), tester);
+        await passwordRecoveryScreen.verifyMessageErrorIsVisible(
+            containsBothLowerAndUpperCaseLettersMsg, tester);
+        await passwordRecoveryScreen.verifyMessageErrorIsVisible(
+            containsAtLeastOneNumberAndASymbolMsg, tester);
+        await passwordRecoveryScreen.verifyMessageErrorIsVisible(
+            containsAtLeast8CharactersMsg, tester);
         await htLogd(
             tester,
             'TC01-019 Validate that Vlorish displays correct messages on the password field',

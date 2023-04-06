@@ -139,8 +139,8 @@ class SignInScreenTest {
 
   Future<void> clickSignupBtn(WidgetTester tester, {String context = ''}) async {
     await tester.pumpAndSettle();
-    final btnSignIn = find.text(signupBtn).first;
-    await tapSomething(tester, btnSignIn, addContext(context, 'click button $signupBtn'));
+    final btnSignup = find.text(signupBtn).first;
+    await tapSomething(tester, btnSignup, addContext(context, 'click button $signupBtn'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
