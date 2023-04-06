@@ -1,0 +1,53 @@
+name: "Deploy to AWS"
+
+on:
+  push:
+    branches: [master, develop, stage]
+  workflow_dispatch:
+    branches: [master, develop, stage]
+  pull_request:
+
+jobs:
+  environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment variables
+        id: env
+        run: |
+          if [[ "${GITHUB_REF#refs/*/}" == "master" ]]; then
+            echo "env"=production >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF#refs/*/}" == "stage" ]]; then
+            echo "env"=stage >> $GITHUB_OUTPUT
+          else
+            echo "env"=dev >> $GITHUB_OUTPUT
+          fi
+    outputs:
+      env: ${{ steps.env.outputs.env }}
+
+  build_and_deploy:
+    needs: [environment]
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.environment.outputs.env }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.7.0"
+          channel: "stable"
+      - name: Configure credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+      - name: Build and Deploy
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
+          flutter build web --dart-define=SENTRY_RELEASE="burgundy_budgeting_app@1.0.12" --dart-define=BROWSER_IMAGE_DECODING_ENABLED=false --source-maps
+          sentry-cli releases files "burgundy_budgeting_app@1.0.12" upload-sourcemaps build/web --ext js
+          sentry-cli releases finalize "burgundy_budgeting_app@1.0.12"
+          aws s3 sync --cache-control 'no-cache' --delete build/web ${{ vars.S3_URI }}
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION }} --paths /*
+        env:
+          OUTPUT_FOLDER_WEB: ./build/web/
