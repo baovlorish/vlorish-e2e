@@ -1,13 +1,14 @@
 name:  E2E Test
-on:
-  workflow_dispatch:
-    inputs:
-      testBranch:
-        description: "Which branch to checkout and run test"
-        required: false
-        default: master
-  schedule:
-    - cron: "0 0 * * 1-5"
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       testBranch:
+#         description: "Which branch to checkout and run test"
+#         required: false
+#         default: master
+#   schedule:
+#     - cron: "0 0 * * 1-5"
+on: [push]
 
 jobs:
   run-e2e:
@@ -19,7 +20,7 @@ jobs:
           node-version: 16
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.0.0"
+          flutter-version: "3.7.0"
           channel: "stable"
           
       - name: Setup Enviroments
